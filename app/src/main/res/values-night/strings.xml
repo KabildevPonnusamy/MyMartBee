@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="submit_option">SUBMIT</string>
+    <string name="pincode">+60</string>
+    <string name="image_desc">Image Desc</string>
+    <string name="enter_otp">Enter OTP</string>
+    <string name="please_enter_otp_text">Please enter OTP sent to </string>
+    <string name="verify_option">VERIFY</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="enter_mbl_txt">Enter Mobile Number</string>
+    <string name="sms_info">4 digit OTP will be sent via SMS.</string>
+    <string name="create_your_store">CREATE STORE</string>
+    <string name="store_name">Store Name*</string>
+    <string name="upload_text">UPLOAD</string>
+    <string name="select_category">Select Category*</string>
+    <string name="select_address">Select Address*</string>
+    <string name="device_dont_have_camera">Sorry! Your device doesn\'t support camera</string>
+    <string name="upload_image">Upload Image</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_image">Add Image!</string>
+    <string name="some_issues_text">Some issues occured, please wait few minutes</string>
+    <string name="search_content">Search</string>
+    <string name="add_your_category">Add My Category</string>
+    <string name="category_not_listed">If your category not listed?</string>
+    <string name="category">Category</string>
+    <string name="add_category">ADD CATEGORY</string>
+    <string name="your_loc">Your Geo Location</string>
+    <string name="select_location">Select Location</string>
+    <string name="ok_option">OK</string>
+    <string name="store_created_success">Store Created \n Successfully!</string>
+    <string name="welcome_option">WELCOME</string>
+    <string name="menu_home">HOME</string>
+    <string name="menu_orders">ORDERS</string>
+    <string name="menu_reports">REPORTS</string>
+    <string name="menu_account">ACCOUNT</string>
+    <string name="maintain_store">MAINTAIN STORE</string>
+    <string name="vist_edit_store">VISIT/EDIT STORE</string>
+    <string name="advertise_store">ADVERTISE YOUR ONLINE STORE</string>
+    <string name="share_store_link">SHARE YOUR STORE LINK</string>
+    <string name="search_products">SEARCH PRODUCTS</string>
+    <string name="change_text">Change</string>
+    <string name="update_profile">UPDATE PROFILE</string>
+    <string name="profile_txt">PROFILE</string>
+
+</resources>

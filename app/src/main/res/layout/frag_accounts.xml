@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:padding="16dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/profile_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            app:tint="@color/white"
+            android:contentDescription="@string/image_desc"
+            android:src="@drawable/back_arrow"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_txt"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="@font/museosans"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/store_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/store_zero"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_store"
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/store_image"
+            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/profile_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/museosans"
+                android:hint="@string/store_name"
+                android:autofillHints="@string/store_name"
+                android:inputType="textCapSentences"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:maxLength="30"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/profile_change"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:text="@string/change_text"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/btn_bgnd"/>
+
+    <LinearLayout
+        android:id="@+id/category_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_category"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_category"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:text=""
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/main_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/address_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/profile_address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_address"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:text=""
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/main_color"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/update_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/btn_bgnd"
+        android:text="@string/update_profile"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

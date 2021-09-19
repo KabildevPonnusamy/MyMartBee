@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_color">
+
+        <ImageView
+            android:id="@+id/act_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/back_arrow"
+            app:tint="@color/white"
+            android:contentDescription="@string/image_desc"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_your_store"
+            android:textSize="17sp"
+            android:gravity="center"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/white"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/store_image"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:src="@drawable/store_zero"
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FF000000"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/layout_store"
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/store_image"
+            android:layout_marginStart="10dp"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/store_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/museosans"
+                android:hint="@string/store_name"
+                android:autofillHints="@string/store_name"
+                android:inputType="textCapSentences"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:maxLength="30"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/upload_image"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:text="@string/upload_text"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:background="@drawable/btn_bgnd"/>
+
+    <LinearLayout
+        android:id="@+id/category_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/category_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_category"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:text=""
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/main_color"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/address_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/address_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_address"
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:text=""
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="2dp"
+            android:background="@color/main_color"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/create_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/btn_bgnd"
+        android:text="@string/create_your_store"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
+</LinearLayout>

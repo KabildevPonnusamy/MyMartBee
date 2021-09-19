@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "546701663786",
+    "project_id": "mymartbee-4f74d",
+    "storage_bucket": "mymartbee-4f74d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:546701663786:android:24d668e028f9e91489ad53",
+        "android_client_info": {
+          "package_name": "com.mart.mymartbee"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "546701663786-a8g5uhq6nv1fmgu4a9ivqhv11sdu2e63.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mart.mymartbee",
+            "certificate_hash": "613c9e2b59336eb2a1909ddad901afa2ad5e98cf"
+          }
+        },
+        {
+          "client_id": "546701663786-b94t9sc681b5s41i7it6b5jhnaoi938s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmQ-yEmfwzQ_azDbzkJEv84m3tze4Dy6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "546701663786-b94t9sc681b5s41i7it6b5jhnaoi938s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
