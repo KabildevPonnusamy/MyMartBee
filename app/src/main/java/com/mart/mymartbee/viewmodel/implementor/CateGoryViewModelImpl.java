@@ -15,6 +15,7 @@ import java.util.Map;
 public class CateGoryViewModelImpl extends ViewModel implements CategoryViewModel {
 
     private MutableLiveData<Category_Model> mutableCategoryList;
+    private MutableLiveData<Category_Model> mutableAddedCategoryList;
     private MutableLiveData<String> mutableCateError;
     private MutableLiveData<Boolean> progressCateObserver;
     private CategoryListRepoImpl categoryListRepo;
@@ -37,6 +38,20 @@ public class CateGoryViewModelImpl extends ViewModel implements CategoryViewMode
     }
 
     @Override
+    public LiveData<Category_Model> getAddedCategoryListLV() {
+        return mutableAddedCategoryList;
+    }
+
+    @Override
+    public void getAddedCategories(Map<String, String> params) {
+        try {
+            mutableAddedCategoryList = categoryListRepo.getAddedCategoryRepo(params);
+        } catch (Exception e) {
+            mutableCateError.setValue(e.getMessage());
+        }
+    }
+
+    @Override
     public LiveData<Category_Model> getCategoryListLV() {
         return mutableCategoryList;
     }
@@ -48,7 +63,6 @@ public class CateGoryViewModelImpl extends ViewModel implements CategoryViewMode
 
     @Override
     public void getCateGories() {
-        Log.e("appSample", "GetCategoryVMCalled");
         try {
             mutableCategoryList = categoryListRepo.getCategoryRepo();
         } catch(Exception e) {

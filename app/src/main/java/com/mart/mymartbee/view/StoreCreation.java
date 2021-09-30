@@ -66,13 +66,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class StoreCreation extends AppCompatActivity implements View.OnClickListener, Constants {
 
-    public static final String GALLERY_DIRECTORY_NAME = "Hello Camera";
-    public static final String IMAGE_EXTENSION = "jpg";
-    public static final String VIDEO_EXTENSION = "mp4";
-    private static final int REQUEST_CAMERA_ACCESS_PERMISSION =5674;
-    private static final int REQUEST_TAKE_GALLERY_VIDEO = 5675;
-    public static final int MEDIA_TYPE_IMAGE = 1;
-    public static final int MEDIA_TYPE_VIDEO = 2;
     ProgressDialog progressDialog;
     File tempPath, finalPath;
 
@@ -110,7 +103,6 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     private void getMyPreferences() {
         myKeyValue = getResources().getString(R.string.myTripleKey);
         preferenceDatas = new MyPreferenceDatas(StoreCreation.this);
-
     }
 
     public void observeProgress() {
@@ -177,7 +169,8 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 Log.e("appSample", "ID: " + selectedId);
 
                 Bundle bundle = new Bundle();
-                bundle.putString("categoryName", sel_category);
+                bundle.putString("mobileNumber", strCountryCode + strMobile);
+//                bundle.putString("categoryName", sel_category);
                 bundle.putInt("SelectedId", selectedId);
                 Intent intent = new Intent(StoreCreation.this, CategorySelection.class);
                 intent.putExtras(bundle);
@@ -227,7 +220,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 params.put("latitude", strLatitude);
                 params.put("longitude", strLongitude);
                 params.put("shop", strShop);
-                params.put("category", ""+selectedId);
+                params.put("cat_id", ""+selectedId);
                 params.put("address", strAddress);
 
                 registerViewModel.checkRegister(finalPath, params);
@@ -400,10 +393,12 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
 
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ID, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegId(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_SHOP, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegshop(), myKeyValue) );
-                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegCategory(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegCategoryID(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegCategory(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_IMAGE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegImage(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ADDRESS, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegAddress(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_MOBILE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegMobileNumber(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_COUNTRY_CODE, TripleDes.getDESEncryptValue("+60", myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LATITUDE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegLatitude(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LONGITUDE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegLongitude(), myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_PRODUCTS_COUNT, TripleDes.getDESEncryptValue("0", myKeyValue) );

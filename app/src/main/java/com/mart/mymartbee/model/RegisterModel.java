@@ -59,9 +59,12 @@ public class RegisterModel {
         @SerializedName("shop")
         @Expose
         String strRegshop;
-        @SerializedName("category")
+        @SerializedName("category_name")
         @Expose
         String strRegCategory;
+        @SerializedName("cat_id")
+        @Expose
+        String strRegCategoryID;
         @SerializedName("image")
         @Expose
         String strRegImage;
@@ -89,6 +92,14 @@ public class RegisterModel {
         @SerializedName("created_at")
         @Expose
         String strRegCreatedAt;
+
+        public String getStrRegCategoryID() {
+            return strRegCategoryID;
+        }
+
+        public void setStrRegCategoryID(String strRegCategoryID) {
+            this.strRegCategoryID = strRegCategoryID;
+        }
 
         public String getStrRegId() {
             return strRegId;

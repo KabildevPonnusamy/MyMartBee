@@ -213,8 +213,10 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ID, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegId(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_SHOP, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegshop(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegCategory(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegCategoryName(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_IMAGE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegImage(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ADDRESS, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegAddress(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_COUNTRY_CODE, TripleDes.getDESEncryptValue("+60", myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_MOBILE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegMobileNumber(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LATITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLatitude(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LONGITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLongitude(), myKeyValue) );
@@ -231,7 +233,6 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         intent.putExtras(bundle);
                         startActivityForResult(intent, MOBILELOGIN_to_STORECREATION);
                         finish();
-                        Log.e("appSample", "MoveToRegister");
                     }
                 } else {
                     showErrorMessage(otpVerifyModel.getStrMessage());

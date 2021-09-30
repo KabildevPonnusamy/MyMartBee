@@ -1,5 +1,6 @@
 package com.mart.mymartbee.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -59,9 +60,9 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.menu_nav_home:
                                 moveHome();
                                 return true;
-                            case R.id.menu_nav_products:
+                            /*case R.id.menu_nav_products:
                                 moveProducts();
-                                return true;
+                                return true;*/
                             case R.id.menu_nav_order:
                                 moveOrders();
                                 return true;
@@ -93,14 +94,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void moveProducts(){
+    /*private void moveProducts(){
         Fragment productFragment = new ProductsFragment();
         if(productFragment != null) {
             FragmentTransaction pft = getSupportFragmentManager().beginTransaction();
             pft.replace(R.id.frame_layout, productFragment);
             pft.commit();
         }
-    }
+    }*/
 
     private void moveOrders(){
         Fragment ordersFragment = new OrdersFragment();
@@ -128,4 +129,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             aft.commit();
         }
     }
+
+    /*@Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.e("appSample","here");
+    }*/
 }

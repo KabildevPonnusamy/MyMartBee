@@ -20,12 +20,14 @@ public class MyPreferenceDatas {
     public static final String SELLER_ID = "sellerId";
     public static final String SELLER_SHOP = "sellerShop";
     public static final String SELLER_CATEGORY = "sellerCategory";
+    public static final String SELLER_CATEGORY_NAME= "sellerCategoryName";
     public static final String SELLER_IMAGE = "sellerImage";
     public static final String SELLER_ADDRESS = "sellerAddress";
     public static final String SELLER_MOBILE = "sellerMobile";
     public static final String SELLER_LATITUDE = "sellerLatitude";
     public static final String SELLER_LONGITUDE = "sellerLongitude";
     public static final String SELLER_PRODUCTS_COUNT = "sellerProductCount";
+    public static final String SELLER_COUNTRY_CODE = "sellerCountryCode";
 
     public MyPreferenceDatas(Context context) {
         myPrefs = context.getSharedPreferences(myPrefName, Context.MODE_PRIVATE);

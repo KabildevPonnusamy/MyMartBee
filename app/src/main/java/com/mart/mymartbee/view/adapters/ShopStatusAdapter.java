@@ -29,10 +29,16 @@ public class ShopStatusAdapter extends RecyclerView.Adapter<ShopStatusAdapter.Ti
 
     private ArrayList<ShopStatusModel> shopStatusModels;
     private Context context;
+    private ShopStatusClickListener ssClickListener;
 
-    public ShopStatusAdapter(ArrayList<ShopStatusModel> shopStatusModels, Context context) {
+    public interface ShopStatusClickListener {
+        void onItemClick(int position);
+    }
+
+    public ShopStatusAdapter(ArrayList<ShopStatusModel> shopStatusModels, Context context, ShopStatusClickListener ssClickListener) {
         this.shopStatusModels = shopStatusModels;
         this.context = context;
+        this.ssClickListener = ssClickListener;
     }
 
     @Override
@@ -69,10 +75,9 @@ public class ShopStatusAdapter extends RecyclerView.Adapter<ShopStatusAdapter.Ti
         holder.store_link.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(position == 0) {
 
-                } else if (position == 1) {
-
+                if(ssClickListener != null) {
+                    ssClickListener.onItemClick(position);
                 }
                 Log.e("appSample", "Clicked: " + position);
             }

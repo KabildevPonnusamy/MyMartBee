@@ -12,8 +12,10 @@ import java.util.Map;
 public interface CategoryViewModel {
 
     LiveData<Category_Model> getCategoryListLV();
+    LiveData<Category_Model> getAddedCategoryListLV();
     LiveData<String> getCategoryError();
     LiveData<Boolean> progressCateUpdation();
-    void getCateGories();
 
+    void getCateGories();
+    void getAddedCategories(Map<String, String> params);
 }

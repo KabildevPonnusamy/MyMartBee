@@ -50,10 +50,6 @@ public class OTPRepoImpl implements OTPRepo {
             @Override
             public void onResponse(Call<OTPVerifyModel> call, Response<OTPVerifyModel> response) {
                 progressOTPObservable.setValue(false);
-                Log.e("appSample", "RespCode: " + response.code());
-                Log.e("appSample", "RespCode: " + response.toString());
-                Log.e("appSample", "BodyOTP: " + response.body().getStrModule());
-
                 try {
                     if(response.isSuccessful()) {
                         if (response.body() != null) {

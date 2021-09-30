@@ -34,6 +34,8 @@ import com.mart.mymartbee.viewmodel.interfaces.CategoryViewModel;
 import com.mart.mymartbee.view.adapters.CategoryAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CategorySelection extends AppCompatActivity implements View.OnClickListener, Constants {
 
@@ -42,7 +44,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     RecyclerView cate_recycle;
     Button add_category_btn;
 
-    String strCategoryName = "";
+    String strMobileNumber = "";
     int selectedId = -1;
 
     ProgressDialog progressDialog;
@@ -50,7 +52,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     CategoryAdapter categoryAdapter;
     ArrayList<Category_Model.Categorys> categoryList;
     ArrayList<Category_Model.Categorys> categoryListTemp;
-    ArrayList<Category_Model.Categorys> prefcategoryList;
+//    ArrayList<Category_Model.Categorys> prefcategoryList;
     BottomSheetDialog bottomSheetDialog;
     EditText category_name;
     Button add_cate_sheet_btn;
@@ -82,13 +84,14 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
 
     public void getBundleData() {
         Bundle bundle = getIntent().getExtras();
-        strCategoryName = bundle.getString("categoryName");
+        strMobileNumber = bundle.getString("mobileNumber");
         selectedId = bundle.getInt("SelectedId");
+        Log.e("appSample", "SelectedId: " + selectedId);
     }
 
     public void initView() {
         categoryList = new ArrayList<Category_Model.Categorys>();
-        prefcategoryList = new ArrayList<Category_Model.Categorys>();
+//        prefcategoryList = new ArrayList<Category_Model.Categorys>();
         categoryListTemp = new ArrayList<Category_Model.Categorys>();
         cate_back = findViewById(R.id.cate_back);
         add_category_btn = findViewById(R.id.add_category_btn);
@@ -108,25 +111,14 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     public void updateView() {
-//        showProgress();
         cateGoryViewModel.getCateGories();
         cateGoryViewModel.getCategoryListLV().observe(this, new Observer<Category_Model>() {
             @Override
             public void onChanged(Category_Model category_model) {
-//                hideProgress();
                 categoryList = category_model.getCategorys();
                 if(categoryList != null) {
                     if(categoryList.size() > 0) {
                         categoryListTemp.addAll(categoryList);
-                        prefcategoryList = StorageDatas.getInstance().getMyOwnCategory(MYOWNCATEGORY, getApplicationContext());
-                        if(prefcategoryList != null) {
-                            for(int i=0; i<prefcategoryList.size(); i++) {
-                                categoryList.add(prefcategoryList.get(i));
-                                categoryListTemp.add(prefcategoryList.get(i));
-                            }
-                        } else {
-                            prefcategoryList = new ArrayList<Category_Model.Categorys>();
-                        }
                         cate_recycle.setHasFixedSize(true);
                         cate_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         categoryAdapter = new CategoryAdapter(categoryList, getApplicationContext(), selectedId);
@@ -155,7 +147,25 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                     return;
                 }
 
-                Category_Model.Categorys items = new Category_Model.Categorys();
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("mobile_no", strMobileNumber);
+                params.put("categorie_name", strCate);
+
+                cateGoryViewModel.getAddedCategories(params);
+                cateGoryViewModel.getAddedCategoryListLV().observe(this, new Observer<Category_Model>() {
+                    @Override
+                    public void onChanged(Category_Model category_model) {
+                        if(category_model.isStrStatus() == true) {
+                            categoryList.clear();
+                            categoryList.addAll(category_model.getCategorys());
+                            categoryAdapter.notifyDataSetChanged();
+                            category_name.setText("");
+                            bottomSheetDialog.dismiss();
+                        }
+                    }
+                });
+
+                /*Category_Model.Categorys items = new Category_Model.Categorys();
                 items.setStrCategoryId("" + categoryList.size() + 1);
                 items.setStrCateGoryName(strCate);
                 items.setStrCategoryImage("");
@@ -167,7 +177,9 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                 categoryList.add(items);
                 categoryAdapter.notifyDataSetChanged();
 
-                bottomSheetDialog.dismiss();
+                bottomSheetDialog.dismiss();*/
+
+
                 break;
         }
     }
@@ -185,16 +197,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-
-
                     moveBack(position);
-
-                    Intent intent = new Intent();
-                    intent.putExtra("SelectedCategory", "" + categoryList.get(position).getStrCateGoryName());
-                    intent.putExtra("SelectedId", Integer.parseInt(categoryList.get(position).getStrCategoryId()));
-                    setResult(CATEGORY_SELECTED, intent);
-                    finish();
-
                 }
                 return false;
             }
@@ -225,9 +228,11 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     private void moveBack(int position) {
-        for(int i=0; i<categoryList.size(); i++) {
-
-        }
+        Intent intent = new Intent();
+        intent.putExtra("SelectedCategory", "" + categoryList.get(position).getStrCateGoryName());
+        intent.putExtra("SelectedId", Integer.parseInt(categoryList.get(position).getStrCategoryId()));
+        setResult(CATEGORY_SELECTED, intent);
+        finish();
     }
 
     private void shortList(Editable s) {

@@ -25,7 +25,7 @@ public class OTPViewModelImpl extends ViewModel implements OTPViewModel {
 
     private MutableLiveData<String> pendingTimeData;
     CountDownTimer countDownTimer = null;
-    private int milliSeconds = 10000;
+    private int milliSeconds = 60000;
 
     public OTPViewModelImpl() {
         otpRepo = new OTPRepoImpl();

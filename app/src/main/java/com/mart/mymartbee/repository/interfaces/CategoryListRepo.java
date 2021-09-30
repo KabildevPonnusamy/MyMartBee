@@ -9,6 +9,7 @@ import java.util.Map;
 public interface CategoryListRepo {
 
     MutableLiveData<Category_Model> getCategoryRepo() throws Exception;
+    MutableLiveData<Category_Model> getAddedCategoryRepo(Map<String, String> params) throws Exception;
     MutableLiveData<String> getCateRepoError() throws Exception;
     MutableLiveData<Boolean> progressCateUpdation();
 

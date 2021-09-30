@@ -109,8 +109,6 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(getApplicationContext(), "Please pick location", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                /*Log.e("appSample", "SelectedLat: " + lat);
-                Log.e("appSample", "SelectedLon: " + lon);*/
 
                 Intent intent = new Intent();
                 intent.putExtra("SelectedLatitude", "" + lat);

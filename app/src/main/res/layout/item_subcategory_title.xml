@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/subcate_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_border"
+        android:padding="7dp">
+
+        <TextView
+            android:id="@+id/product_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:layout_marginEnd="5dp"
+            android:text="@string/subcategory"
+            android:textStyle="bold"
+            android:layout_toStartOf="@+id/product_arrow"
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+        <ImageView
+            android:id="@+id/product_arrow"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/arrow_up"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/image_desc" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/products_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="7dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/my_products_recycle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:scrollbars="none"/>
+
+        <TextView
+            android:id="@+id/product_view_option"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:maxLines="1"
+            android:layout_marginEnd="5dp"
+            android:textAllCaps="true"
+            android:text="@string/view_all_text"
+            android:textStyle="bold"
+            android:layout_gravity="end"
+            android:background="@drawable/view_btn_bgnd"
+            android:fontFamily="@font/museosans"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="7dp"/>
+
+</LinearLayout>

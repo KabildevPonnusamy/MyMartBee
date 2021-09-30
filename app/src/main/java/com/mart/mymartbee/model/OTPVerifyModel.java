@@ -60,9 +60,12 @@ public class OTPVerifyModel {
         @SerializedName("shop")
         @Expose
         String strRegshop;
-        @SerializedName("category")
+        @SerializedName("cat_id")
         @Expose
         String strRegCategory;
+        @SerializedName("category_name")
+        @Expose
+        String strRegCategoryName;
         @SerializedName("image")
         @Expose
         String strRegImage;
@@ -90,6 +93,14 @@ public class OTPVerifyModel {
         @SerializedName("created_at")
         @Expose
         String strRegCreatedAt;
+
+        public String getStrRegCategoryName() {
+            return strRegCategoryName;
+        }
+
+        public void setStrRegCategoryName(String strRegCategoryName) {
+            this.strRegCategoryName = strRegCategoryName;
+        }
 
         public String getStrRegId() {
             return strRegId;

@@ -43,7 +43,6 @@ public class CategoryListRepoImpl implements CategoryListRepo {
 
     @Override
     public MutableLiveData<Category_Model> getCategoryRepo() throws Exception {
-
         progressCateObervable.setValue(true);
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
 
@@ -52,10 +51,6 @@ public class CategoryListRepoImpl implements CategoryListRepo {
             @Override
             public void onResponse(Call<Category_Model> call, Response<Category_Model> response) {
                 progressCateObervable.setValue(false);
-                if(response == null) {
-                    Log.e("appSample", "ResponseNull");
-                }
-
                 try {
                     if(response.isSuccessful()) {
                         if (response.body() != null) {
@@ -80,6 +75,42 @@ public class CategoryListRepoImpl implements CategoryListRepo {
             }
         });
         return category_modelMLD;
+    }
+
+    @Override
+    public MutableLiveData<Category_Model> getAddedCategoryRepo(Map<String, String> params) throws Exception {
+        progressCateObervable.setValue(true);
+        ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
+        MutableLiveData<Category_Model> category_modelAddedMLD = new MutableLiveData<Category_Model>();
+        Call<Category_Model> call = callBack.addMyCateGory(params);
+        call.enqueue(new Callback<Category_Model>() {
+            @Override
+            public void onResponse(Call<Category_Model> call, Response<Category_Model> response) {
+                progressCateObervable.setValue(false);
+                try {
+                    if(response.isSuccessful()) {
+                        if (response.body() != null) {
+                            category_modelAddedMLD.setValue(response.body());
+                        }
+                    } else {
+                        category_modelAddedMLD.setValue(null);
+                        cateErrorMLD.setValue("No Response");
+                    }
+                } catch(Exception e) {
+                    Log.e("appSample", "ResponseExc: " + e.getMessage());
+                    category_modelAddedMLD.setValue(null);
+                    cateErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Category_Model> call, Throwable t) {
+                progressCateObervable.setValue(false);
+                category_modelAddedMLD.setValue(null);
+                cateErrorMLD.setValue("Connection Error");
+            }
+        });
+        return category_modelAddedMLD;
     }
 
     @Override

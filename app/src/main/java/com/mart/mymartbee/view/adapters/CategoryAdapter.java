@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +55,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             holder.category_image.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.appicon_temp));
         }
 
-
         if (selectedId == Integer.parseInt(categoryList.get(position).getStrCategoryId())) {
             holder.category_border.setBackgroundResource(R.drawable.selected_border);
             holder.category_image.setColorFilter(ContextCompat.getColor(context, R.color.main_color),
@@ -71,6 +71,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     @Override
     public int getItemCount() {
         return categoryList.size();
+    }
+
+    public void updateAdapter(ArrayList<Category_Model.Categorys> categoryList) {
+        this.categoryList = categoryList;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

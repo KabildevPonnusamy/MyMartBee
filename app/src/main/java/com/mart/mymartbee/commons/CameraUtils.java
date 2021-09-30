@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider;
 import android.util.Log;
 
 import com.mart.mymartbee.BuildConfig;
+import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.view.StoreCreation;
 
 import java.io.File;
@@ -96,13 +97,13 @@ public class CameraUtils {
         // External sdcard location
         File mediaStorageDir = new File(
                 Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                StoreCreation.GALLERY_DIRECTORY_NAME);
+                Constants.GALLERY_DIRECTORY_NAME);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.e(StoreCreation.GALLERY_DIRECTORY_NAME, "Oops! Failed create "
-                        + StoreCreation.GALLERY_DIRECTORY_NAME + " directory");
+                Log.e(Constants.GALLERY_DIRECTORY_NAME, "Oops! Failed create "
+                        + Constants.GALLERY_DIRECTORY_NAME + " directory");
                 return null;
             }
         }
@@ -112,12 +113,12 @@ public class CameraUtils {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
         File mediaFile;
-        if (type == StoreCreation.MEDIA_TYPE_IMAGE) {
+        if (type == Constants.MEDIA_TYPE_IMAGE) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "IMG_" + timeStamp + "." + StoreCreation.IMAGE_EXTENSION);
-        } else if (type == StoreCreation.MEDIA_TYPE_VIDEO) {
+                    + "IMG_" + timeStamp + "." + Constants.IMAGE_EXTENSION);
+        } else if (type == Constants.MEDIA_TYPE_VIDEO) {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator
-                    + "VID_" + timeStamp + "." + StoreCreation.VIDEO_EXTENSION);
+                    + "VID_" + timeStamp + "." + Constants.VIDEO_EXTENSION);
         } else {
             return null;
         }

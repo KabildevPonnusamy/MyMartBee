@@ -19,12 +19,14 @@ import java.util.Map;
 public class RegisterViewModelImpl extends ViewModel implements RegisterViewModel {
 
     private MutableLiveData<RegisterModel> registerModelMutableLiveData;
+    private MutableLiveData<RegisterModel> profileUpdateModelMLD;
     private MutableLiveData<String> regErrorMutableLiveData;
     private MutableLiveData<Boolean> progressObservable;
     private RegisterRepoImpl registerRepo;
 
     public RegisterViewModelImpl() {
         registerRepo = new RegisterRepoImpl();
+        profileUpdateModelMLD = new MutableLiveData<RegisterModel>();
         registerModelMutableLiveData = new MutableLiveData<RegisterModel>();
         regErrorMutableLiveData = new MutableLiveData<String>();
         progressObservable = new MutableLiveData<Boolean>();
@@ -46,6 +48,20 @@ public class RegisterViewModelImpl extends ViewModel implements RegisterViewMode
         try {
             registerModelMutableLiveData = registerRepo.checkRegisterRepo(file, params);
         } catch (Exception e) {
+            regErrorMutableLiveData.setValue(e.getMessage());
+        }
+    }
+
+    @Override
+    public LiveData<RegisterModel> checkProfileUpdateLiveData() {
+        return profileUpdateModelMLD;
+    }
+
+    @Override
+    public void checkProfileUpdate(Map<String, String> params) {
+        try {
+            profileUpdateModelMLD = registerRepo.updateProfileRepo(params);
+        } catch(Exception e) {
             regErrorMutableLiveData.setValue(e.getMessage());
         }
     }

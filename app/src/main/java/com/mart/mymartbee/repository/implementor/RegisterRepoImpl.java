@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mart.mymartbee.model.OTPModel;
+import com.mart.mymartbee.model.OTPVerifyModel;
 import com.mart.mymartbee.model.RegisterModel;
 import com.mart.mymartbee.networking.retrofit.ApiCallBack;
 import com.mart.mymartbee.networking.retrofit.ApiClient;
@@ -28,7 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterRepoImpl implements RegisterRepo {
 
-    private MutableLiveData<RegisterModel> registerModel_MLD;
+
+    private MutableLiveData<RegisterModel> updateProfileModel_MLD;
     private MutableLiveData<String> regErrorMLD;
     private MutableLiveData<Boolean> progressbarObservable;
 
@@ -43,14 +45,50 @@ public class RegisterRepoImpl implements RegisterRepo {
 
 
     public RegisterRepoImpl() {
-        registerModel_MLD = new MutableLiveData<RegisterModel>();
+
+        updateProfileModel_MLD = new MutableLiveData<RegisterModel>();
         regErrorMLD = new MutableLiveData<String>();
         progressbarObservable = new MutableLiveData<Boolean>();
     }
 
     @Override
+    public MutableLiveData<RegisterModel> updateProfileRepo(Map<String, String> params) throws Exception {
+        progressbarObservable.setValue(true);
+        ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
+        Call<RegisterModel> call = callBack.updateProfile(params);
+        call.enqueue(new Callback<RegisterModel>() {
+            @Override
+            public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
+                progressbarObservable.setValue(false);
+                try {
+                    if(response.isSuccessful()) {
+                        if (response.body() != null) {
+                            updateProfileModel_MLD.setValue(response.body());
+                        }
+                    } else {
+                        updateProfileModel_MLD.setValue(null);
+                        regErrorMLD.setValue("No Response");
+                    }
+                } catch(Exception e) {
+                    Log.e("appSample", "ResponseExc: " + e.getMessage());
+                    updateProfileModel_MLD.setValue(null);
+                    regErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterModel> call, Throwable t) {
+                progressbarObservable.setValue(false);
+                Log.e("appSample", "ResponseFailure: " + t.getMessage());
+                updateProfileModel_MLD.setValue(null);
+                regErrorMLD.setValue("Connection Error");
+            }
+        });
+        return updateProfileModel_MLD;
+    }
+
+    @Override
     public MutableLiveData<RegisterModel> checkRegisterRepo(File file, Map<String, String> params) throws Exception {
-        Log.e("appSample", "RegisterRepoImpl");
         progressbarObservable.setValue(true);
 
         RequestBody r_CountryCode = RequestBody.create(MediaType.parse("text/plain"), params.get("country_code"));
@@ -60,14 +98,14 @@ public class RegisterRepoImpl implements RegisterRepo {
         RequestBody r_Latitude = RequestBody.create(MediaType.parse("text/plain"), params.get("latitude"));
         RequestBody r_Longitude = RequestBody.create(MediaType.parse("text/plain"), params.get("longitude"));
         RequestBody r_Shop = RequestBody.create(MediaType.parse("text/plain"), params.get("shop"));
-        RequestBody r_Category = RequestBody.create(MediaType.parse("text/plain"), params.get("category"));
+        RequestBody r_Category = RequestBody.create(MediaType.parse("text/plain"), params.get("cat_id"));
         RequestBody r_Address = RequestBody.create(MediaType.parse("text/plain"), params.get("address"));
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/*"), file);
         Retrofit retrofit = ApiClient.getRetrofit();
 
-//        MultipartBody.Part filePart = MultipartBody.Part.createFormData("file", file.getName(), RequestBody.create(MediaType.parse("image/*"), file));
+        MutableLiveData<RegisterModel> registerModel_MLD = new MutableLiveData<RegisterModel>();
 
         MultipartBody.Part body =
                 MultipartBody.Part.createFormData("image", file.getName(), requestFile);

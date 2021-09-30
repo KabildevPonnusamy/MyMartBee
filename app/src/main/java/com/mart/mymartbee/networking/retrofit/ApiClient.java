@@ -17,7 +17,7 @@ import okhttp3.OkHttpClient;
 
 public class ApiClient {
 
-    public static final String BASE_URL = "https://www.mymartbee.com/api/seller/";
+    public static final String BASE_URL = "https://www.mymartbee.com/api/";
 
     private static Retrofit retrofit = null;
     public static final int DEFAULT_TIMEOUT_SEC = 90;

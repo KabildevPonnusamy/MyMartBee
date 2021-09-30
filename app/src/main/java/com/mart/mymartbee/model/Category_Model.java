@@ -9,16 +9,16 @@ public class Category_Model {
 
     @SerializedName("status")
     @Expose
-    String strStatus;
+    private boolean strStatus;
     @SerializedName("categorys")
     @Expose
     ArrayList<Categorys> categorys;
 
-    public String getStrStatus() {
+    public boolean isStrStatus() {
         return strStatus;
     }
 
-    public void setStrStatus(String strStatus) {
+    public void setStrStatus(boolean strStatus) {
         this.strStatus = strStatus;
     }
 

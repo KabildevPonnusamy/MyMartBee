@@ -20,11 +20,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.mart.mymartbee.R;
+import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.commons.PermissionManager;
 
 public class Splash extends AppCompatActivity {
+
+    MyPreferenceDatas preferenceDatas;
+    String myKeyValue = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,11 +73,19 @@ public class Splash extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+                    myKeyValue = getResources().getString(R.string.myTripleKey);
+                    preferenceDatas = new MyPreferenceDatas(Splash.this);
 
-                    Intent intent= new Intent(Splash.this, MobileLogin.class); //MobileLogin, StoreCreation
-                    startActivity(intent);
-                    finish();
-
+                    if(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue) != null &&
+                    !TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue).equalsIgnoreCase("")) {
+                        Intent intent= new Intent(Splash.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Intent intent= new Intent(Splash.this, MobileLogin.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 } catch (Exception e) {
                 }
             }
