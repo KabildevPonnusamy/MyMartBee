@@ -22,6 +22,8 @@ public class MyPreferenceDatas {
     public static final String SELLER_CATEGORY = "sellerCategory";
     public static final String SELLER_CATEGORY_NAME= "sellerCategoryName";
     public static final String SELLER_IMAGE = "sellerImage";
+    public static final String SELLER_START_TIME = "sellerStartTime";
+    public static final String SELLER_CLOSE_TIME = "sellerCloseTime";
     public static final String SELLER_ADDRESS = "sellerAddress";
     public static final String SELLER_MOBILE = "sellerMobile";
     public static final String SELLER_LATITUDE = "sellerLatitude";

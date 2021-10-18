@@ -1,183 +1,239 @@
 package com.mart.mymartbee.view.fragments;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
-import com.mart.mymartbee.model.Products_Model;
-import com.mart.mymartbee.model.ShopStatusModel;
-import com.mart.mymartbee.model.SubCategory_Model;
+import com.mart.mymartbee.custom.NetworkAvailability;
+import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
+import com.mart.mymartbee.model.Dashboard_Model;
+import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
-import com.mart.mymartbee.view.AddProduct;
-import com.mart.mymartbee.view.HomeActivity;
-import com.mart.mymartbee.view.ProductDetails;
-import com.mart.mymartbee.view.ProductViewAll;
-import com.mart.mymartbee.view.adapters.ShopStatusAdapter;
-import com.mart.mymartbee.view.adapters.SubCateTitleAdapter;
-import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
-import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
+import com.mart.mymartbee.view.OrderUpdate;
+import com.mart.mymartbee.view.adapters.PendingOrdersAdapter;
+import com.mart.mymartbee.view.ProductViewsAct;
+import com.mart.mymartbee.viewmodel.implementor.DashboardViewModelImpl;
+import com.mart.mymartbee.viewmodel.interfaces.DashboardViewModel;
 
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements View.OnClickListener, ShopStatusAdapter.ShopStatusClickListener, Constants {
+public class HomeFragment extends Fragment implements View.OnClickListener, Constants {
 
-    ArrayList<ShopStatusModel> shopStatusModel;
-    RecyclerView recyclerView, products_recycler;
-    EditText search_product_edit;
-    ShopStatusAdapter shopStatusAdapter;
-    RelativeLayout product_creation_layout, product_layout;
-
-    ProductsViewModel productsViewModel;
-    ProgressDialog progressDialog;
-
-    ArrayList<Products_Model.ProductCategories> productsList;
-    ArrayList<Products_Model.ProductCategories> productsListTemp;
-    SubCateTitleAdapter subCateTitleAdapter;
+    String whatsAppLink = "", strCategoryName = "";
+    String strCateId, strSellerId;
+    LinearLayout whatsapp_layout;
+    TextView store_link, store_view_value, product_view_value, total_orders_value, revenue_value,
+            status_short_value;
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
-    TextView shop_tv, new_product_txt;
-    String strCateId, strSellerId;
+    DashboardViewModel dashboardViewModel;
+    ProgressDialog progressDialog;
+    RecyclerView pending_orders_recycler;
+
+    LinearLayout copy_link, product_views_layout, order_views_layout, revenue_layout;
+    ArrayList<Dashboard_Model.ViewedProductList> viewedProductLists;
+    ArrayList<Dashboard_Model.PendingOrdersList> pendingOrdersLists;
+    Dashboard_Model dashboard_model;
+    private ClipboardManager myClipboard;
+    private ClipData myClip;
     LinearLayoutManager lManager = null;
-    Products_Model.ProductCategories.ProductsList productsObj;
-    ArrayList<Products_Model.ProductCategories.ProductsList> cateProductsLists;
-    ImageView whatsapp_share;
-    String whatsAppLink = "";
+    PendingOrdersAdapter ordersAdapter;
+    BottomNavigationView bottom_navigation;
+    Orders_Model.OrdersList ordersListObj;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_home, container, false);
 
-        productsViewModel = ViewModelProviders.of(getActivity()).get(ProductsViewModelImpl.class);
+        dashboardViewModel = ViewModelProviders.of(getActivity()).get(DashboardViewModelImpl.class);
         initView(view);
-        getMyPreferences(view);
+        getMyPreferences();
 
         return view;
     }
 
     private void initView(View view) {
-        productsList = new ArrayList<Products_Model.ProductCategories>();
-        productsListTemp = new ArrayList<Products_Model.ProductCategories>();
-        shopStatusModel = new ArrayList<ShopStatusModel>();
-        whatsapp_share = (ImageView) view.findViewById(R.id.whatsapp_share);
-        shop_tv = (TextView) view.findViewById(R.id.shop_tv);
-        new_product_txt = (TextView) view.findViewById(R.id.new_product_txt);
-        product_creation_layout = (RelativeLayout) view.findViewById(R.id.product_creation_layout);
-        product_layout = (RelativeLayout) view.findViewById(R.id.product_layout);
-        recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        products_recycler = (RecyclerView) view.findViewById(R.id.products_recycler);
-        search_product_edit = (EditText) view.findViewById(R.id.search_product_edit);
+        ordersListObj = new Orders_Model.OrdersList();
+        bottom_navigation = getActivity().findViewById(R.id.bottom_navigation);
+        pending_orders_recycler = (RecyclerView) view.findViewById(R.id.pending_orders_recycler);
+        ViewCompat.setNestedScrollingEnabled(pending_orders_recycler, false);
+
+        copy_link = (LinearLayout) view.findViewById(R.id.copy_link);
+        order_views_layout = (LinearLayout) view.findViewById(R.id.order_views_layout);
+        revenue_layout = (LinearLayout) view.findViewById(R.id.revenue_layout);
+        product_views_layout = (LinearLayout) view.findViewById(R.id.product_views_layout);
+        viewedProductLists = new ArrayList<Dashboard_Model.ViewedProductList>();
+        pendingOrdersLists = new ArrayList<Dashboard_Model.PendingOrdersList>();
+        whatsapp_layout = (LinearLayout) view.findViewById(R.id.whatsapp_layout);
+        store_link = (TextView) view.findViewById(R.id.store_link);
+        status_short_value = (TextView) view.findViewById(R.id.status_short_value);
+        store_view_value = (TextView) view.findViewById(R.id.store_view_value);
+        product_view_value = (TextView) view.findViewById(R.id.product_view_value);
+        total_orders_value = (TextView) view.findViewById(R.id.total_orders_value);
+        revenue_value = (TextView) view.findViewById(R.id.revenue_value);
+        whatsapp_layout.setOnClickListener(this);
+        copy_link.setOnClickListener(this);
+        order_views_layout.setOnClickListener(this);
+        revenue_layout.setOnClickListener(this);
+        product_views_layout.setOnClickListener(this);
+        status_short_value.setOnClickListener(this);
         setListeners();
     }
 
-    private void getMyPreferences(View view) {
-        myKeyValue = getActivity().getResources().getString(R.string.myTripleKey);
-        preferenceDatas = new MyPreferenceDatas(getActivity());
-        shop_tv.setText(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue));
-        strCateId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
-        strSellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
-        productsViewModel.progressProductUpdation().observe(this, new Observer<Boolean>() {
+    public void setListeners() {
+        pending_orders_recycler.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            GestureDetector gestureDetector = new GestureDetector(getActivity(),
+                    new GestureDetector.SimpleOnGestureListener() {
+                        @Override
+                        public boolean onSingleTapUp(MotionEvent e) {
+                            return true;
+                        }
+                    });
             @Override
-            public void onChanged(Boolean progressObserve) {
-                if(progressObserve) {
-                    showProgress();
-                } else {
-                    hideProgress();
-                }
-            }
-        });
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                View child = rv.findChildViewUnder(e.getX(), e.getY());
+                if (child != null && gestureDetector.onTouchEvent(e)) {
+                    int position = rv.getChildAdapterPosition(child);
 
-        productsViewModel.getProducts(strCateId, strSellerId);
-        productsViewModel.getProductLV().observe(this, new Observer<Products_Model>() {
-            @Override
-            public void onChanged(Products_Model products_model) {
-                productsList = products_model.getProductCategories();
-                productsListTemp.addAll(productsList);
-                whatsAppLink = products_model.getStrStoreLink();
-                StorageDatas.getInstance().setStoreWhatsappLink(whatsAppLink);
-                Log.e("appSample", "StoreLink: " + whatsAppLink);
+                    ordersListObj.setStrOrderId(pendingOrdersLists.get(position).getStrOrderId());
+                    ordersListObj.setStrStatus(pendingOrdersLists.get(position).getStrStatus());
+                    ordersListObj.setStrOrderDate(pendingOrdersLists.get(position).getStrOrderDate());
+                    ordersListObj.setStrTotalAmount(pendingOrdersLists.get(position).getStrTotalAmount());
+                    ordersListObj.setStrPhone(pendingOrdersLists.get(position).getStrPhone());
+                    ordersListObj.setStrCountryCode(pendingOrdersLists.get(position).getStrCountryCode());
+                    ordersListObj.setStrAddress(pendingOrdersLists.get(position).getStrAddress());
 
-                if(productsList != null) {
-                    if(productsList.size() > 0) {
-                        product_creation_layout.setVisibility(View.GONE);
-                        product_layout.setVisibility(View.VISIBLE);
-                        setProductAdapter();
-                    } else {
-                    noProductFound();
+                    ArrayList<Orders_Model.OrdersList.OrderHistory> listitem = new ArrayList<>();
+                    ArrayList<Orders_Model.OrdersList.OrderedProducts> productItem = new ArrayList<>();
+
+                    for( int i=0; i < pendingOrdersLists.get(position).getPendingOrderHistoryList().size(); i++ ) {
+                        Orders_Model.OrdersList.OrderHistory item = new Orders_Model.OrdersList.OrderHistory();
+                        item.setStrAddedDate(pendingOrdersLists.get(position).getPendingOrderHistoryList().get(i).getStrDateodAdded());
+                        item.setStrStatusName(pendingOrdersLists.get(position).getPendingOrderHistoryList().get(i).getStrName());
+                        listitem.add(item);
                     }
-                } else {
-                    noProductFound();
+
+                    for(int j=0; j < pendingOrdersLists.get(position).getPendingProductsList().size(); j++) {
+                        Orders_Model.OrdersList.OrderedProducts item = new Orders_Model.OrdersList.OrderedProducts();
+                        item.setStrProductId(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrProductId());
+                        item.setStrProductImage(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrProductImage());
+                        item.setStrProductPrice(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrProductPrice());
+                        item.setStrProductQuantity(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrProductQuantity());
+                        item.setStrProductTotal(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrProductTotal());
+                        item.setStrProductTitle(pendingOrdersLists.get(position).pendingProductsList.get(j).getStrproductTitle());
+                        productItem.add(item);
+                    }
+
+                    ordersListObj.setOrderHistoryList(listitem);
+                    ordersListObj.setOrderedProductsList(productItem);
+
+                    StorageDatas.getInstance().setOrdersListObj(ordersListObj);
+                    sentToOrderDetails(pendingOrdersLists.get(position).getStrStatus(),
+                            pendingOrdersLists.get(position).getStrOrderId());
+
                 }
+                return false;
+            }
+
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
             }
         });
     }
 
-    private void noProductFound() {
-        product_creation_layout.setVisibility(View.VISIBLE);
-        product_layout.setVisibility(View.GONE);
-        ShopStatusModel item1 = new ShopStatusModel("1", getActivity().getResources().getString(R.string.maintain_store),
-                getActivity().getResources().getString(R.string.vist_edit_store), "1");
-        ShopStatusModel item2 = new ShopStatusModel("2", getActivity().getResources().getString(R.string.advertise_store),
-                getActivity().getResources().getString(R.string.share_store_link),
-                "0");
-        shopStatusModel.add(item1);
-        shopStatusModel.add(item2);
-        setAdapter();
+    public void sentToOrderDetails(String strStatus, String strOrderId) {
+        if (NetworkAvailability.isNetworkAvailable(getActivity())) {
+            Bundle bundle = new Bundle();
+            bundle.putString("orderStatus", strStatus);
+            bundle.putString("orderId", strOrderId);
+            Intent intent = new Intent(getActivity(), OrderUpdate.class);
+            intent.putExtras(bundle);
+            startActivityForResult(intent, HOME_FRAG_to_ORDER_DETAILS);
+        } else {
+            noInternetConnection();
+        }
     }
 
-    private void setAdapter() {
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        shopStatusAdapter = new ShopStatusAdapter(shopStatusModel, getActivity(), HomeFragment.this);
-        recyclerView.setAdapter(shopStatusAdapter);
-    }
+    public void showStatusPopup() {
+        PopupMenu popup = new PopupMenu(getActivity(), status_short_value);
+        popup.getMenuInflater().inflate(R.menu.popup_menu, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                status_short_value.setText(item.getTitle());
+                return true;
+            }
+        });
 
-    private void setProductAdapter() {
-        products_recycler.setHasFixedSize(true);
-        lManager = new LinearLayoutManager(getActivity());
-        products_recycler.setLayoutManager(lManager);
-        subCateTitleAdapter = new SubCateTitleAdapter(productsList, getActivity(), HomeFragment.this,
-                lManager);
-        products_recycler.setAdapter(subCateTitleAdapter);
+        popup.show();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.whatsapp_share:
-                shareOnWhatsapp();
+            case R.id.revenue_layout:
+                bottom_navigation.setSelectedItemId(R.id.menu_nav_reports);
                 break;
 
-            case R.id.new_product_txt:
-                Bundle bundle = new Bundle();
-                bundle.putString("fromActivity", "HomeFragment");
-                Intent addProdIntent = new Intent(getActivity(), AddProduct.class);
-                addProdIntent.putExtras(bundle);
-                startActivityForResult(addProdIntent, HOME_FRAG_to_ADD_PRODUCT);
+            case R.id.order_views_layout:
+                bottom_navigation.setSelectedItemId(R.id.menu_nav_order);
+                break;
+
+            case R.id.status_short_value:
+                showStatusPopup();
+                break;
+
+            case R.id.product_views_layout:
+                StorageDatas.getInstance().setViewedProductLists(dashboard_model.getViewedProductList());
+                Intent intent = new Intent(getActivity(), ProductViewsAct.class);
+                startActivityForResult(intent, HOME_FRAG_to_PRODUCTVIEWS);
+                break;
+
+            case R.id.copy_link:
+                myClipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                String text = store_link.getText().toString();
+
+                myClip = ClipData.newPlainText("text", text);
+                myClipboard.setPrimaryClip(myClip);
+                CommonMethods.LinkCopiedToast(getActivity(), "Link Copied");
+                break;
+
+            case R.id.whatsapp_layout:
+                shareOnWhatsapp();
                 break;
         }
     }
@@ -186,197 +242,79 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Shop
         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
         whatsappIntent.setType("text/plain");
         whatsappIntent.setPackage("com.whatsapp");
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, whatsAppLink + " \n\n   Please visit my store to buy electronics products on very low cost.");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, whatsAppLink + " \n\n   Please visit my store to buy " + strCategoryName + " products on very low cost.");
         try {
             startActivity(whatsappIntent);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getActivity(), "WhatsApp have not been installed.", Toast.LENGTH_SHORT).show();
+            CommonMethods.Toast(getActivity(), "WhatsApp have not been installed.");
         }
     }
 
-    public void updateProduct() {
-        if(productsList == null) {
-            productsList = new ArrayList<Products_Model.ProductCategories>();
+    private void getMyPreferences() {
+        myKeyValue = getActivity().getResources().getString(R.string.myTripleKey);
+        preferenceDatas = new MyPreferenceDatas(getActivity());
+        strCateId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
+        strSellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
+        strCategoryName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
+        viewModelInits();
+    }
+
+    public void viewModelInits() {
+        dashboardViewModel.progressbarDASHObservable().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean progressObserve) {
+                if (progressObserve) {
+                    showProgress();
+                } else {
+                    hideProgress();
+                }
+            }
+        });
+        getDashboardDatas();
+    }
+
+    public void getDashboardDatas() {
+        if (NetworkAvailability.isNetworkAvailable(getActivity())) {
+            dashboardViewModel.getDashboardDatas(strSellerId);
         } else {
-            productsList.clear();
+            noInternetConnection();
         }
-
-        productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-        if(productsList.size() == 1) {
-            product_creation_layout.setVisibility(View.GONE);
-            product_layout.setVisibility(View.VISIBLE);
-            setProductAdapter();
-        } else {
-            subCateTitleAdapter.notifyDataSetChanged();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == HOME_FRAG_to_VIEW_ALL) {
-            if(resultCode == PRODUCT_DELETION_success) {
-                updateProduct();
-            } else if (resultCode == PRODUCT_UPDATED_success) {
-                updateProduct();
-
-                /*if(productsList == null) {
-                    productsList = new ArrayList<Products_Model.ProductCategories>();
-                }
-                productsList.clear();
-                productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-                if(productsList.size() == 1) {
-                    product_creation_layout.setVisibility(View.GONE);
-                    product_layout.setVisibility(View.VISIBLE);
-                    setProductAdapter();
-                } else {
-                    subCateTitleAdapter.notifyDataSetChanged();
-                }*/
-            }
-        }
-
-        if(requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
-            if(resultCode == PRODUCT_UPDATED_success) {
-                updateProduct();
-                /*if(productsList == null) {
-                    productsList = new ArrayList<Products_Model.ProductCategories>();
-                }
-                productsList.clear();
-                productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-                if(productsList.size() == 1) {
-                    product_creation_layout.setVisibility(View.GONE);
-                    product_layout.setVisibility(View.VISIBLE);
-                    setProductAdapter();
-                } else {
-                    subCateTitleAdapter.notifyDataSetChanged();
-                }*/
-            }
-        }
-
-        if(requestCode == HOME_FRAG_to_ADD_PRODUCT) {
-            if(resultCode == PRODUCT_ADDED_success) {
-                updateProduct();
-                /*if(productsList == null) {
-                    productsList = new ArrayList<Products_Model.ProductCategories>();
-                }
-                productsList.clear();
-                productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-                if(productsList.size() == 1) {
-                    product_creation_layout.setVisibility(View.GONE);
-                    product_layout.setVisibility(View.VISIBLE);
-                    setProductAdapter();
-                } else {
-                    subCateTitleAdapter.notifyDataSetChanged();
-                }*/
-            }
-        }
-
-        if(requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
-            if(resultCode == PRODUCT_DELETION_success) {
-                updateProduct();
-                /*if(productsList == null) {
-                    productsList = new ArrayList<Products_Model.ProductCategories>();
-                } else {
-                    productsList.clear();
-                }
-
-                productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-                if(productsList.size() == 1) {
-                    product_creation_layout.setVisibility(View.GONE);
-                    product_layout.setVisibility(View.VISIBLE);
-                    setProductAdapter();
-                } else {
-                    subCateTitleAdapter.notifyDataSetChanged();
-                }*/
-            }
-        }
-    }
-
-    private void setListeners() {
-        new_product_txt.setOnClickListener(this);
-        whatsapp_share.setOnClickListener(this);
-        search_product_edit.addTextChangedListener(new TextWatcher() {
+        dashboardViewModel.getDashboardDatasLD().observe(this, new Observer<Dashboard_Model>() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                shortList(s);
+            public void onChanged(Dashboard_Model d_model) {
+                if (d_model.isStrStatus() == true) {
+                    Log.e("appSample", "TRUE");
+                    viewedProductLists = d_model.getViewedProductList();
+                    dashboard_model = d_model;
+                    updateValues(dashboard_model);
+                }
             }
         });
     }
 
-    private void shortList(Editable s) {
-        if (productsListTemp != null) {
-            if (productsListTemp.size() > 0) {
-                String value = "" + s;
-                value = value.trim();
-                productsList.clear();
+    public void updateValues(Dashboard_Model dashboard_model) {
+        store_view_value.setText(dashboard_model.getStrPageViewCount());
+        product_view_value.setText(dashboard_model.getStrProductViewCount());
+        total_orders_value.setText(dashboard_model.getStrOrderCount());
+        revenue_value.setText("RM. " + dashboard_model.getStrTotalRevenue());
+        store_link.setText(dashboard_model.getStrStoreLink());
+        whatsAppLink = dashboard_model.getStrStoreLink();
+        store_link.setPaintFlags(store_link.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
-                if (value != null) {
-                    if (value.equals("")) {
-                        productsList.addAll(productsListTemp);
-                    } else {
-                        for (int i = 0; i < productsListTemp.size(); i++) {
-                            if (productsListTemp.get(i).getStrCateName().toLowerCase().
-                                    contains(value.toLowerCase())) {
-                                Products_Model.ProductCategories item = new Products_Model.ProductCategories();
-                                item.setStrCateId(productsListTemp.get(i).getStrCateId());
-                                item.setStrCateName(productsListTemp.get(i).getStrCateName());
-                                item.setProductsLists(productsListTemp.get(i).getProductsLists());
-                                productsList.add(item);
-                            }
-                        }
-                    }
-                }
-                subCateTitleAdapter.notifyDataSetChanged();
+        if (dashboard_model.getPendingOrdersLists() != null) {
+            if (dashboard_model.getPendingOrdersLists().size() > 0) {
+                pendingOrdersLists = dashboard_model.getPendingOrdersLists();
+                setPendingOrdersAdapter();
             }
         }
     }
 
-    @Override
-    public void onItemClick(int position) {
-        if(position == 0) {
-            Bundle bundle = new Bundle();
-            bundle.putString("fromActivity", "HomeFragment");
-            Intent intent = new Intent(getActivity(), AddProduct.class);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, HOME_FRAG_to_ADD_PRODUCT);
-        } else {
-
-        }
-    }
-
-    public void movetoProductEdit(Products_Model.ProductCategories.ProductsList productsObj,
-                                  String subcateName, String strsubCateId) {
-        this.productsObj = productsObj;
-        StorageDatas.getInstance().setProductsObj(productsObj);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("subcateName", subcateName);
-        bundle.putString("subcateId", strsubCateId);
-        Intent intent = new Intent(getActivity(), ProductDetails.class);
-        intent.putExtras(bundle);
-        startActivityForResult(intent, HOME_FRAG_to_PRODUCT_DETAILS);
-    }
-
-    public void movetoProductViewAll(ArrayList<Products_Model.ProductCategories.ProductsList> cateProductsLists,
-                                  String subcateName, String strsubCateId) {
-        this.cateProductsLists = cateProductsLists;
-        StorageDatas.getInstance().setCateProductsList(cateProductsLists);
-
-        Bundle pvbundle = new Bundle();
-        pvbundle.putString("subcateName", subcateName);
-        pvbundle.putString("subcateId", strsubCateId);
-        Intent pvintent = new Intent(getActivity(), ProductViewAll.class);
-        pvintent.putExtras(pvbundle);
-        startActivityForResult(pvintent, HOME_FRAG_to_VIEW_ALL);
+    private void setPendingOrdersAdapter() {
+        pending_orders_recycler.setHasFixedSize(true);
+        lManager = new LinearLayoutManager(getActivity());
+        pending_orders_recycler.setLayoutManager(lManager);
+        ordersAdapter = new PendingOrdersAdapter(pendingOrdersLists, getActivity());
+        pending_orders_recycler.setAdapter(ordersAdapter);
     }
 
     private void showProgress() {
@@ -387,10 +325,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Shop
     }
 
     private void hideProgress() {
-        if(progressDialog != null) {
-            if(progressDialog.isShowing()) {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
+            }
+        }
+    }
+
+    public void noInternetConnection() {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.ERROR_TYPE);
+        sweetAlertDialog.setTitleText(getActivity().getResources().getString(R.string.no_internet));
+        sweetAlertDialog.setContentText(getActivity().getResources().getString(R.string.open_settings));
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+
+        sweetAlertDialog.setCancelText(getActivity().getResources().getString(R.string.option_no));
+        sweetAlertDialog.setConfirmText(getActivity().getResources().getString(R.string.option_yes));
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+                startActivityForResult(new Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS), GET_HOME_PRODUCTS);
+            }
+        });
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == HOME_FRAG_to_ORDER_DETAILS) {
+            if(resultCode == ORDER_STATUS_UPDATE_success) {
+                if(pendingOrdersLists == null) {
+                    pendingOrdersLists = new ArrayList<Dashboard_Model.PendingOrdersList>();
+                } else {
+                    pendingOrdersLists.clear();
+                }
+
+                getDashboardDatas();
             }
         }
     }

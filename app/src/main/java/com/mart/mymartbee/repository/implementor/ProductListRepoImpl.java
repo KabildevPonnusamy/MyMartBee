@@ -72,7 +72,6 @@ public class ProductListRepoImpl implements ProductListRepo {
                 p_old_price, p_cat_id, p_sub_cat_id, p_quantity, p_seller_id, p_uom).enqueue(new Callback<Products_Model>() {
             @Override
             public void onResponse(Call<Products_Model> call, Response<Products_Model> response) {
-                Log.e("appSample", "onResponse");
                 progressProductObservable.setValue(false);
                 try {
                     if(response.isSuccessful()) {

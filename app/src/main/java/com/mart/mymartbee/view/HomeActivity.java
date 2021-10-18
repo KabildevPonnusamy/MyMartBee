@@ -15,14 +15,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
-import com.mart.mymartbee.view.fragments.AccountsFragment;
+import com.mart.mymartbee.view.fragments.AccountFragment;
 import com.mart.mymartbee.view.fragments.HomeFragment;
 import com.mart.mymartbee.view.fragments.OrdersFragment;
 import com.mart.mymartbee.view.fragments.ProductsFragment;
 import com.mart.mymartbee.view.fragments.ReportsFragment;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, Constants {
 
     BottomNavigationView bottom_navigation;
     MyPreferenceDatas preferenceDatas;
@@ -34,7 +35,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.act_home);
 
         initView();
-//        getMyPreferences();
         moveHome();
     }
 
@@ -60,13 +60,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.menu_nav_home:
                                 moveHome();
                                 return true;
-                            /*case R.id.menu_nav_products:
+                            case R.id.menu_nav_products:
                                 moveProducts();
-                                return true;*/
+                                return true;
                             case R.id.menu_nav_order:
                                 moveOrders();
                                 return true;
-                            case R.id.menu_reports:
+                            case R.id.menu_nav_reports:
                                 moveReports();
                                 return true;
                             case R.id.menu_nav_account:
@@ -94,14 +94,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*private void moveProducts(){
+    private void moveProducts(){
         Fragment productFragment = new ProductsFragment();
         if(productFragment != null) {
             FragmentTransaction pft = getSupportFragmentManager().beginTransaction();
             pft.replace(R.id.frame_layout, productFragment);
             pft.commit();
         }
-    }*/
+    }
 
     private void moveOrders(){
         Fragment ordersFragment = new OrdersFragment();
@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void moveAccounts() {
-        Fragment accountsFragment = new AccountsFragment();
+        Fragment accountsFragment = new AccountFragment();
         if(accountsFragment != null) {
             FragmentTransaction aft = getSupportFragmentManager().beginTransaction();
             aft.replace(R.id.frame_layout, accountsFragment);
@@ -130,9 +130,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    /*@Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("appSample","here");
-    }*/
+
+        if(data == null) {
+            data = new Intent();
+        }
+
+        if(data == null) {
+            Log.e("appSample", "Data Null");
+        }
+
+        if(requestCode == GET_HOME_PRODUCTS) {
+//            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.menu_nav_home);
+            Fragment fragment = new HomeFragment();
+            if(fragment == null) {
+                Log.e("appSample", "Frag Null");
+            }
+            fragment.onActivityResult(GET_HOME_PRODUCTS, 00, data);
+        }
+    }
 }

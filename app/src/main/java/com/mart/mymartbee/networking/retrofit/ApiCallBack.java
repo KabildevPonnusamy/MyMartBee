@@ -15,10 +15,14 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.Dashboard_Model;
 import com.mart.mymartbee.model.OTPModel;
 import com.mart.mymartbee.model.OTPVerifyModel;
+import com.mart.mymartbee.model.Order_Status_Model;
+import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.RegisterModel;
+import com.mart.mymartbee.model.Reports_Model;
 import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.model.UOMModel;
 
@@ -40,7 +44,7 @@ public interface ApiCallBack {
     Call<RegisterModel> sellerRegistration(@Part MultipartBody.Part image, @Part("country_code") RequestBody country_code, @Part("mobile_number") RequestBody mobile_number,
                                            @Part("imie_no") RequestBody imie_no, @Part("gcm_id") RequestBody gcm_id, @Part("latitude") RequestBody latitude,
                                            @Part("longitude") RequestBody longitude, @Part("shop") RequestBody shop, @Part("cat_id") RequestBody category,
-                                           @Part("address") RequestBody address);
+                                           @Part("address") RequestBody address, @Part("open_time") RequestBody open_time, @Part("close_time") RequestBody close_time);
 
     @POST("seller/register")
     @FormUrlEncoded
@@ -87,6 +91,23 @@ public interface ApiCallBack {
 
     @GET("seller/uom")
     Call<UOMModel> getUOMList();
+
+    @GET("order/{seller_id}")
+    Call<Orders_Model> getOrders(@Path("seller_id") String seller_id);
+
+    @GET("order/order-status")
+    Call<Order_Status_Model> getOrdersStatusList();
+
+    @POST("order/edit-order")
+    @FormUrlEncoded
+    Call<Orders_Model> updateOrderStatus(@FieldMap Map<String, String> params);
+
+    @GET("order/report/{seller_id}")
+    Call<Reports_Model> getReportsList(@Path("seller_id") String seller_id);
+
+    @GET("dashboard/{seller_id}")
+    Call<Dashboard_Model> getDashboardDatas(@Path("seller_id") String seller_id);
+    //Dashboard_Model
 
     /*@GET("{value}/info.json")
     Call<StatesList> getStateInfos(@Path("value") String value);*/

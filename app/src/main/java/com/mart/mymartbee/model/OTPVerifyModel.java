@@ -93,6 +93,28 @@ public class OTPVerifyModel {
         @SerializedName("created_at")
         @Expose
         String strRegCreatedAt;
+        @SerializedName("open_time")
+        @Expose
+        String strOpenTime;
+        @SerializedName("close_time")
+        @Expose
+        String strCloseTime;
+
+        public String getStrOpenTime() {
+            return strOpenTime;
+        }
+
+        public void setStrOpenTime(String strOpenTime) {
+            this.strOpenTime = strOpenTime;
+        }
+
+        public String getStrCloseTime() {
+            return strCloseTime;
+        }
+
+        public void setStrCloseTime(String strCloseTime) {
+            this.strCloseTime = strCloseTime;
+        }
 
         public String getStrRegCategoryName() {
             return strRegCategoryName;

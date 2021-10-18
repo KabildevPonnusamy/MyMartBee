@@ -14,6 +14,8 @@ public interface Constants {
 
     public static String MYOWNCATEGORY = "MyOwnCategory";
 
+    public static final int NOTIFICATION_ID = 100;
+
     public static int MOBILELOGIN_to_STORECREATION = 1;
     public static int STORE_CREATION_to_CATEGORY_SELECTION = 2;
     public static int CATEGORY_SELECTED = 3;
@@ -37,8 +39,32 @@ public interface Constants {
     public static int ACCOUNT_FRAG_to_SETTINGs = 21;
     public static int HOME_FRAG_to_VIEW_ALL = 22;
     public static int VIEW_ALL_to_PRODUCT_DETAILS = 23;
+    public static int ORDER_FRAG_to_ORDER_DETAILS = 24;
+    public static int ORDER_STATUS_UPDATE_success = 25;
+    public static int REPORT_FRAG_to_REPORT_DETAILS = 26;
+    public static int ACCOUNT_FRAG_to_SETTINGS = 27;
+    public static int ACCOUNT_FRAG_to_PROFILE = 28;
+    public static int HOME_FRAG_to_PRODUCTVIEWS = 29;
+    public static int HOME_FRAG_to_ORDER_DETAILS = 30;
 
-    public static int LOGOUT = 100;
+    public static int LOGOUT = 1000;
+    public static int PICK_IMAGE = 1001;
+    public static int CAMERA_IMAGE = 1002;
+
+    public static int NETWORK_ENABLE_SETTINGS = 1003;
+    public static int GET_HOME_PRODUCTS = 101;
+    public static int GET_MY_ORDERS = 102;
+    public static int MOVE_ORDER_DETAILS = 103;
+    public static int GET_MY_REPORTS = 104;
+    public static int MOVE_COMPLETED_REPORTS = 105;
+    public static int MOVE_REJECTED_REPORTS = 106;
+    public static int PROFILE_UPD_WITH_IMAGE = 107;
+    public static int PROFILE_UPD_WITHOUT_IMAGE = 108;
+    public static int ADD_PRODUCT_INFO = 109;
+    public static int MOVE_SUB_CATEGORY = 110;
+    public static int MOVE_TO_ADDRESS_SELECTION = 111;
+    public static int CATEGORY_CREATION = 112;
+    public static int UPDATE_ORDER_STATUS = 113;
 
 
 

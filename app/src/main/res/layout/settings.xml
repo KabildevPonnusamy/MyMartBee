@@ -6,7 +6,7 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/colorPrimary"
@@ -18,6 +18,8 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
+            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
             android:contentDescription="@string/image_desc"
             android:src="@drawable/back_arrow"
             app:tint="@color/white" />
@@ -25,16 +27,16 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_centerInParent="true"
             android:fontFamily="@font/museosans"
             android:gravity="center"
             android:text="@string/settings_text"
             android:textColor="@color/white"
             android:textAllCaps="true"
-            android:textSize="18sp"
+            android:textSize="@dimen/title_size"
             android:textStyle="bold" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -134,11 +136,12 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/logout_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/version_layout"
+            android:foreground="?android:attr/selectableItemBackground"
             android:background="@drawable/btn_bgnd"
             android:layout_centerInParent="true"
             android:layout_marginBottom="20dp"
@@ -159,11 +162,13 @@
                 android:layout_gravity="center"
                 android:fontFamily="@font/museosans"
                 android:gravity="center"
+                android:paddingStart="2dp"
+                android:paddingEnd="8dp"
                 android:text="@string/logout_text"
                 android:textColor="@color/white"
                 android:layout_marginStart="7dp"
                 android:textAllCaps="true"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -186,6 +191,7 @@
                 android:gravity="center"
                 android:text="@string/version_text"
                 android:textAllCaps="true"
+                android:textColor="@color/text_color"
                 android:textSize="13sp"
                 android:textStyle="normal" />
 
@@ -198,10 +204,10 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:textAllCaps="true"
-                android:textSize="17sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
     </RelativeLayout>
 

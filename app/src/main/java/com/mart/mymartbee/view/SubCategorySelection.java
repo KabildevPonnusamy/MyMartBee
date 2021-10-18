@@ -12,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,14 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mart.mymartbee.R;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
-import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.model.SubCategory_Model;
-import com.mart.mymartbee.view.adapters.CategoryAdapter;
 import com.mart.mymartbee.view.adapters.SubCategoryAdapter;
 import com.mart.mymartbee.viewmodel.implementor.SubCategoryViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.SubCategoryViewModel;
-import com.zjun.widget.tagflowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,7 +76,7 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
 
     private void sheetDialoginitView() {
         bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.add_subcate_bottomsheet);
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_add_subcate);
         bottomSheetDialog.setCancelable(true);
         subcategory_name = (EditText) bottomSheetDialog.findViewById(R.id.subcategory_name);
         add_subcate_sheet_btn = (Button) bottomSheetDialog.findViewById(R.id.add_subcate_sheet_btn);
@@ -100,8 +98,14 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
         listeners();
     }
 
-    private void updateView(){
-        subCategoryViewModel.getSubCategories(cate_id);
+    private void updateView() {
+        if (NetworkAvailability.isNetworkAvailable(SubCategorySelection.this)) {
+            subCategoryViewModel.getSubCategories(cate_id);
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(SubCategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
+        }
+
         subCategoryViewModel.getSubCategoryList().observe(this, new Observer<SubCategory_Model>() {
             @Override
             public void onChanged(SubCategory_Model subCategory_model) {
@@ -220,7 +224,7 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
             case R.id.add_subcate_sheet_btn:
                 String strSubCate = subcategory_name.getText().toString().trim();
                 if(strSubCate.equalsIgnoreCase("")) {
-                    Toast.makeText(getApplicationContext(), "Please enter sub-category", Toast.LENGTH_SHORT).show();
+                    CommonMethods.Toast(SubCategorySelection.this, "Please enter sub-category.");
                     return;
                 }
 
@@ -229,7 +233,13 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
                 params.put("cat_id", cate_id);
                 params.put("sub_categorie_name", strSubCate);
 
-                subCategoryViewModel.getAddedSubCategories(params);
+                if (NetworkAvailability.isNetworkAvailable(SubCategorySelection.this)) {
+                    subCategoryViewModel.getAddedSubCategories(params);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(SubCategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
+
                 subCategoryViewModel.getAddedSubCategoryList().observe(this, new Observer<SubCategory_Model>() {
                     @Override
                     public void onChanged(SubCategory_Model subCategory_model) {
@@ -287,4 +297,11 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NETWORK_ENABLE_SETTINGS) {
+            updateView();
+        }
+    }
 }

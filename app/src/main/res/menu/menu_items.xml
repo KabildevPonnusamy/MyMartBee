@@ -5,10 +5,10 @@
         android:title="@string/menu_home"
         android:icon="@drawable/ic_home" />
 
-    <!--<item
+    <item
         android:id="@+id/menu_nav_products"
         android:title="@string/menu_products"
-        android:icon="@drawable/ic_products"/>-->
+        android:icon="@drawable/ic_products"/>
 
     <item
         android:id="@+id/menu_nav_order"
@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_orders"/>
 
     <item
-        android:id="@+id/menu_reports"
+        android:id="@+id/menu_nav_reports"
         android:title="@string/menu_reports"
         android:icon="@drawable/ic_reports"/>
 

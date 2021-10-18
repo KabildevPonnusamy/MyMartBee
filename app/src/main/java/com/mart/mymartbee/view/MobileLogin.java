@@ -1,21 +1,16 @@
 package com.mart.mymartbee.view;
 
-import android.animation.Animator;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,11 +18,12 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.OTPModel;
 import com.mart.mymartbee.model.OTPVerifyModel;
@@ -87,7 +83,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
         submit_btn = (Button) findViewById(R.id.submit_btn);
         bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.otp_bottomsheet);
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_otp);
         bottomSheetDialog.setCancelable(false);
 
         otp_view = (OtpTextView)bottomSheetDialog.findViewById(R.id.otp_view);
@@ -109,12 +105,9 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                 if(!countString.equalsIgnoreCase("DONE")) {
                     otp_seconds.setText(" in " + countString);
                 } else if(countString.equalsIgnoreCase("DONE")) {
-//                    otpViewModel.getPendingTime().removeObservers(MobileLogin.this);
-                    Log.e("appSample", "DONE");
                     otp_seconds.setVisibility(View.GONE);
                     enableResendBtn();
                 } else {
-                    Log.e("appSample", "Else");
                 }
             }
         });
@@ -129,8 +122,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                 imm.hideSoftInputFromWindow(otp_view.getWindowToken(), 0);
                 Log.e("appSample", "Completed: " + otp);
                 otpStr = "" + otp;
-
-                verifyOTP();
+                    verifyOTP();
 
             }
         });
@@ -145,7 +137,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
             case R.id.verify_btn:
                 if(otpStr.equalsIgnoreCase("")) {
-                    Toast.makeText(MobileLogin.this, "Please enter OTP!", Toast.LENGTH_SHORT).show();
+                    CommonMethods.Toast(MobileLogin.this, "Please enter OTP!");
                     return;
                 }
                 verifyOTP();
@@ -157,18 +149,24 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
                 mobileStr = mobile_edit.getText().toString().trim();
                 if(mobileStr.length() < 9) {
-                    Toast.makeText(MobileLogin.this, "Enter valid mobile number", Toast.LENGTH_SHORT).show();
+                    CommonMethods.Toast(MobileLogin.this, "Enter valid mobile number");
                     return;
                 }
                 sendOTP();
-
                 break;
         }
     }
 
+
     private void sendOTP() {
-        getLifecycle().addObserver(otpViewModel);
-        otpViewModel.getOTP("+60", mobileStr);
+        if (NetworkAvailability.isNetworkAvailable(MobileLogin.this)) {
+            getLifecycle().addObserver(otpViewModel);
+            otpViewModel.getOTP("+60", mobileStr);
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(MobileLogin.this, Constants.NETWORK_ENABLE_SETTINGS);
+        }
+
         otpViewModel.getOTPLiveData().observe(MobileLogin.this, new Observer<OTPModel>() {
             @Override
             public void onChanged(OTPModel otpModel) {
@@ -180,7 +178,6 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                 otp_seconds.setVisibility(View.VISIBLE);
 
                 otpViewModel.getOTPLiveData().removeObservers(MobileLogin.this);
-
                 otpViewModel.startCounter();
             }
         });
@@ -193,7 +190,12 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
         params.put("otp", otpStr);
         params.put("gcm_id", StorageDatas.getInstance().getFirebaseToken());
 
-        otpViewModel.verifyOTP(params);
+        if (NetworkAvailability.isNetworkAvailable(MobileLogin.this)) {
+            otpViewModel.verifyOTP(params);
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(MobileLogin.this, Constants.NETWORK_ENABLE_SETTINGS);
+        }
         otpViewModel.verifyOTPLiveData().observe(MobileLogin.this, new Observer<OTPVerifyModel>() {
             @Override
             public void onChanged(OTPVerifyModel otpVerifyModel) {
@@ -203,6 +205,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                 mobileNum = "" + mobileStr;
 
                 Log.e("appSample", "Status: " + otpVerifyModel.isStrStatus());
+                Log.e("appSample", "Module: " + otpVerifyModel.getStrModule());
                 mobileStr = "";
                 mobile_edit.setText(mobileStr);
                 otp_view.setOTP("");
@@ -221,6 +224,8 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LATITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLatitude(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LONGITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLongitude(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_PRODUCTS_COUNT, TripleDes.getDESEncryptValue("0", myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_START_TIME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrOpenTime(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrCloseTime(), myKeyValue) );
 
                         Intent homeIntent = new Intent(MobileLogin.this, HomeActivity.class);
                         startActivityForResult(homeIntent, MOBILE_LOGIN_to_HOME);
@@ -237,7 +242,6 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                 } else {
                     showErrorMessage(otpVerifyModel.getStrMessage());
                 }
-
             }
         });
     }
@@ -289,7 +293,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
         verify_btn.setBackgroundColor(R.color.yellow_btn_color);
     }
 
-    public void disableVerifyBtn(){
+    public void disableVerifyBtn() {
         verify_btn.setEnabled(false);
         verify_btn.setClickable(false);
         verify_btn.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black));

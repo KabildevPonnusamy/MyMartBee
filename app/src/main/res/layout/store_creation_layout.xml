@@ -1,156 +1,254 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/main_color">
+        android:layout_height="56dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/act_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/image_desc"
             android:src="@drawable/back_arrow"
-            app:tint="@color/white"
-            android:contentDescription="@string/image_desc"/>
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/create_your_store"
-            android:textSize="17sp"
-            android:gravity="center"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/museosans"
-            android:textColor="@color/white"/>
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/store_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:src="@drawable/store_zero"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/layout_store"
-            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="@string/create_your_store"
             android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/store_image"
-            android:layout_marginStart="10dp"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/store_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/museosans"
-                android:hint="@string/store_name"
-                android:autofillHints="@string/store_name"
-                android:inputType="textCapSentences"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
-                android:maxLength="30"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black"
-                android:textSize="15sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/upload_image"
-        android:layout_width="96dp"
-        android:layout_height="wrap_content"
-        android:text="@string/upload_text"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        android:background="@drawable/btn_bgnd"/>
-
     <LinearLayout
-        android:id="@+id/category_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/frag_bgnds"
         android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/category_tv"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_category"
-            android:textSize="16sp"
-            android:maxLines="1"
-            android:text=""
-            android:fontFamily="@font/museosans"
-            android:textColor="@color/black"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/main_color"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/store_image"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:src="@drawable/store_zero"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="2dp" />
 
-    </LinearLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_store"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/store_image">
 
-    <LinearLayout
-        android:id="@+id/address_ll"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="vertical">
+                <EditText
+                    android:id="@+id/store_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/store_name"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                    android:fontFamily="@font/museosans"
+                    android:hint="@string/store_name"
+                    android:inputType="textCapSentences"
+                    android:maxLength="30"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="@dimen/input_text_size" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/address_tv"
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/upload_image"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_bgnd"
+            android:gravity="center"
+            android:text="@string/upload_text"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/select_address"
-            android:textSize="16sp"
-            android:maxLines="1"
-            android:text=""
-            android:fontFamily="@font/museosans"
-            android:textColor="@color/black"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
 
-        <View
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_cate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/category_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/category_necessary"
+                    android:fontFamily="@font/museosans"
+                    android:hint="@string/category_necessary"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_marginTop="2dp"
-            android:background="@color/main_color"/>
+            android:layout_height="55dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:weightSum="2"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:baselineAligned="false">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/start_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/start_time"
+                    android:fontFamily="@font/museosans"
+                    android:hint="@string/start_time"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/close_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/close_time"
+                    android:fontFamily="@font/museosans"
+                    android:hint="@string/close_time"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_weight="1">
+
+
+                <Spinner
+                    android:id="@+id/type_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="true"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/shadow_color"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/address_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/address_necessary"
+                    android:fontFamily="@font/museosans"
+                    android:hint="@string/address_necessary"
+                    android:inputType="textCapSentences"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="@dimen/input_text_size" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/create_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="70dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/btn_bgnd"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="@string/create_your_store"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/create_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/btn_bgnd"
-        android:text="@string/create_your_store"
-        android:textColor="@color/white"
-        android:textStyle="bold" />
 
 </LinearLayout>

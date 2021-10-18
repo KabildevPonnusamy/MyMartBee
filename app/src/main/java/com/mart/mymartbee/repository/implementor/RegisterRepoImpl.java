@@ -29,8 +29,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RegisterRepoImpl implements RegisterRepo {
 
-
-    private MutableLiveData<RegisterModel> updateProfileModel_MLD;
     private MutableLiveData<String> regErrorMLD;
     private MutableLiveData<Boolean> progressbarObservable;
 
@@ -43,10 +41,7 @@ public class RegisterRepoImpl implements RegisterRepo {
         return instance;
     }
 
-
     public RegisterRepoImpl() {
-
-        updateProfileModel_MLD = new MutableLiveData<RegisterModel>();
         regErrorMLD = new MutableLiveData<String>();
         progressbarObservable = new MutableLiveData<Boolean>();
     }
@@ -54,6 +49,7 @@ public class RegisterRepoImpl implements RegisterRepo {
     @Override
     public MutableLiveData<RegisterModel> updateProfileRepo(Map<String, String> params) throws Exception {
         progressbarObservable.setValue(true);
+        MutableLiveData<RegisterModel> updateProfileModel_MLD = new MutableLiveData<RegisterModel>();
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
         Call<RegisterModel> call = callBack.updateProfile(params);
         call.enqueue(new Callback<RegisterModel>() {
@@ -100,6 +96,8 @@ public class RegisterRepoImpl implements RegisterRepo {
         RequestBody r_Shop = RequestBody.create(MediaType.parse("text/plain"), params.get("shop"));
         RequestBody r_Category = RequestBody.create(MediaType.parse("text/plain"), params.get("cat_id"));
         RequestBody r_Address = RequestBody.create(MediaType.parse("text/plain"), params.get("address"));
+        RequestBody r_close_time = RequestBody.create(MediaType.parse("text/plain"), params.get("close_time"));
+        RequestBody r_open_time = RequestBody.create(MediaType.parse("text/plain"), params.get("open_time"));
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/*"), file);
@@ -112,19 +110,17 @@ public class RegisterRepoImpl implements RegisterRepo {
 
         ApiCallBack apiService = retrofit.create(ApiCallBack.class);
         apiService.sellerRegistration(body, r_CountryCode, r_MobileNumber, r_ImieNo, r_GcmId, r_Latitude, r_Longitude,
-                r_Shop, r_Category, r_Address).enqueue(new Callback<RegisterModel>() {
+                r_Shop, r_Category, r_Address, r_open_time, r_close_time).enqueue(new Callback<RegisterModel>() {
             @Override
             public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
                 progressbarObservable.setValue(false);
                 try {
                     if (response.isSuccessful()) {
-                        Log.e("appSample", "RegRespSuccess");
                         if (response.body() != null) {
                             Log.e("appSample", "Success: " + response.body());
                             registerModel_MLD.setValue(response.body());
                         }
                     } else {
-                        Log.e("appSample", "RegElse");
                         registerModel_MLD.setValue(null);
                         regErrorMLD.setValue("No Response");
                     }

@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,6 +20,7 @@ import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.CustomLinearLayoutManager;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.view.fragments.HomeFragment;
+import com.mart.mymartbee.view.fragments.ProductsFragment;
 
 import java.util.ArrayList;
 
@@ -26,14 +28,14 @@ public class SubCateTitleAdapter extends RecyclerView.Adapter<SubCateTitleAdapte
 
     private ArrayList<Products_Model.ProductCategories> productsArrayList;
     private Context context;
-    HomeFragment homeFragmentObj;
+    ProductsFragment productFragmentObj;
     LinearLayoutManager layoutManager;
 
     public SubCateTitleAdapter(ArrayList<Products_Model.ProductCategories> productsArrayList, Context context,
-                               HomeFragment homeFragmentObj, LinearLayoutManager layoutManager) {
+                               ProductsFragment productFragmentObj, LinearLayoutManager layoutManager) {
         this.productsArrayList = productsArrayList;
         this.context = context;
-        this.homeFragmentObj = homeFragmentObj;
+        this.productFragmentObj = productFragmentObj;
         this.layoutManager = layoutManager;
     }
 
@@ -49,10 +51,15 @@ public class SubCateTitleAdapter extends RecyclerView.Adapter<SubCateTitleAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.product_title.setText(productsArrayList.get(position).getStrCateName());
         boolean isExpanded = productsArrayList.get(position).isExpanded();
+
         if(isExpanded) {
             holder.product_arrow.setImageResource(getImage("arrow_down"));
+            holder.subcate_item_layout.setBackgroundResource(R.drawable.homesubcate_selected);
+            holder.product_title.setTextColor(ContextCompat.getColor(context, R.color.white));
         } else {
             holder.product_arrow.setImageResource(getImage("arrow_up"));
+            holder.subcate_item_layout.setBackgroundResource(R.drawable.homesubcate_unselected);
+            holder.product_title.setTextColor(ContextCompat.getColor(context, R.color.black));
         }
         holder.products_list_layout.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
@@ -64,12 +71,14 @@ public class SubCateTitleAdapter extends RecyclerView.Adapter<SubCateTitleAdapte
         } else {
             prodItems = new ArrayList<Products_Model.ProductCategories.ProductsList>();
         }
+
         holder.product_view_option.setVisibility(prodItems.size() > 4 ? View.VISIBLE : View.GONE);
 
         Log.e("appSample", "Size: " + prodItems.size());
         holder.my_products_recycle.setHasFixedSize(true);
-        holder.my_products_recycle.setLayoutManager(new GridLayoutManager(context, 2));
-        holder.homeProductsAdapter= new HomeProductsAdapter(prodItems, context, homeFragmentObj,
+//        holder.my_products_recycle.setLayoutManager(new GridLayoutManager(context, 2));
+        holder.my_products_recycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        holder.homeProductsAdapter= new HomeProductsAdapter(prodItems, context, productFragmentObj,
                 productsArrayList.get(position).getStrCateName(), productsArrayList.get(position).getStrCateId());
         holder.my_products_recycle.setAdapter(holder.homeProductsAdapter);
     }
@@ -110,7 +119,7 @@ public class SubCateTitleAdapter extends RecyclerView.Adapter<SubCateTitleAdapte
             product_view_option.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeFragment) homeFragmentObj).movetoProductViewAll(productsArrayList.get(getAdapterPosition()).getProductsLists(),
+                    ((ProductsFragment) productFragmentObj).movetoProductViewAll(productsArrayList.get(getAdapterPosition()).getProductsLists(),
                             productsArrayList.get(getAdapterPosition()).getStrCateName(), productsArrayList.get(getAdapterPosition()).getStrCateId());
                 }
             });
@@ -118,13 +127,11 @@ public class SubCateTitleAdapter extends RecyclerView.Adapter<SubCateTitleAdapte
             subcate_item_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("appSample", "Position: " + getAbsoluteAdapterPosition());
                     Products_Model.ProductCategories products = productsArrayList.get(getAdapterPosition());
                     products.setExpanded(!products.isExpanded());
                     notifyItemChanged(getAdapterPosition());
                 }
             });
-
         }
     }
 }

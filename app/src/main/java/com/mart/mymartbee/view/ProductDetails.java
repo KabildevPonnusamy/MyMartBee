@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
@@ -68,7 +69,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         productsViewModel.progressProductUpdation().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean progressObserve) {
-                if(progressObserve) {
+                if (progressObserve) {
                     showProgress();
                 } else {
                     hideProgress();
@@ -103,14 +104,21 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         strSubCateId = bundle.getString("subcateId");
         prod_details_title.setText(productsObj.getStrProduct_title());
         prod_details_subcate.setText(bundle.getString("subcateName"));
-        prod_details_oldprice.setText("Rs. " + productsObj.getStrProduct_oldprice());
-        prod_details_price.setText("Rs. " + productsObj.getStrProduct_price());
+
+        String oldPrice = productsObj.getStrProduct_oldprice().replace(".00", "");
+        prod_details_oldprice.setText("RM. " + oldPrice);
+
+        String newPrice = productsObj.getStrProduct_price().replace(".00", "");
+        prod_details_price.setText("RM. " + newPrice);
+
+        /*prod_details_oldprice.setText("RM. " + productsObj.getStrProduct_oldprice());
+        prod_details_price.setText("RM. " + productsObj.getStrProduct_price());*/
         prod_details_desc.setText(productsObj.getStrProduct_description());
         prod_details_stock_with_uom.setText(productsObj.getStrProduct_quantity() + " " + productsObj.getStrProduct_uom());
         Glide.with(getApplicationContext()).load(productsObj.getStrProduct_image()).into(prod_details_image);
 
         prod_details_oldprice.setPaintFlags(prod_details_oldprice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            }
+    }
 
     @Override
     public void onClick(View v) {
@@ -118,27 +126,43 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             case R.id.prod_details_back:
                 finish();
                 break;
-            case R.id.product_edit_btn:
-                Bundle bundle = new Bundle();
-                bundle.putString("fromActivity", "ProductDetails");
-                bundle.putString("fromActivitySubcategory", prod_details_subcate.getText().toString().trim());
-                bundle.putInt("fromActivitySubcategoryID", Integer.parseInt(strSubCateId));
-                Intent intent = new Intent(ProductDetails.this, AddProduct.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, PRODUCT_DETAILS_to_PRODUCT_EDIT);
 
+            case R.id.product_edit_btn:
+                if (NetworkAvailability.isNetworkAvailable(ProductDetails.this)) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("fromActivity", "ProductDetails");
+                    bundle.putString("fromActivitySubcategory", prod_details_subcate.getText().toString().trim());
+                    bundle.putInt("fromActivitySubcategoryID", Integer.parseInt(strSubCateId));
+                    Intent intent = new Intent(ProductDetails.this, AddProduct.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, PRODUCT_DETAILS_to_PRODUCT_EDIT);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(ProductDetails.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
                 break;
+
             case R.id.product_delete_btn:
                 Map<String, String> params = new HashMap<>();
                 params.put("seller_id", strSellerId);
                 params.put("cat_id", strCateId);
                 params.put("product_id", strProductId);
 
-                productsViewModel.deleteProducts(params);
+                if (NetworkAvailability.isNetworkAvailable(ProductDetails.this)) {
+                    productsViewModel.deleteProducts(params);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(ProductDetails.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
+
                 productsViewModel.deleteProductLV().observe(this, new Observer<Products_Model>() {
                     @Override
                     public void onChanged(Products_Model products_model) {
-                        showSuccessDialog(products_model);
+                        if (products_model.isStrStatus() == false) {
+                            showErrorDialog(products_model.getStrMessage());
+                        } else {
+                            showSuccessDialog(products_model);
+                        }
                     }
                 });
                 break;
@@ -153,12 +177,26 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     }
 
     private void hideProgress() {
-        if(progressDialog != null) {
-            if(progressDialog.isShowing()) {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
         }
+    }
+
+    private void showErrorDialog(String errMessage) {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ProductDetails.this, SweetAlertDialog.ERROR_TYPE);
+        sweetAlertDialog.setTitleText("Error!");
+        sweetAlertDialog.setContentText(errMessage);
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                sweetAlertDialog.dismiss();
+            }
+        });
     }
 
     private void showSuccessDialog(Products_Model products_model) {
@@ -181,8 +219,8 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PRODUCT_DETAILS_to_PRODUCT_EDIT) {
-            if(resultCode == PRODUCT_UPDATED_success) {
+        if (requestCode == PRODUCT_DETAILS_to_PRODUCT_EDIT) {
+            if (resultCode == PRODUCT_UPDATED_success) {
                 setResult(PRODUCT_UPDATED_success);
                 finish();
             }

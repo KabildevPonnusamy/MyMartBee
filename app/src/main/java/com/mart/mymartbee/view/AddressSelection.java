@@ -9,12 +9,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,11 +29,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.GPSTracker;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
 
 import java.io.IOException;
 import java.util.List;
@@ -104,18 +103,23 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.select_btn:
-                strLoc = your_location.getText().toString().trim();
-                if(strLoc.equalsIgnoreCase("")) {
-                    Toast.makeText(getApplicationContext(), "Please pick location", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                if (NetworkAvailability.isNetworkAvailable(AddressSelection.this)) {
+                    strLoc = your_location.getText().toString().trim();
+                    if(strLoc.equalsIgnoreCase("")) {
+                        CommonMethods.Toast(AddressSelection.this,  "Please pick location");
+                        return;
+                    }
 
-                Intent intent = new Intent();
-                intent.putExtra("SelectedLatitude", "" + lat);
-                intent.putExtra("SelectedLongitude", "" + lon);
-                intent.putExtra("SelectedAddress", strLoc);
-                setResult(ADDRESS_SELECTED, intent);
-                finish();
+                    Intent intent = new Intent();
+                    intent.putExtra("SelectedLatitude", "" + lat);
+                    intent.putExtra("SelectedLongitude", "" + lon);
+                    intent.putExtra("SelectedAddress", strLoc);
+                    setResult(ADDRESS_SELECTED, intent);
+                    finish();
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(AddressSelection.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
                 break;
 
             case R.id.address_back:
@@ -286,5 +290,15 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
     public void onLowMemory() {
         super.onLowMemory();
         mapFragment.onLowMemory();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NETWORK_ENABLE_SETTINGS) {
+            if(mapFragment == null) {
+                locationInit();
+            }
+        }
     }
 }

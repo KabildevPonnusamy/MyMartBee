@@ -1,0 +1,13 @@
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <stroke
+        android:width="2dp"
+        android:color="@color/red" />
+
+    <solid
+        android:color="@color/button_red" />
+
+    <corners
+        android:radius="3dp" />
+
+</shape>

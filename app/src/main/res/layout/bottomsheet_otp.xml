@@ -105,6 +105,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="25dp"
+        android:foreground="?android:attr/selectableItemBackground"
         android:background="@color/yellow_btn_color"
         android:text="@string/verify_option"
         android:textStyle="bold"

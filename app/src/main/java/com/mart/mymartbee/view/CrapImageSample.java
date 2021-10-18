@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.PathUtil;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -33,7 +33,6 @@ public class CrapImageSample extends AppCompatActivity implements Constants {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.e("appSample", "CrapImageSample");
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAllowFlipping(false)
@@ -57,22 +56,26 @@ public class CrapImageSample extends AppCompatActivity implements Constants {
                 if(uri != null) {
 
                     try {
-                        String filePath= PathUtil.getPath(getApplicationContext(), uri);
+                        String filePath = PathUtil.getPath(getApplicationContext(), uri);
                         Log.e("appSample", "File_Path: " + filePath);
 
                         ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
                         File directory = contextWrapper.getDir(getFilesDir().getName(), Context.MODE_PRIVATE);
 
-                        tempPath = new File(directory + "/uploads/");
+                        Intent intent = new Intent();
+                        intent.putExtra("FilePath", "" + filePath);
+                        setResult(CROP_success, intent);
+                        finish();
 
-                        new ImageCompressionAsyncTask(this, filePath).execute(uri.toString(), "" + tempPath);
+//                        tempPath = new File(directory + "/uploads/");
+//                        new ImageCompressionAsyncTask(this, filePath).execute(uri.toString(), "" + tempPath);
 
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Toast.makeText(getApplicationContext(), getString(R.string.some_issues_text), Toast.LENGTH_SHORT).show();
+                CommonMethods.Toast(CrapImageSample.this,  getString(R.string.some_issues_text));
             } else {
                 finish();
             }

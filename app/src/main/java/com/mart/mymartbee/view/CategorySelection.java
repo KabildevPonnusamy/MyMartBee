@@ -12,13 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,9 +22,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mart.mymartbee.R;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.model.Category_Model;
-import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.viewmodel.implementor.CateGoryViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.CategoryViewModel;
 import com.mart.mymartbee.view.adapters.CategoryAdapter;
@@ -99,7 +96,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
         cate_recycle = findViewById(R.id.cate_recycle);
 
         bottomSheetDialog = new BottomSheetDialog(this);
-        bottomSheetDialog.setContentView(R.layout.add_category_bottomsheet);
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_add_category);
         bottomSheetDialog.setCancelable(true);
         category_name = (EditText) bottomSheetDialog.findViewById(R.id.category_name);
         add_cate_sheet_btn = (Button) bottomSheetDialog.findViewById(R.id.add_cate_sheet_btn);
@@ -111,7 +108,13 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     public void updateView() {
-        cateGoryViewModel.getCateGories();
+        if (NetworkAvailability.isNetworkAvailable(CategorySelection.this)) {
+            cateGoryViewModel.getCateGories();
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(CategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
+        }
+
         cateGoryViewModel.getCategoryListLV().observe(this, new Observer<Category_Model>() {
             @Override
             public void onChanged(Category_Model category_model) {
@@ -143,7 +146,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
             case R.id.add_cate_sheet_btn:
                 String strCate = category_name.getText().toString().trim();
                 if(strCate.equalsIgnoreCase("")) {
-                    Toast.makeText(CategorySelection.this, "Please enter category", Toast.LENGTH_SHORT).show();
+                    CommonMethods.Toast(CategorySelection.this,  "Please enter category");
                     return;
                 }
 
@@ -151,7 +154,12 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                 params.put("mobile_no", strMobileNumber);
                 params.put("categorie_name", strCate);
 
-                cateGoryViewModel.getAddedCategories(params);
+                if (NetworkAvailability.isNetworkAvailable(CategorySelection.this)) {
+                    cateGoryViewModel.getAddedCategories(params);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(CategorySelection.this, CATEGORY_CREATION);
+                }
                 cateGoryViewModel.getAddedCategoryListLV().observe(this, new Observer<Category_Model>() {
                     @Override
                     public void onChanged(Category_Model category_model) {
@@ -164,21 +172,6 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                         }
                     }
                 });
-
-                /*Category_Model.Categorys items = new Category_Model.Categorys();
-                items.setStrCategoryId("" + categoryList.size() + 1);
-                items.setStrCateGoryName(strCate);
-                items.setStrCategoryImage("");
-                items.setStrCategoryStatus("1");
-                prefcategoryList.add(items);
-
-                StorageDatas.getInstance().saveMyOwnCategory(prefcategoryList, MYOWNCATEGORY, getApplicationContext());
-
-                categoryList.add(items);
-                categoryAdapter.notifyDataSetChanged();
-
-                bottomSheetDialog.dismiss();*/
-
 
                 break;
         }
@@ -278,6 +271,14 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                 progressDialog.dismiss();
                 progressDialog = null;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == NETWORK_ENABLE_SETTINGS) {
+            updateView();
         }
     }
 }

@@ -9,8 +9,8 @@
         android:id="@+id/subcate_item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/black_border"
-        android:padding="7dp">
+        android:background="@drawable/homesubcate_unselected"
+        android:padding="5dp">
 
         <TextView
             android:id="@+id/product_title"
@@ -26,6 +26,26 @@
             android:layout_toStartOf="@+id/product_arrow"
             android:fontFamily="@font/museosans"
             android:textColor="@color/black"/>
+
+        <!--<ImageView
+            android:id="@+id/subproduct_edit"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_subcate_edit"
+            android:layout_toStartOf="@+id/subproduct_delete"
+            android:contentDescription="@string/image_desc" />-->
+
+        <!--<ImageView
+            android:id="@+id/subproduct_menu"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="10dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/icon_menu_list"
+            android:layout_toStartOf="@+id/product_arrow"
+            android:contentDescription="@string/image_desc" />-->
 
         <ImageView
             android:id="@+id/product_arrow"
@@ -61,13 +81,14 @@
             android:id="@+id/product_view_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="12sp"
             android:maxLines="1"
             android:layout_marginEnd="5dp"
             android:textAllCaps="true"
             android:text="@string/view_all_text"
             android:textStyle="bold"
             android:layout_gravity="end"
+            android:foreground="?android:attr/selectableItemBackground"
             android:background="@drawable/view_btn_bgnd"
             android:fontFamily="@font/museosans"
             android:textColor="@color/black"/>

@@ -29,4 +29,16 @@ public class Infos {
     * https://www.youtube.com/watch?v=GhfJTOu3_SE
     * */
 
+    /*Push Notification Sample Code
+    *
+    * https://github.com/firebase/quickstart-android/tree/master/messaging
+    * */
+
+    /*
+    *    Country codes API => https://countriesnow.space/api/v0.1/countries/codes
+    * https://documenter.getpostman.com/view/1134062/T1LJjU52#4a76c2d7-6826-43a3-98b0-18d6d929f414
+    *
+    *
+    * */
+
 }

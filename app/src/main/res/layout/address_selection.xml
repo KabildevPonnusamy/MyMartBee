@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white">
+    android:background="@color/colorPrimary"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:layout_width="match_parent"
@@ -17,26 +16,28 @@
             android:id="@+id/address_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:contentDescription="@string/image_desc"
             android:src="@drawable/back_arrow"
-            app:tint="@color/white"
-            android:contentDescription="@string/image_desc"/>
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/select_address"
-            android:textAllCaps="true"
-            android:textSize="17sp"
-            android:gravity="center"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/museosans"
-            android:textColor="@color/white"/>
+            android:gravity="center"
+            android:text="@string/select_your_address"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold" />
 
     </androidx.appcompat.widget.Toolbar>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/frag_bgnds">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,15 +48,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UselessParent">
 
                 <LinearLayout
-                    xmlns:tools="http://schemas.android.com/tools"
                     android:id="@+id/frame_map"
                     android:layout_width="match_parent"
-                    android:layout_height="450dp"
+                    android:layout_height="420dp"
                     tools:context=".Frag_Map">
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -66,10 +66,9 @@
                             android:name="com.google.android.gms.maps.SupportMapFragment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
                             android:layout_alignParentTop="true"
                             android:layout_alignParentBottom="true" />
-
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -83,6 +82,7 @@
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:layout_marginBottom="25dp"
+                                android:contentDescription="@string/image_desc"
                                 android:src="@drawable/loc_icon" />
 
                         </LinearLayout>
@@ -98,65 +98,38 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@+id/frame_map"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="vertical"
+                        android:padding="10dp">
 
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="15dp" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:padding="10dp">
+                            android:fontFamily="@font/museosans"
+                            android:text="@string/your_loc"
+                            android:textColor="@color/black"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
 
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/museosans"
-                                    android:text="@string/your_loc"
-                                    android:textColor="@color/black"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-
-                                <RelativeLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:id="@+id/your_location"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_alignParentStart="true"
-                                        android:fontFamily="@font/museosans"
-                                        android:singleLine="true"
-                                        android:textColor="@color/black"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                </RelativeLayout>
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/your_location"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/museosans"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/input_text_size"
+                            android:textStyle="bold" />
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
+                            android:layout_marginBottom="15dp"
                             android:background="@color/shadow_color" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="15dp" />
 
                     </LinearLayout>
 
@@ -171,6 +144,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/light_white"
             android:orientation="vertical">
 
             <View
@@ -178,39 +152,23 @@
                 android:layout_height="1dp"
                 android:background="@color/shadow_color" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="15dp"
-                android:background="@color/light_white"
-                android:orientation="horizontal" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_white" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <Button
                 android:id="@+id/select_btn"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
                 android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/button_border"
                 android:fontFamily="@font/museosans"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:text="@string/select_location"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 android:textSize="15sp"
                 android:textStyle="bold" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
 
         </LinearLayout>
 

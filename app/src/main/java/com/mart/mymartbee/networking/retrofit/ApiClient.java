@@ -44,7 +44,7 @@ public class ApiClient {
             public Response intercept(Interceptor.Chain chain) throws IOException {
                 Request original = chain.request();
                 Request request = original.newBuilder()
-                        .header("x-access-token","YOUR_ACCESS_TOKEN")
+                        .header("x-access-token", "YOUR_ACCESS_TOKEN")
                         .method(original.method(), original.body())
                         .build();
 

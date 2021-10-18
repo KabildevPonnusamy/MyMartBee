@@ -38,7 +38,6 @@ public class OTPViewModelImpl extends ViewModel implements OTPViewModel {
         countDownTimer = new CountDownTimer(milliSeconds, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.e("appSample", "Counter Started");
                 long min = millisUntilFinished / 1000;
                 String strTime = String.format("%d:%d",
                         TimeUnit.MILLISECONDS.toMinutes( millisUntilFinished),
@@ -50,7 +49,6 @@ public class OTPViewModelImpl extends ViewModel implements OTPViewModel {
 
             @Override
             public void onFinish() {
-                Log.e("appSample", "Seconds: Finished");
                 countDownTimer.cancel();
                 pendingTimeData.setValue("DONE");
             }
@@ -67,7 +65,6 @@ public class OTPViewModelImpl extends ViewModel implements OTPViewModel {
         if(countDownTimer != null) {
             countDownTimer.cancel();
             pendingTimeData.setValue("DONE");
-            Log.e("appSample", "Counter: Stopped");
         }
     }
 

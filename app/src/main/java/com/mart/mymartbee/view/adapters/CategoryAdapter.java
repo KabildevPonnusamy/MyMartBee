@@ -2,17 +2,12 @@ package com.mart.mymartbee.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -22,7 +17,6 @@ import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.model.Category_Model;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
@@ -39,7 +33,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category_items, parent,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent,
                 false);
         return new ViewHolder(v);
     }
@@ -57,13 +51,13 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
         if (selectedId == Integer.parseInt(categoryList.get(position).getStrCategoryId())) {
             holder.category_border.setBackgroundResource(R.drawable.selected_border);
-            holder.category_image.setColorFilter(ContextCompat.getColor(context, R.color.main_color),
-                    PorterDuff.Mode.MULTIPLY);
+            /*holder.category_image.setColorFilter(ContextCompat.getColor(context, R.color.main_color),
+                    PorterDuff.Mode.MULTIPLY);*/
             holder.category_title.setTypeface(null, Typeface.BOLD);
         } else {
             holder.category_border.setBackgroundResource(R.drawable.unselect_border);
-            holder.category_image.setColorFilter(ContextCompat.getColor(context, R.color.black),
-                    PorterDuff.Mode.MULTIPLY);
+            /*holder.category_image.setColorFilter(ContextCompat.getColor(context, R.color.black),
+                    PorterDuff.Mode.MULTIPLY);*/
             holder.category_title.setTypeface(null, Typeface.NORMAL);
         }
     }

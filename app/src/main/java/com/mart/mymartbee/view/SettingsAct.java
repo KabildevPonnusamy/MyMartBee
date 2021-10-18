@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
+import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
@@ -21,10 +20,9 @@ import com.suke.widget.SwitchButton;
 public class SettingsAct extends AppCompatActivity implements View.OnClickListener, Constants {
 
     ImageView settings_back;
-    LinearLayout logout_layout, share_whatsapp_layout;
-    TextView version_number;
+    LinearLayout share_whatsapp_layout; // logout_layout
     MyPreferenceDatas preferenceDatas;
-    String myKeyValue = "";
+    String myKeyValue = "", strCateName = "";
     SwitchButton notification_switch;
 
     @Override
@@ -40,21 +38,18 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
     private void getMyPreferences() {
         myKeyValue = getResources().getString(R.string.myTripleKey);
         preferenceDatas = new MyPreferenceDatas(SettingsAct.this);
+        strCateName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
     }
 
     private void initView() {
         notification_switch = findViewById(R.id.notification_switch);
         settings_back = findViewById(R.id.settings_back);
-        logout_layout = findViewById(R.id.logout_layout);
         share_whatsapp_layout = findViewById(R.id.share_whatsapp_layout);
-        version_number = findViewById(R.id.version_number);
-        version_number.setText( "MART" + BuildConfig.VERSION_NAME);
         setListeners();
     }
 
     private void setListeners() {
         settings_back.setOnClickListener(this);
-        logout_layout.setOnClickListener(this);
         share_whatsapp_layout.setOnClickListener(this);
 
         notification_switch.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
@@ -80,11 +75,6 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
                 shareOnWhatsapp();
                 break;
 
-        case R.id.logout_layout:
-                preferenceDatas.clearPreference(getApplicationContext());
-                setResult(LOGOUT);
-                finish();
-                break;
         }
     }
 
@@ -92,11 +82,11 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
         whatsappIntent.setType("text/plain");
         whatsappIntent.setPackage("com.whatsapp");
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, StorageDatas.getInstance().getStoreWhatsappLink() + " \n\n   Please visit my store to buy electronics products on very low cost.");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, StorageDatas.getInstance().getStoreWhatsappLink() + " \n\n   Please visit my store to buy " + strCateName +" products on very low cost.");
         try {
             startActivity(whatsappIntent);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(getApplicationContext(), "WhatsApp have not been installed.", Toast.LENGTH_SHORT).show();
+            CommonMethods.Toast(SettingsAct.this,  "WhatsApp have not been installed.");
         }
     }
 }

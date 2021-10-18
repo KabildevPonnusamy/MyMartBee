@@ -157,6 +157,7 @@
         <Button
             android:id="@+id/confirm_button"
             style="@style/dialog_blue_button"
+            android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/dialog_ok" />
     </LinearLayout>
 </LinearLayout>

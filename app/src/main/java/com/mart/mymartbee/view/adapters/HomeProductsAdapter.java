@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.view.fragments.HomeFragment;
+import com.mart.mymartbee.view.fragments.ProductsFragment;
 
 import java.util.ArrayList;
 
@@ -23,15 +24,16 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
 
     private ArrayList<Products_Model.ProductCategories.ProductsList> productsArrayList;
     private Context context;
-    HomeFragment homeFragmentObj;
+//    HomeFragment homeFragmentObj;
+    ProductsFragment productFragmentObj;
     String strSubCateName;
     String strSubCateId;
 
     public HomeProductsAdapter(ArrayList<Products_Model.ProductCategories.ProductsList> productsArrayList, Context context,
-                               HomeFragment homeFragmentObj, String strSubCateName, String strSubCateId) {
+                               ProductsFragment productFragmentObj, String strSubCateName, String strSubCateId) {
         this.productsArrayList = productsArrayList;
         this.context = context;
-        this.homeFragmentObj = homeFragmentObj;
+        this.productFragmentObj = productFragmentObj;
         this.strSubCateName = strSubCateName;
         this.strSubCateId = strSubCateId;
     }
@@ -46,7 +48,8 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.itm_product_price.setText("Rs. " + productsArrayList.get(position).getStrProduct_price());
+        String product_price = productsArrayList.get(position).getStrProduct_price().replace(".00", "");
+        holder.itm_product_price.setText("RM. " + product_price);
         holder.itm_product_name.setText(productsArrayList.get(position).getStrProduct_title());
         Glide.with(context).load(productsArrayList.get(position).getStrProduct_image()).into(holder.itm_product_image);
     }
@@ -82,7 +85,7 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
             item_product_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((HomeFragment) homeFragmentObj).movetoProductEdit(productsArrayList.get(getAdapterPosition()),
+                    ((ProductsFragment) productFragmentObj).movetoProductEdit(productsArrayList.get(getAdapterPosition()),
                             strSubCateName, strSubCateId);
                 }
             });

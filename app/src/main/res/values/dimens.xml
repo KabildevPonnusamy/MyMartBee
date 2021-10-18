@@ -80,4 +80,7 @@
     <dimen name="alert_width">290dp</dimen>
     <dimen name="common_circle_width">3dp</dimen>
     <dimen name="progress_circle_radius">34dp</dimen>
+
+    <dimen name="title_size">16sp</dimen>
+    <dimen name="input_text_size">15sp</dimen>
 </resources>

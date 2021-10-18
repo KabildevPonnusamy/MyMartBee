@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.storage.StorageDatas;
@@ -47,6 +48,14 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
 
         initView();
         getBundles();
+        checkInternetConnection();
+    }
+
+    public void checkInternetConnection() {
+        if (!NetworkAvailability.isNetworkAvailable(ProductViewAll.this)) {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(ProductViewAll.this, Constants.NETWORK_ENABLE_SETTINGS);
+        }
     }
 
     private void getBundles() {
@@ -99,7 +108,13 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
                 if (child != null && gestureDetector.onTouchEvent(e)) {
                     int position = rv.getChildAdapterPosition(child);
-                    moveProductDetails(position);
+
+                    if (NetworkAvailability.isNetworkAvailable(ProductViewAll.this)) {
+                        moveProductDetails(position);
+                    } else {
+                        NetworkAvailability networkAvailability = new NetworkAvailability(getApplicationContext());
+                        networkAvailability.noInternetConnection(ProductViewAll.this, Constants.NETWORK_ENABLE_SETTINGS);
+                    }
                 }
                 return false;
             }

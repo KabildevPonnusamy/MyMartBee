@@ -45,5 +45,7 @@
     <color name="light_white">#F3F3F3</color>
     <color name="light_white_two">#E5E5E5</color>
     <color name="light_sandle">#FDF4DC</color>
+    <color name="whatsapp_icon_color">#25D366</color>
+    <color name="snow_color">#FFFAFA </color>
 
 </resources>

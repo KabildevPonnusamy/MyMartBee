@@ -7,12 +7,16 @@ import android.preference.PreferenceManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.Dashboard_Model;
+import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.model.Products_Model;
+import com.mart.mymartbee.model.Reports_Model;
+import com.mart.mymartbee.view.OrderUpdate;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class StorageDatas {
+public class StorageDatas  {
 
     public static StorageDatas sObj;
 
@@ -36,6 +40,72 @@ public class StorageDatas {
     Products_Model products_model;
     Products_Model.ProductCategories.ProductsList productsObj;
     ArrayList<Products_Model.ProductCategories.ProductsList> cateProductsList;
+    Orders_Model.OrdersList ordersListObj;
+    Orders_Model orders_model;
+    Reports_Model.ReportsList reportListObj;
+    String currHour;
+    ArrayList<Dashboard_Model.ViewedProductList> viewedProductLists;
+    Dashboard_Model.PendingOrdersList pendingOrdersListObj;
+
+    public Dashboard_Model.PendingOrdersList getPendingOrdersListObj() {
+        return pendingOrdersListObj;
+    }
+
+    public void setPendingOrdersListObj(Dashboard_Model.PendingOrdersList pendingOrdersListObj) {
+        this.pendingOrdersListObj = pendingOrdersListObj;
+    }
+
+
+
+    public ArrayList<Dashboard_Model.ViewedProductList> getViewedProductLists() {
+        return viewedProductLists;
+    }
+
+    public void setViewedProductLists(ArrayList<Dashboard_Model.ViewedProductList> viewedProductLists) {
+        this.viewedProductLists = viewedProductLists;
+    }
+
+    public String getCurrHour() {
+        return currHour;
+    }
+
+    public void setCurrHour(String currHour) {
+        this.currHour = currHour;
+    }
+
+    public String getCurrMint() {
+        return currMint;
+    }
+
+    public void setCurrMint(String currMint) {
+        this.currMint = currMint;
+    }
+
+    String currMint;
+
+    public Reports_Model.ReportsList getReportListObj() {
+        return reportListObj;
+    }
+
+    public void setReportListObj(Reports_Model.ReportsList reportListObj) {
+        this.reportListObj = reportListObj;
+    }
+
+    public Orders_Model getOrders_model() {
+        return orders_model;
+    }
+
+    public void setOrders_model(Orders_Model orders_model) {
+        this.orders_model = orders_model;
+    }
+
+    public Orders_Model.OrdersList getOrdersListObj() {
+        return ordersListObj;
+    }
+
+    public void setOrdersListObj(Orders_Model.OrdersList ordersListObj) {
+        this.ordersListObj = ordersListObj;
+    }
 
     public ArrayList<Products_Model.ProductCategories.ProductsList> getCateProductsList() {
         return cateProductsList;
