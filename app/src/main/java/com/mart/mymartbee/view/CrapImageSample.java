@@ -37,7 +37,7 @@ public class CrapImageSample extends AppCompatActivity implements Constants {
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAllowFlipping(false)
                 .setActivityTitle("Select Image")
-                .setCropShape(CropImageView.CropShape.OVAL)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .setCropMenuCropButtonTitle("Save")
                 .setRequestedSize(200, 200)
                 .start(CrapImageSample.this);

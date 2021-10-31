@@ -83,4 +83,5 @@
 
     <dimen name="title_size">16sp</dimen>
     <dimen name="input_text_size">15sp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 </resources>

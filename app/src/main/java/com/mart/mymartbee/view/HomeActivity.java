@@ -20,7 +20,7 @@ import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.view.fragments.AccountFragment;
 import com.mart.mymartbee.view.fragments.HomeFragment;
 import com.mart.mymartbee.view.fragments.OrdersFragment;
-import com.mart.mymartbee.view.fragments.ProductsFragment;
+import com.mart.mymartbee.view.fragments.CategoriesFragment;
 import com.mart.mymartbee.view.fragments.ReportsFragment;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, Constants {
@@ -60,8 +60,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                             case R.id.menu_nav_home:
                                 moveHome();
                                 return true;
-                            case R.id.menu_nav_products:
-                                moveProducts();
+                            case R.id.menu_nav_categories:
+                                moveCategories();
                                 return true;
                             case R.id.menu_nav_order:
                                 moveOrders();
@@ -94,12 +94,12 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void moveProducts(){
-        Fragment productFragment = new ProductsFragment();
-        if(productFragment != null) {
-            FragmentTransaction pft = getSupportFragmentManager().beginTransaction();
-            pft.replace(R.id.frame_layout, productFragment);
-            pft.commit();
+    private void moveCategories() {
+        Fragment categoriesFragment = new CategoriesFragment();
+        if(categoriesFragment != null) {
+            FragmentTransaction cft = getSupportFragmentManager().beginTransaction();
+            cft.replace(R.id.frame_layout, categoriesFragment);
+            cft.commit();
         }
     }
 

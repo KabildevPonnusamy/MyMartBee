@@ -27,7 +27,6 @@
             android:fontFamily="@font/museosans"
             android:gravity="center"
             android:text="@string/select_your_address"
-            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/title_size"
             android:textStyle="bold" />
@@ -50,6 +49,13 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 tools:ignore="UselessParent">
+
+                <fragment
+                    android:id="@+id/autocomplete_fragment"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_above="@id/frame_map" />
 
                 <LinearLayout
                     android:id="@+id/frame_map"
@@ -112,24 +118,35 @@
                             android:textSize="13sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/your_location"
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:fontFamily="@font/museosans"
-                            android:singleLine="true"
-                            android:text=""
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/input_text_size"
-                            android:textStyle="bold" />
+                            android:background="@drawable/common_edittext"
+                            android:layout_marginTop="15dp">
 
-                        <View
+                            <TextView
+                                android:id="@+id/your_location"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:fontFamily="@font/museosans"
+                                android:singleLine="true"
+                                android:text=""
+                                android:padding="3dp"
+                                android:hint="@string/location"
+                                android:background="@null"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/input_text_size"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!--<View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginEnd="10dp"
                             android:layout_marginBottom="15dp"
-                            android:background="@color/shadow_color" />
+                            android:background="@color/shadow_color" />-->
 
                     </LinearLayout>
 

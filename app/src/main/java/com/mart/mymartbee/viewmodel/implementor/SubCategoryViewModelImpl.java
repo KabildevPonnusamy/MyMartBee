@@ -52,9 +52,9 @@ public class SubCategoryViewModelImpl extends ViewModel implements SubCategoryVi
     }
 
     @Override
-    public void getSubCategories(String cate_id) {
+    public void getSubCategories(String seller_id, String cate_id) {
         try {
-            mutableSubCategoryList = subCategoryListRepo.subCategoryRepo(cate_id);
+            mutableSubCategoryList = subCategoryListRepo.subCategoryRepo(seller_id, cate_id);
         } catch(Exception e) {
             mutableSubCateError.setValue(e.getMessage());
         }

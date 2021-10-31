@@ -46,6 +46,9 @@ public interface Constants {
     public static int ACCOUNT_FRAG_to_PROFILE = 28;
     public static int HOME_FRAG_to_PRODUCTVIEWS = 29;
     public static int HOME_FRAG_to_ORDER_DETAILS = 30;
+    public static int SUBCATE_to_SUBCATE_OPTIONS = 31;
+    public static int SUBCATE_update_success = 33;
+
 
     public static int LOGOUT = 1000;
     public static int PICK_IMAGE = 1001;

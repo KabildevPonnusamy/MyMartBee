@@ -174,6 +174,17 @@ public class Orders_Model {
             @SerializedName("total")
             @Expose
             private String strProductTotal;
+            @SerializedName("categorie_name")
+            @Expose
+            private String strCategoryName;
+
+            public String getStrCategoryName() {
+                return strCategoryName;
+            }
+
+            public void setStrCategoryName(String strCategoryName) {
+                this.strCategoryName = strCategoryName;
+            }
 
             public String getStrProductId() {
                 return strProductId;

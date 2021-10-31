@@ -2,15 +2,6 @@ package com.mart.mymartbee.storage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.mart.mymartbee.model.Category_Model;
-import com.mart.mymartbee.model.RegisterModel;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class MyPreferenceDatas {
 

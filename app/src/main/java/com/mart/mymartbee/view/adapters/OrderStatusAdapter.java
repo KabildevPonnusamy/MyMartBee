@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mart.mymartbee.R;
@@ -43,14 +45,30 @@ public class OrderStatusAdapter extends RecyclerView.Adapter<OrderStatusAdapter.
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.orderstatus_title.setText(ordersStatusLists.get(position).getStrOrderStatusName());
 
-        if (selectedId == Integer.parseInt(ordersStatusLists.get(position).getStrOrderStatusId())) {
-            holder.orderstatus_border.setBackgroundResource(R.drawable.order_status_selected);
-            holder.orderstatus_title.setTypeface(null, Typeface.BOLD);
-            holder.orderstatus_title.setTextColor(ContextCompat.getColor(context, R.color.white));
+        if (ordersStatusLists.get(position).getStrOrderStatusCount() == null) {
+            holder.orderstatus_count.setText("(0)");
         } else {
-            holder.orderstatus_title.setTextColor(ContextCompat.getColor(context, R.color.black));
-            holder.orderstatus_border.setBackgroundResource(R.drawable.order_status_unselected);
-            holder.orderstatus_title.setTypeface(null, Typeface.NORMAL);
+            holder.orderstatus_count.setText("(" + ordersStatusLists.get(position).getStrOrderStatusCount() + ")");
+        }
+
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.museosans);
+
+        if (selectedId == Integer.parseInt(ordersStatusLists.get(position).getStrOrderStatusId())) {
+//            holder.orderstatus_border.setBackgroundResource(R.drawable.order_status_selected);
+            holder.status_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.orderstatus_title.setTypeface(typeface, Typeface.BOLD);
+            holder.orderstatus_title.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+
+            holder.orderstatus_count.setTypeface(typeface, Typeface.BOLD);
+            holder.orderstatus_count.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        } else {
+//            holder.orderstatus_border.setBackgroundResource(R.drawable.order_status_unselected);
+            holder.status_cardView.setCardBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
+            holder.orderstatus_title.setTextColor(ContextCompat.getColor(context, R.color.white));
+            holder.orderstatus_title.setTypeface(typeface, Typeface.NORMAL);
+
+            holder.orderstatus_count.setTextColor(ContextCompat.getColor(context, R.color.white));
+            holder.orderstatus_count.setTypeface(typeface, Typeface.NORMAL);
         }
     }
 
@@ -66,13 +84,16 @@ public class OrderStatusAdapter extends RecyclerView.Adapter<OrderStatusAdapter.
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView orderstatus_title;
+        TextView orderstatus_title, orderstatus_count;
         LinearLayout orderstatus_border;
+        CardView status_cardView;
 
         ViewHolder(View itemView) {
             super(itemView);
+            orderstatus_count = (TextView) itemView.findViewById(R.id.orderstatus_count);
             orderstatus_title = (TextView) itemView.findViewById(R.id.orderstatus_title);
             orderstatus_border = (LinearLayout) itemView.findViewById(R.id.orderstatus_border);
+            status_cardView = (CardView) itemView.findViewById(R.id.status_cardView);
 
         }
     }

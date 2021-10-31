@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class Category_Model {
+public class BusinessCategory_Model {
 
     @SerializedName("status")
     @Expose

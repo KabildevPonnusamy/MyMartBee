@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.mart.mymartbee.model.Category_Model;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.UOMModel;
 import com.mart.mymartbee.networking.retrofit.ApiCallBack;

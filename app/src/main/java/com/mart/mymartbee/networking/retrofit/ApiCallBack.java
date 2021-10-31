@@ -1,6 +1,5 @@
 package com.mart.mymartbee.networking.retrofit;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -14,7 +13,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 import retrofit2.http.Path;
 
-import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.BusinessCategory_Model;
 import com.mart.mymartbee.model.Dashboard_Model;
 import com.mart.mymartbee.model.OTPModel;
 import com.mart.mymartbee.model.OTPVerifyModel;
@@ -23,6 +22,7 @@ import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.RegisterModel;
 import com.mart.mymartbee.model.Reports_Model;
+import com.mart.mymartbee.model.SubCategoryUpdate_Model;
 import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.model.UOMModel;
 
@@ -37,7 +37,7 @@ public interface ApiCallBack {
     Call<OTPVerifyModel> verifyOTP(@FieldMap Map<String, String> params);
 
     @GET("seller/category")
-    Call<Category_Model> getCategory();
+    Call<BusinessCategory_Model> getCategory();
 
     @Multipart
     @POST("seller/register")
@@ -52,10 +52,10 @@ public interface ApiCallBack {
 
     @POST("seller/add-category")
     @FormUrlEncoded
-    Call<Category_Model> addMyCateGory(@FieldMap Map<String, String> params);
+    Call<BusinessCategory_Model> addMyCateGory(@FieldMap Map<String, String> params);
 
-    @GET("seller/sub-category/{value}")
-    Call<SubCategory_Model> getSubCategories(@Path("value") String value);
+    @GET("seller/sub-category/{seller_id}/{cat_id}")
+    Call<SubCategory_Model> getSubCategories(@Path("seller_id") String seller_id, @Path("cat_id") String cat_id);
 
     @POST("seller/add-sub-category")
     @FormUrlEncoded
@@ -105,8 +105,17 @@ public interface ApiCallBack {
     @GET("order/report/{seller_id}")
     Call<Reports_Model> getReportsList(@Path("seller_id") String seller_id);
 
-    @GET("dashboard/{seller_id}")
-    Call<Dashboard_Model> getDashboardDatas(@Path("seller_id") String seller_id);
+    @GET("dashboard/{seller_id}/{short_value}")
+    Call<Dashboard_Model> getDashboardDatas(@Path("seller_id") String seller_id, @Path("short_value") String short_value);
+
+    @POST("seller/edit-sub-category")
+    @FormUrlEncoded
+    Call<SubCategoryUpdate_Model> updateSubCategory(@FieldMap Map<String, String> params);
+
+    @POST("seller/delete-sub-category")
+    @FormUrlEncoded
+    Call<SubCategoryUpdate_Model> deleteSubCategory(@FieldMap Map<String, String> params);
+
     //Dashboard_Model
 
     /*@GET("{value}/info.json")

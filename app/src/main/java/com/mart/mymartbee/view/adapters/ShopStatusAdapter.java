@@ -2,25 +2,17 @@ package com.mart.mymartbee.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.github.vipulasri.timelineview.TimelineView;
 import com.mart.mymartbee.R;
-import com.mart.mymartbee.model.Category_Model;
 import com.mart.mymartbee.model.ShopStatusModel;
 
 import java.util.ArrayList;

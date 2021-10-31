@@ -1,15 +1,21 @@
 package com.mart.mymartbee.view.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,26 +27,35 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.ShopStatusModel;
+import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.AddProduct;
 import com.mart.mymartbee.view.ProductDetails;
 import com.mart.mymartbee.view.ProductViewAll;
+import com.mart.mymartbee.view.SubCategorySelection;
+import com.mart.mymartbee.view.SubCategory_Options;
 import com.mart.mymartbee.view.adapters.ShopStatusAdapter;
 import com.mart.mymartbee.view.adapters.SubCateTitleAdapter;
 import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
+import com.mart.mymartbee.viewmodel.implementor.SubCategoryViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
+import com.mart.mymartbee.viewmodel.interfaces.SubCategoryViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ProductsFragment extends Fragment implements View.OnClickListener, ShopStatusAdapter.ShopStatusClickListener, Constants {
+public class CategoriesFragment extends Fragment implements View.OnClickListener, ShopStatusAdapter.ShopStatusClickListener, Constants {
 
     ArrayList<ShopStatusModel> shopStatusModel;
     RecyclerView recyclerView, products_recycler;
@@ -56,22 +71,35 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
     SubCateTitleAdapter subCateTitleAdapter;
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
+    ImageView icon_options, icon_search;
     TextView shop_tv, new_product_txt;
     String strCateId, strSellerId;
     LinearLayoutManager lManager = null;
     Products_Model.ProductCategories.ProductsList productsObj;
     ArrayList<Products_Model.ProductCategories.ProductsList> cateProductsLists;
     String whatsAppLink = "", strCategoryName = "";
+    LinearLayout add_cate_layout, edit_cate_layout, detele_cate_layout;
+    PopupWindow mypopupWindow;
+    BottomSheetDialog bottomSheetDialog;
+    EditText subcategory_name;
+    Button add_subcate_sheet_btn;
+    SubCategoryViewModel subCategoryViewModel;
+    LinearLayout search_layout;
+    RelativeLayout category_title_layout;
+    ImageView search_back;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_products, container, false);
+        View view = inflater.inflate(R.layout.frag_categories, container, false);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
+        subCategoryViewModel = ViewModelProviders.of(getActivity()).get(SubCategoryViewModelImpl.class);
         productsViewModel = ViewModelProviders.of(getActivity()).get(ProductsViewModelImpl.class);
         initView(view);
         getMyPreferences();
-
+        observeSubCateProgress();
+        sheetDialoginitView();
         return view;
     }
 
@@ -79,7 +107,12 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
         productsList = new ArrayList<Products_Model.ProductCategories>();
         productsListTemp = new ArrayList<Products_Model.ProductCategories>();
         shopStatusModel = new ArrayList<ShopStatusModel>();
+        search_layout = view.findViewById(R.id.search_layout);
+        category_title_layout = view.findViewById(R.id.category_title_layout);
+        search_back = view.findViewById(R.id.search_back);
         shop_tv = (TextView) view.findViewById(R.id.shop_tv);
+        icon_options = (ImageView) view.findViewById(R.id.icon_options);
+        icon_search = (ImageView) view.findViewById(R.id.icon_search);
         new_product_txt = (TextView) view.findViewById(R.id.new_product_txt);
         product_creation_layout = (RelativeLayout) view.findViewById(R.id.product_creation_layout);
         product_layout = (RelativeLayout) view.findViewById(R.id.product_layout);
@@ -103,7 +136,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
         productsViewModel.progressProductUpdation().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean progressObserve) {
-                if(progressObserve) {
+                if (progressObserve) {
                     showProgress();
                 } else {
                     hideProgress();
@@ -124,13 +157,18 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
         productsViewModel.getProductLV().observe(this, new Observer<Products_Model>() {
             @Override
             public void onChanged(Products_Model products_model) {
-                productsList = products_model.getProductCategories();
-                productsListTemp.addAll(productsList);
+                productsList.clear();
+                productsListTemp.clear();
+
                 whatsAppLink = products_model.getStrStoreLink();
                 StorageDatas.getInstance().setStoreWhatsappLink(whatsAppLink);
 
-                if(productsList != null) {
-                    if(productsList.size() > 0) {
+                if (products_model.getProductCategories() != null) {
+                    if (products_model.getProductCategories().size() > 0) {
+
+                        productsList = products_model.getProductCategories();
+                        productsListTemp.addAll(productsList);
+
                         product_creation_layout.setVisibility(View.GONE);
                         product_layout.setVisibility(View.VISIBLE);
                         setProductAdapter();
@@ -142,6 +180,15 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
                 }
             }
         });
+    }
+
+    private void sheetDialoginitView() {
+        bottomSheetDialog = new BottomSheetDialog(getActivity());
+        bottomSheetDialog.setContentView(R.layout.bottomsheet_add_subcate);
+        bottomSheetDialog.setCancelable(true);
+        subcategory_name = (EditText) bottomSheetDialog.findViewById(R.id.subcategory_name);
+        add_subcate_sheet_btn = (Button) bottomSheetDialog.findViewById(R.id.add_subcate_sheet_btn);
+        add_subcate_sheet_btn.setOnClickListener(this);
     }
 
     private void noProductFound() {
@@ -160,7 +207,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
     private void setAdapter() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        shopStatusAdapter = new ShopStatusAdapter(shopStatusModel, getActivity(), ProductsFragment.this);
+        shopStatusAdapter = new ShopStatusAdapter(shopStatusModel, getActivity(), CategoriesFragment.this);
         recyclerView.setAdapter(shopStatusAdapter);
     }
 
@@ -168,7 +215,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
         products_recycler.setHasFixedSize(true);
         lManager = new LinearLayoutManager(getActivity());
         products_recycler.setLayoutManager(lManager);
-        subCateTitleAdapter = new SubCateTitleAdapter(productsList, getActivity(), ProductsFragment.this,
+        subCateTitleAdapter = new SubCateTitleAdapter(productsList, getActivity(), CategoriesFragment.this,
                 lManager);
         products_recycler.setAdapter(subCateTitleAdapter);
     }
@@ -177,39 +224,125 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.new_product_txt:
-                Bundle bundle = new Bundle();
-                bundle.putString("fromActivity", "HomeFragment");
-                Intent addProdIntent = new Intent(getActivity(), AddProduct.class);
-                addProdIntent.putExtras(bundle);
-                startActivityForResult(addProdIntent, HOME_FRAG_to_ADD_PRODUCT);
-                /*if (NetworkAvailability.isNetworkAvailable(getActivity())) {
-                    Bundle bundle = new Bundle();
-                    bundle.putString("fromActivity", "HomeFragment");
-                    Intent addProdIntent = new Intent(getActivity(), AddProduct.class);
-                    addProdIntent.putExtras(bundle);
-                    startActivityForResult(addProdIntent, HOME_FRAG_to_ADD_PRODUCT);
+            case R.id.add_subcate_sheet_btn:
+                String strSubCate = subcategory_name.getText().toString().trim();
+                if(strSubCate.equalsIgnoreCase("")) {
+                    CommonMethods.Toast(getActivity(), "Please enter sub-category.");
+                    return;
+                }
+
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("seller_id", strSellerId);
+                params.put("cat_id", strCateId);
+                params.put("sub_categorie_name", strSubCate);
+                if (NetworkAvailability.isNetworkAvailable(getActivity())) {
+                    subCategoryViewModel.getAddedSubCategories(params);
                 } else {
-                    noInternetConnection();
-                }*/
+                    NetworkAvailability networkAvailability = new NetworkAvailability(getActivity());
+                    networkAvailability.noInternetConnection(getActivity(), Constants.NETWORK_ENABLE_SETTINGS);
+                }
+
+                subCategoryViewModel.getAddedSubCategoryList().observe(this, new Observer<SubCategory_Model>() {
+                    @Override
+                    public void onChanged(SubCategory_Model subCategory_model) {
+                        if(subCategory_model.isStrStatus() == true) {
+                            bottomSheetDialog.dismiss();
+                            getHomeProducts();
+                        }
+                    }
+                });
+                break;
+
+            case R.id.add_cate_layout:
+                closeKeyboard();
+                mypopupWindow.dismiss();
+                bottomSheetDialog.show();
+                break;
+
+            case R.id.edit_cate_layout:
+                closeKeyboard();
+                mypopupWindow.dismiss();
+                StorageDatas.getInstance().setSubCategoryList(productsList);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("subcateOptions", "EDIT");
+
+                Intent editIntent = new Intent(getActivity(), SubCategory_Options.class);
+                editIntent.putExtras(bundle);
+                startActivityForResult(editIntent, SUBCATE_to_SUBCATE_OPTIONS);
+                break;
+
+            case R.id.detele_cate_layout:
+                closeKeyboard();
+                mypopupWindow.dismiss();
+                StorageDatas.getInstance().setSubCategoryList(productsList);
+                Bundle del_bundle = new Bundle();
+                del_bundle.putString("subcateOptions", "DELETE");
+
+                Intent deleteIntent = new Intent(getActivity(), SubCategory_Options.class);
+                deleteIntent.putExtras(del_bundle);
+                startActivityForResult(deleteIntent, SUBCATE_to_SUBCATE_OPTIONS);
+                break;
+
+            case R.id.search_back:
+                closeKeyboard();
+                search_product_edit.setText("");
+                category_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                break;
+
+            case R.id.icon_search:
+                category_title_layout.setVisibility(View.GONE);
+                search_layout.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.icon_options:
+                LayoutInflater inflater = (LayoutInflater)
+                        getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = inflater.inflate(R.layout.subcate_options_layout, null);
+
+                add_cate_layout = (LinearLayout) view.findViewById(R.id.add_cate_layout);
+                edit_cate_layout = (LinearLayout) view.findViewById(R.id.edit_cate_layout);
+                detele_cate_layout = (LinearLayout) view.findViewById(R.id.detele_cate_layout);
+                add_cate_layout.setOnClickListener(this);
+                edit_cate_layout.setOnClickListener(this);
+                detele_cate_layout.setOnClickListener(this);
+
+                mypopupWindow = new PopupWindow(view, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
+                mypopupWindow.getContentView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mypopupWindow.dismiss();
+                    }
+                });
+                mypopupWindow.showAsDropDown(icon_options);
+                break;
+
+            case R.id.new_product_txt:
+                closeKeyboard();
+                Bundle newprod_bundle = new Bundle();
+                newprod_bundle.putString("fromActivity", "HomeFragment");
+                Intent addProdIntent = new Intent(getActivity(), AddProduct.class);
+                addProdIntent.putExtras(newprod_bundle);
+                startActivityForResult(addProdIntent, HOME_FRAG_to_ADD_PRODUCT);
                 break;
         }
     }
 
     public void updateProduct() {
-        if(productsList == null) {
+        if (productsList == null) {
             productsList = new ArrayList<Products_Model.ProductCategories>();
         } else {
             productsList.clear();
         }
 
         productsList.addAll(StorageDatas.getInstance().getProducts_model().getProductCategories());
-        if(productsList.size() == 1) {
+        if (productsList.size() == 1) {
             product_creation_layout.setVisibility(View.GONE);
             product_layout.setVisibility(View.VISIBLE);
             setProductAdapter();
         } else {
-            if(subCateTitleAdapter != null) {
+            if (subCateTitleAdapter != null) {
                 subCateTitleAdapter.notifyDataSetChanged();
             } else {
                 setProductAdapter();
@@ -218,6 +351,9 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setListeners() {
+        icon_options.setOnClickListener(this);
+        icon_search.setOnClickListener(this);
+        search_back.setOnClickListener(this);
         new_product_txt.setOnClickListener(this);
         search_product_edit.addTextChangedListener(new TextWatcher() {
             @Override
@@ -265,7 +401,7 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onItemClick(int position) {
-        if(position == 0) {
+        if (position == 0) {
             Bundle bundle = new Bundle();
             bundle.putString("fromActivity", "HomeFragment");
             Intent intent = new Intent(getActivity(), AddProduct.class);
@@ -309,8 +445,8 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void hideProgress() {
-        if(progressDialog != null) {
-            if(progressDialog.isShowing()) {
+        if (progressDialog != null) {
+            if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -341,37 +477,66 @@ public class ProductsFragment extends Fragment implements View.OnClickListener, 
         });
     }
 
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
+    private void observeSubCateProgress() {
+        subCategoryViewModel.progressSubCateUpdation().observe(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean progressObserve) {
+                if(progressObserve) {
+                    showProgress();
+                } else {
+                    hideProgress();
+                }
+            }
+        });
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.e("appSample", "FragmentRESULT");
+        closeKeyboard();
 
-        if(requestCode == GET_HOME_PRODUCTS) {
+        if (requestCode == SUBCATE_to_SUBCATE_OPTIONS) {
+            if(resultCode == SUBCATE_update_success) {
+                getHomeProducts();
+            }
+        }
+
+        if (requestCode == GET_HOME_PRODUCTS) {
             getHomeProducts();
         }
 
-        if(requestCode == HOME_FRAG_to_VIEW_ALL) {
-            if(resultCode == PRODUCT_DELETION_success) {
+        if (requestCode == HOME_FRAG_to_VIEW_ALL) {
+            if (resultCode == PRODUCT_DELETION_success) {
                 updateProduct();
             } else if (resultCode == PRODUCT_UPDATED_success) {
                 updateProduct();
             }
         }
 
-        if(requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
-            if(resultCode == PRODUCT_UPDATED_success) {
+        if (requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
+            if (resultCode == PRODUCT_UPDATED_success) {
                 updateProduct();
             }
         }
 
-        if(requestCode == HOME_FRAG_to_ADD_PRODUCT) {
-            if(resultCode == PRODUCT_ADDED_success) {
+        if (requestCode == HOME_FRAG_to_ADD_PRODUCT) {
+            if (resultCode == PRODUCT_ADDED_success) {
                 updateProduct();
+            } else {
+                if(StorageDatas.getInstance().isSubCateAdded() == true) {
+                    getHomeProducts();
+                }
             }
         }
 
-        if(requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
-            if(resultCode == PRODUCT_DELETION_success) {
+
+        if (requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
+            if (resultCode == PRODUCT_DELETION_success) {
                 updateProduct();
             }
         }

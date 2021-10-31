@@ -32,7 +32,6 @@
                 android:autofillHints="@string/search_content"
                 android:background="@null"
                 android:inputType="textCapSentences"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
                 android:hint="@string/search_content"
                 android:maxLength="45"
                 android:paddingStart="10dp"
@@ -93,7 +92,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/owner_add_subcate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,10 +122,8 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
     </RelativeLayout>
-
-
 
 </LinearLayout>

@@ -1,63 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/subcate_item_layout"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/completed_cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/homesubcate_unselected"
-        android:padding="5dp">
+        android:layout_height="match_parent"
+        android:elevation="15dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="8dp"
+        card_view:cardUseCompatPadding="true">
 
-        <TextView
-            android:id="@+id/product_title"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/subcate_item_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_alignParentStart="true"
-            android:textSize="15sp"
-            android:maxLines="1"
-            android:layout_marginEnd="5dp"
-            android:text="@string/subcategory"
-            android:textStyle="bold"
-            android:layout_toStartOf="@+id/product_arrow"
-            android:fontFamily="@font/museosans"
-            android:textColor="@color/black"/>
+            android:background="@drawable/homesubcate_unselected"
+            android:padding="5dp">
 
-        <!--<ImageView
-            android:id="@+id/subproduct_edit"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="10dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/icon_subcate_edit"
-            android:layout_toStartOf="@+id/subproduct_delete"
-            android:contentDescription="@string/image_desc" />-->
+            <TextView
+                android:id="@+id/product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/product_arrow"
+                android:fontFamily="@font/museosans"
+                android:maxLines="1"
+                android:text="@string/subcategory"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-        <!--<ImageView
-            android:id="@+id/subproduct_menu"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="10dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/icon_menu_list"
-            android:layout_toStartOf="@+id/product_arrow"
-            android:contentDescription="@string/image_desc" />-->
+            <ImageView
+                android:id="@+id/product_arrow"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:layout_marginEnd="10dp"
+                android:contentDescription="@string/image_desc"
+                android:padding="5dp"
+                android:src="@drawable/icon_new_uparrow" />
 
-        <ImageView
-            android:id="@+id/product_arrow"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="10dp"
-            android:layout_centerInParent="true"
-            android:src="@drawable/arrow_up"
-            android:layout_alignParentEnd="true"
-            android:contentDescription="@string/image_desc" />
+        </RelativeLayout>
 
-    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <LinearLayout
         android:id="@+id/products_list_layout"
@@ -65,9 +59,9 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <Space
+        <!--<Space
             android:layout_width="match_parent"
-            android:layout_height="7dp"/>
+            android:layout_height="7dp" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/my_products_recycle"
@@ -75,28 +69,30 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="7dp"
             android:layout_marginEnd="7dp"
-            android:scrollbars="none"/>
+            android:scrollbars="none" />
 
         <TextView
             android:id="@+id/product_view_option"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:maxLines="1"
-            android:layout_marginEnd="5dp"
-            android:textAllCaps="true"
-            android:text="@string/view_all_text"
-            android:textStyle="bold"
             android:layout_gravity="end"
-            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="3dp"
             android:background="@drawable/view_btn_bgnd"
             android:fontFamily="@font/museosans"
-            android:textColor="@color/black"/>
+            android:foreground="?android:attr/selectableItemBackground"
+            android:maxLines="1"
+            android:text="@string/view_all_text"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
-    <Space
+    <!--<Space
         android:layout_width="match_parent"
-        android:layout_height="7dp"/>
+        android:layout_height="7dp" />-->
 
 </LinearLayout>

@@ -61,9 +61,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
     GPSTracker gpsTracker;
     String profile_str = "";
 
-    CircleImageView store_image;
+    ImageView store_image;
     ImageView profile_back;
-    EditText profile_store, profile_mobile_tv, category_et, address_et, start_time, close_time;
+    EditText profile_store, profile_mobile_tv, business_category_et, address_et, start_time, close_time;
     TextView profile_change;
     Button update_btn;
     MyPreferenceDatas preferenceDatas;
@@ -116,7 +116,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         store_image = findViewById(R.id.store_image);
         profile_back = findViewById(R.id.profile_back);
         profile_store = findViewById(R.id.profile_store);
-        category_et = findViewById(R.id.category_et);
+        business_category_et = findViewById(R.id.business_category_et);
         address_et = findViewById(R.id.address_et);
         start_time = findViewById(R.id.start_time);
         close_time = findViewById(R.id.close_time);
@@ -125,8 +125,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
 
         profile_mobile_tv.setFocusable(false);
         profile_mobile_tv.setClickable(false);
-        category_et.setFocusable(false);
-        category_et.setClickable(false);
+        business_category_et.setFocusable(false);
+        business_category_et.setClickable(false);
 
         start_time.setFocusable(false);
         start_time.setClickable(true);
@@ -149,7 +149,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         close_time.setText(strCloseTime);
         address_et.setText(strAddress);
         profile_mobile_tv.setText(strCountryCode + " " + strMobile);
-        category_et.setText(strCategoryName);
+        business_category_et.setText(strCategoryName);
         profile_store.setText(strShop);
         if(strImage != null) {
             if(!strImage.equalsIgnoreCase("") ) {
@@ -207,7 +207,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
 
             case R.id.update_btn:
                 strShop = profile_store.getText().toString().trim();
-                strCategoryName = category_et.getText().toString().trim();
+                strCategoryName = business_category_et.getText().toString().trim();
                 strAddress = address_et.getText().toString().trim();
                 strStartTime = start_time.getText().toString().trim();
                 strCloseTime = close_time.getText().toString().trim();
@@ -224,7 +224,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                 }
 
                 if(strCategoryName.equalsIgnoreCase("")) {
-                    CommonMethods.Toast(Profile.this, "Please select category.");
+                    CommonMethods.Toast(Profile.this, "Please select business category.");
                     return;
                 }
 
@@ -369,7 +369,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
 //                hideKeyboard(store_name);
                 strCategoryName = data.getStringExtra("SelectedCategory");
                 selectedId = data.getIntExtra("SelectedId", 0);
-                category_et.setText(strCategoryName);
+                business_category_et.setText(strCategoryName);
             }
         }
 

@@ -9,9 +9,9 @@
         android:width="2dp"
         android:color="@color/white" />
 
-    <corners
+    <!--<corners
         android:topLeftRadius="35dp"
         android:topRightRadius="35dp"
-         />
+         />-->
 
 </shape>

@@ -33,7 +33,6 @@
                 android:autofillHints="@string/search_content"
                 android:background="@null"
                 android:inputType="textCapSentences"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 android:hint="@string/search_content"
                 android:maxLength="45"
                 android:paddingStart="10dp"
@@ -96,7 +95,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-
 
 </LinearLayout>

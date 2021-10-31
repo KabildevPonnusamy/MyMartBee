@@ -25,16 +25,16 @@ import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
-import com.mart.mymartbee.model.Category_Model;
-import com.mart.mymartbee.viewmodel.implementor.CateGoryViewModelImpl;
-import com.mart.mymartbee.viewmodel.interfaces.CategoryViewModel;
-import com.mart.mymartbee.view.adapters.CategoryAdapter;
+import com.mart.mymartbee.model.BusinessCategory_Model;
+import com.mart.mymartbee.viewmodel.implementor.BusinessCateGoryViewModelImplBusiness;
+import com.mart.mymartbee.viewmodel.interfaces.BusinessCategoryViewModel;
+import com.mart.mymartbee.view.adapters.BusinessCategoryAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CategorySelection extends AppCompatActivity implements View.OnClickListener, Constants {
+public class BusinessCategorySelection extends AppCompatActivity implements View.OnClickListener, Constants {
 
     ImageView cate_back;
     EditText cate_search_edit;
@@ -45,11 +45,10 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     int selectedId = -1;
 
     ProgressDialog progressDialog;
-    CategoryViewModel cateGoryViewModel;
-    CategoryAdapter categoryAdapter;
-    ArrayList<Category_Model.Categorys> categoryList;
-    ArrayList<Category_Model.Categorys> categoryListTemp;
-//    ArrayList<Category_Model.Categorys> prefcategoryList;
+    BusinessCategoryViewModel businessCateGoryViewModel;
+    BusinessCategoryAdapter businessCategoryAdapter;
+    ArrayList<BusinessCategory_Model.Categorys> businessCategoryList;
+    ArrayList<BusinessCategory_Model.Categorys> businessCategoryListTemp;
     BottomSheetDialog bottomSheetDialog;
     EditText category_name;
     Button add_cate_sheet_btn;
@@ -57,9 +56,9 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.category_selection);
+        setContentView(R.layout.business_category_selection);
 
-        cateGoryViewModel = ViewModelProviders.of(this).get(CateGoryViewModelImpl.class);
+        businessCateGoryViewModel = ViewModelProviders.of(this).get(BusinessCateGoryViewModelImplBusiness.class);
         initView();
         getBundleData();
         updateView();
@@ -67,7 +66,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     public void observeCateProgress() {
-        cateGoryViewModel.progressCateUpdation().observe(this, new Observer<Boolean>() {
+        businessCateGoryViewModel.progressCateUpdation().observe(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean progressObserve) {
                 if(progressObserve) {
@@ -87,9 +86,9 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     public void initView() {
-        categoryList = new ArrayList<Category_Model.Categorys>();
+        businessCategoryList = new ArrayList<BusinessCategory_Model.Categorys>();
 //        prefcategoryList = new ArrayList<Category_Model.Categorys>();
-        categoryListTemp = new ArrayList<Category_Model.Categorys>();
+        businessCategoryListTemp = new ArrayList<BusinessCategory_Model.Categorys>();
         cate_back = findViewById(R.id.cate_back);
         add_category_btn = findViewById(R.id.add_category_btn);
         cate_search_edit = findViewById(R.id.cate_search_edit);
@@ -108,24 +107,24 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
     }
 
     public void updateView() {
-        if (NetworkAvailability.isNetworkAvailable(CategorySelection.this)) {
-            cateGoryViewModel.getCateGories();
+        if (NetworkAvailability.isNetworkAvailable(BusinessCategorySelection.this)) {
+            businessCateGoryViewModel.getCateGories();
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-            networkAvailability.noInternetConnection(CategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
+            networkAvailability.noInternetConnection(BusinessCategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
         }
 
-        cateGoryViewModel.getCategoryListLV().observe(this, new Observer<Category_Model>() {
+        businessCateGoryViewModel.getCategoryListLV().observe(this, new Observer<BusinessCategory_Model>() {
             @Override
-            public void onChanged(Category_Model category_model) {
-                categoryList = category_model.getCategorys();
-                if(categoryList != null) {
-                    if(categoryList.size() > 0) {
-                        categoryListTemp.addAll(categoryList);
+            public void onChanged(BusinessCategory_Model businessCategory_model) {
+                businessCategoryList = businessCategory_model.getCategorys();
+                if(businessCategoryList != null) {
+                    if(businessCategoryList.size() > 0) {
+                        businessCategoryListTemp.addAll(businessCategoryList);
                         cate_recycle.setHasFixedSize(true);
                         cate_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                        categoryAdapter = new CategoryAdapter(categoryList, getApplicationContext(), selectedId);
-                        cate_recycle.setAdapter(categoryAdapter);
+                        businessCategoryAdapter = new BusinessCategoryAdapter(businessCategoryList, getApplicationContext(), selectedId);
+                        cate_recycle.setAdapter(businessCategoryAdapter);
                     }
                 }
             }
@@ -146,7 +145,7 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
             case R.id.add_cate_sheet_btn:
                 String strCate = category_name.getText().toString().trim();
                 if(strCate.equalsIgnoreCase("")) {
-                    CommonMethods.Toast(CategorySelection.this,  "Please enter category");
+                    CommonMethods.Toast(BusinessCategorySelection.this,  "Please enter category");
                     return;
                 }
 
@@ -154,19 +153,19 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
                 params.put("mobile_no", strMobileNumber);
                 params.put("categorie_name", strCate);
 
-                if (NetworkAvailability.isNetworkAvailable(CategorySelection.this)) {
-                    cateGoryViewModel.getAddedCategories(params);
+                if (NetworkAvailability.isNetworkAvailable(BusinessCategorySelection.this)) {
+                    businessCateGoryViewModel.getAddedCategories(params);
                 } else {
                     NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(CategorySelection.this, CATEGORY_CREATION);
+                    networkAvailability.noInternetConnection(BusinessCategorySelection.this, CATEGORY_CREATION);
                 }
-                cateGoryViewModel.getAddedCategoryListLV().observe(this, new Observer<Category_Model>() {
+                businessCateGoryViewModel.getAddedCategoryListLV().observe(this, new Observer<BusinessCategory_Model>() {
                     @Override
-                    public void onChanged(Category_Model category_model) {
-                        if(category_model.isStrStatus() == true) {
-                            categoryList.clear();
-                            categoryList.addAll(category_model.getCategorys());
-                            categoryAdapter.notifyDataSetChanged();
+                    public void onChanged(BusinessCategory_Model businessCategory_model) {
+                        if(businessCategory_model.isStrStatus() == true) {
+                            businessCategoryList.clear();
+                            businessCategoryList.addAll(businessCategory_model.getCategorys());
+                            businessCategoryAdapter.notifyDataSetChanged();
                             category_name.setText("");
                             bottomSheetDialog.dismiss();
                         }
@@ -222,38 +221,38 @@ public class CategorySelection extends AppCompatActivity implements View.OnClick
 
     private void moveBack(int position) {
         Intent intent = new Intent();
-        intent.putExtra("SelectedCategory", "" + categoryList.get(position).getStrCateGoryName());
-        intent.putExtra("SelectedId", Integer.parseInt(categoryList.get(position).getStrCategoryId()));
+        intent.putExtra("SelectedCategory", "" + businessCategoryList.get(position).getStrCateGoryName());
+        intent.putExtra("SelectedId", Integer.parseInt(businessCategoryList.get(position).getStrCategoryId()));
         setResult(CATEGORY_SELECTED, intent);
         finish();
     }
 
     private void shortList(Editable s) {
 
-        if (categoryListTemp != null) {
-            if (categoryListTemp.size() > 0) {
+        if (businessCategoryListTemp != null) {
+            if (businessCategoryListTemp.size() > 0) {
                 String value = "" + s;
                 value = value.trim();
-                categoryList.clear();
+                businessCategoryList.clear();
 
                 if (value != null) {
                     if (value.equals("")) {
-                        categoryList.addAll(categoryListTemp);
+                        businessCategoryList.addAll(businessCategoryListTemp);
                     } else {
-                        for (int i = 0; i < categoryListTemp.size(); i++) {
-                            if (categoryListTemp.get(i).getStrCateGoryName().toLowerCase().
+                        for (int i = 0; i < businessCategoryListTemp.size(); i++) {
+                            if (businessCategoryListTemp.get(i).getStrCateGoryName().toLowerCase().
                                     contains(value.toLowerCase())) {
-                                Category_Model.Categorys item = new Category_Model.Categorys();
-                                item.setStrCategoryId(categoryListTemp.get(i).getStrCategoryId());
-                                item.setStrCategoryImage(categoryListTemp.get(i).getStrCategoryImage());
-                                item.setStrCateGoryName(categoryListTemp.get(i).getStrCateGoryName());
-                                item.setStrCategoryStatus(categoryListTemp.get(i).getStrCategoryStatus());
-                                categoryList.add(item);
+                                BusinessCategory_Model.Categorys item = new BusinessCategory_Model.Categorys();
+                                item.setStrCategoryId(businessCategoryListTemp.get(i).getStrCategoryId());
+                                item.setStrCategoryImage(businessCategoryListTemp.get(i).getStrCategoryImage());
+                                item.setStrCateGoryName(businessCategoryListTemp.get(i).getStrCateGoryName());
+                                item.setStrCategoryStatus(businessCategoryListTemp.get(i).getStrCategoryStatus());
+                                businessCategoryList.add(item);
                             }
                         }
                     }
                 }
-                categoryAdapter.notifyDataSetChanged();
+                businessCategoryAdapter.notifyDataSetChanged();
             }
         }
     }

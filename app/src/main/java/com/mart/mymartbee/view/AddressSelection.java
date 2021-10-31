@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -30,6 +31,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.GPSTracker;
 import com.mart.mymartbee.commons.CommonMethods;
@@ -37,6 +43,7 @@ import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -62,9 +69,11 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
     Location mLastLocation;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
+    AutocompleteSupportFragment autocompleteFragment;
     GPSTracker gpsTracker;
     String S_lat = "", S_lon = "";
     String strLoc = "";
+    String apiKey = "AIzaSyB4CPqqhVMPCH9VEOBtMu_gRRhaVh0SWrU";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,6 +100,28 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
         your_location = findViewById(R.id.your_location);
         select_btn.setOnClickListener(this);
         address_back.setOnClickListener(this);
+
+        Places.initialize(AddressSelection.this, apiKey);
+        PlacesClient placesClient = Places.createClient(AddressSelection.this);
+
+        autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG,
+                Place.Field.ADDRESS));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                mMap.clear();
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(place.getLatLng()));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15));
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+            }
+        });
     }
 
     private void locationInit() {

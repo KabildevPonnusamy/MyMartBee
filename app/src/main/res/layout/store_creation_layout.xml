@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/colorPrimary"
         android:gravity="center"
         android:orientation="horizontal">
@@ -51,38 +52,61 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="10dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/store_image"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/store_img_card"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
-                android:src="@drawable/store_zero"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp" />
+                android:layout_margin="4dp"
+                android:elevation="15dp"
+                app:cardBackgroundColor="@color/white"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="10dp"
+                card_view:cardUseCompatPadding="true">
 
-            <com.google.android.material.textfield.TextInputLayout
+                <ImageView
+                    android:id="@+id/store_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/image_desc"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/store_zero" />
+
+                <!--<de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/store_image"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/store_zero"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="2dp" />-->
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
                 android:id="@+id/layout_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_marginStart="10dp"
-                android:layout_toEndOf="@+id/store_image">
+                android:background="@drawable/common_edittext"
+                android:layout_toEndOf="@+id/store_img_card">
 
                 <EditText
                     android:id="@+id/store_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="@string/store_name"
-                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                     android:fontFamily="@font/museosans"
                     android:hint="@string/store_name"
                     android:inputType="textCapSentences"
                     android:maxLength="30"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:padding="2dp"
+                    android:background="@null"
+                    android:textColorHint="@color/gray_btn_bg_color"
                     android:textSize="@dimen/input_text_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>>
 
         </RelativeLayout>
 
@@ -90,7 +114,7 @@
             android:id="@+id/upload_image"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/btn_bgnd"
             android:gravity="center"
@@ -106,31 +130,35 @@
             android:layout_marginEnd="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_cate"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/common_edittext"
+                android:layout_marginTop="10dp"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <EditText
-                    android:id="@+id/category_et"
+                    android:id="@+id/business_category_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:autofillHints="@string/category_necessary"
+                    android:autofillHints="@string/business_category_necessary"
                     android:fontFamily="@font/museosans"
-                    android:hint="@string/category_necessary"
+                    android:hint="@string/business_category_necessary"
                     android:inputType="textCapSentences"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:padding="3dp"
+                    android:background="@null"
+                    android:textColorHint="@color/gray_btn_bg_color"
                     android:textSize="@dimen/input_text_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="40dp"
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
@@ -139,10 +167,11 @@
             android:layout_marginEnd="10dp"
             android:baselineAligned="false">
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
+                android:background="@drawable/common_edittext"
                 android:layout_weight="1">
 
                 <EditText
@@ -155,15 +184,17 @@
                     android:inputType="textCapSentences"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:padding="3dp"
+                    android:background="@null"
+                    android:textColorHint="@color/gray_btn_bg_color"
                     android:textSize="@dimen/input_text_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>>
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
+                android:background="@drawable/common_edittext"
                 android:layout_weight="1">
 
                 <EditText
@@ -176,10 +207,12 @@
                     android:inputType="textCapSentences"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:padding="3dp"
+                    android:background="@null"
+                    android:textColorHint="@color/gray_btn_bg_color"
                     android:textSize="@dimen/input_text_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -214,10 +247,11 @@
             android:layout_marginEnd="10dp"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_address"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/common_edittext"
+                android:foreground="?android:attr/selectableItemBackground">
 
                 <EditText
                     android:id="@+id/address_et"
@@ -226,13 +260,27 @@
                     android:autofillHints="@string/address_necessary"
                     android:fontFamily="@font/museosans"
                     android:hint="@string/address_necessary"
-                    android:inputType="textCapSentences"
                     android:singleLine="true"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/black"
+                    android:padding="3dp"
+                    android:background="@null"
+                    android:layout_toStartOf="@+id/icon_address_arr"
+                    android:layout_marginEnd="5dp"
+                    android:textColorHint="@color/gray_btn_bg_color"
                     android:textSize="@dimen/input_text_size" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <ImageView
+                    android:id="@+id/icon_address_arr"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/arrow_right"
+                    android:layout_alignParentEnd="true"
+                    android:padding="3dp"
+                    app:tint="@color/black"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/image_desc" />
+
+            </RelativeLayout>>
 
         </LinearLayout>
 

@@ -2,27 +2,19 @@ package com.mart.mymartbee.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.CommonMethods;
-import com.mart.mymartbee.model.Category_Model;
 import com.mart.mymartbee.model.Orders_Model;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder> {
 
@@ -79,10 +71,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
             order_total = (TextView) itemView.findViewById(R.id.order_total);
             order_status = (TextView) itemView.findViewById(R.id.order_status);
             status_layout = (LinearLayout) itemView.findViewById(R.id.status_layout);
-
-//            ordered_address = (TextView) itemView.findViewById(R.id.ordered_address);
-//            order_items_count = (TextView) itemView.findViewById(R.id.order_items_count);
-//            order_time = (TextView) itemView.findViewById(R.id.order_time);
 
         }
     }

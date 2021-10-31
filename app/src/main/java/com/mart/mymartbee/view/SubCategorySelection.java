@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.model.SubCategory_Model;
+import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.adapters.SubCategoryAdapter;
 import com.mart.mymartbee.viewmodel.implementor.SubCategoryViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.SubCategoryViewModel;
@@ -40,7 +42,7 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
     EditText subcate_search_edit;
     RecyclerView subcate_recycle;
     LinearLayout no_data_found_layout;
-    Button add_subcate_btn;
+//    Button add_subcate_btn;
 
     ProgressDialog progressDialog;
     SubCategoryViewModel subCategoryViewModel;
@@ -60,6 +62,7 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.subcategory_selection);
 
         subCategoryViewModel = ViewModelProviders.of(this).get(SubCategoryViewModelImpl.class);
+        StorageDatas.getInstance().setSubCateAdded(false);
         initView();
         sheetDialoginitView();
         getBundleData();
@@ -90,17 +93,17 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
         subcate_back = (ImageView) findViewById(R.id.subcate_back);
         subcate_search_edit = (EditText) findViewById(R.id.subcate_search_edit);
         subcate_recycle = (RecyclerView) findViewById(R.id.subcate_recycle);
-        add_subcate_btn = (Button) findViewById(R.id.add_subcate_btn);
+//        add_subcate_btn = (Button) findViewById(R.id.add_subcate_btn);
 
         subcate_back.setOnClickListener(this);
-        add_subcate_btn.setOnClickListener(this);
+//        add_subcate_btn.setOnClickListener(this);
 
         listeners();
     }
 
     private void updateView() {
         if (NetworkAvailability.isNetworkAvailable(SubCategorySelection.this)) {
-            subCategoryViewModel.getSubCategories(cate_id);
+            subCategoryViewModel.getSubCategories(strSellerId, cate_id);
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
             networkAvailability.noInternetConnection(SubCategorySelection.this, Constants.NETWORK_ENABLE_SETTINGS);
@@ -244,6 +247,7 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onChanged(SubCategory_Model subCategory_model) {
                         if(subCategory_model.isStrStatus() == true) {
+                            StorageDatas.getInstance().setSubCateAdded(true);
                             subCategoryList.clear();
                             subCategoryList.addAll(subCategory_model.getSubCategories());
 
@@ -262,9 +266,10 @@ public class SubCategorySelection extends AppCompatActivity implements View.OnCl
             case R.id.subcate_back:
                 finish();
                 break;
-            case R.id.add_subcate_btn:
+
+            /*case R.id.add_subcate_btn:
                 bottomSheetDialog.show();
-                break;
+                break;*/
         }
     }
 

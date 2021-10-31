@@ -23,11 +23,10 @@ import com.mart.mymartbee.view.Splash;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        Log.e("appSample", "onMessageReceived");
+        Log.e("appSample", "onMessageReceived: " + remoteMessage.getData());
         Log.e("appSample", "Title: " + remoteMessage.getData().get("title"));
         Log.e("appSample", "Message: " + remoteMessage.getData().get("message"));
 

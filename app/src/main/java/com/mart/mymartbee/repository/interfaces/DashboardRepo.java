@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface DashboardRepo {
 
-    MutableLiveData<Dashboard_Model> getDashboardModel(String sellerId) throws Exception;
+    MutableLiveData<Dashboard_Model> getDashboardModel(String sellerId, String short_value) throws Exception;
     MutableLiveData<String> getError() throws Exception;
     MutableLiveData<Boolean> progressDashboardUpdation();
 }

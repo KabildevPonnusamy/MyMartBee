@@ -31,6 +31,7 @@ public class CustomTimePickerDialog extends TimePickerDialog {
         lastMinute = minute;
         mTimeSetListener = listener;
         mIs24HourView = is24HourView;
+        mTimePicker = new TimePicker(context);
     }
 
     @Override
@@ -56,9 +57,7 @@ public class CustomTimePickerDialog extends TimePickerDialog {
 
                     StorageDatas.getInstance().setCurrHour("" + mTimePicker.getCurrentHour());
                     StorageDatas.getInstance().setCurrMint("" + mTimePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
-
                 }
-
 
                 break;
             case BUTTON_NEGATIVE:

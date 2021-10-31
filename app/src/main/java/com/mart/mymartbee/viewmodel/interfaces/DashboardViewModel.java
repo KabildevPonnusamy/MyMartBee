@@ -10,5 +10,5 @@ public interface DashboardViewModel {
     LiveData<Boolean> progressbarDASHObservable();
     LiveData<Dashboard_Model> getDashboardDatasLD();
 
-    void getDashboardDatas(String sellerId);
+    void getDashboardDatas(String sellerId, String short_value);
 }

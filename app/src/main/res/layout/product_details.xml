@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
@@ -31,7 +31,6 @@
             android:fontFamily="@font/museosans"
             android:gravity="center"
             android:text="@string/product_details"
-            android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="@dimen/title_size"
             android:textStyle="bold" />

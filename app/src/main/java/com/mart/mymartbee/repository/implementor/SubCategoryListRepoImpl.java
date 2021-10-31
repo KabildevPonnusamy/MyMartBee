@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.mart.mymartbee.model.Category_Model;
 import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.networking.retrofit.ApiCallBack;
 import com.mart.mymartbee.networking.retrofit.ApiClient;
@@ -38,12 +37,13 @@ public class SubCategoryListRepoImpl implements SubCategoryListRepo {
     }
 
     @Override
-    public MutableLiveData<SubCategory_Model> subCategoryRepo(String cate_id) throws Exception {
+    public MutableLiveData<SubCategory_Model> subCategoryRepo(String seller_id, String cate_id) throws Exception {
         Log.e("appSample", "CATEID: " + cate_id);
+        Log.e("appSample", "SELLERID: " + seller_id);
         progressSubCateObservable.setValue(true);
 
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
-        Call<SubCategory_Model> call = callBack.getSubCategories(cate_id);
+        Call<SubCategory_Model> call = callBack.getSubCategories(seller_id, cate_id);
         call.enqueue(new Callback<SubCategory_Model>() {
             @Override
             public void onResponse(Call<SubCategory_Model> call, Response<SubCategory_Model> response) {

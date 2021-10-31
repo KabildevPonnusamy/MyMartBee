@@ -39,6 +39,15 @@ public class Order_Status_Model {
         @SerializedName("name")
         @Expose
         private String strOrderStatusName;
+        private String strOrderStatusCount;
+
+        public String getStrOrderStatusCount() {
+            return strOrderStatusCount;
+        }
+
+        public void setStrOrderStatusCount(String strOrderStatusCount) {
+            this.strOrderStatusCount = strOrderStatusCount;
+        }
 
         public String getStrOrderStatusId() {
             return strOrderStatusId;

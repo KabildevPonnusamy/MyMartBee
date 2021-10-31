@@ -9,7 +9,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
@@ -68,10 +68,11 @@
                         android:id="@+id/upload_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_marginTop="25dp"
                         android:orientation="horizontal">
 
-                        <TextView
+                        <!--<TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
@@ -80,16 +81,23 @@
                             android:text="@string/product_image_text"
                             android:textColor="@color/black"
                             android:textSize="15sp"
-                            android:textStyle="normal" />
+                            android:textStyle="normal" />-->
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:cardCornerRadius="8dp"
+                            android:layout_gravity="center"
+                            android:elevation="8dp">
 
                         <LinearLayout
                             android:id="@+id/upload_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="50dp"
-                            android:background="@drawable/upload_bgnd"
+                            android:layout_gravity="center"
                             android:gravity="center"
                             android:orientation="horizontal"
+                            android:background="@drawable/upload_bgnd"
                             android:padding="3dp">
 
                             <TextView
@@ -116,6 +124,8 @@
                                 app:tint="@color/black" />
 
                         </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
 
                     </LinearLayout>
 
@@ -145,7 +155,26 @@
                                 android:scaleType="centerCrop"
                                 android:contentDescription="@string/image_desc" />
 
-                            <com.google.android.material.textview.MaterialTextView
+                            <LinearLayout
+                                android:id="@+id/profile_change"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/change_bgnd"
+                                android:padding="7dp">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:src="@drawable/icon_edit_image"
+                                    app:tint="@color/white"
+                                    android:scaleType="centerCrop"
+                                    android:contentDescription="@string/image_desc" />
+
+                            </LinearLayout>
+
+                            <!--<com.google.android.material.textview.MaterialTextView
                                 android:id="@+id/profile_change_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -158,16 +187,16 @@
                                 android:layout_alignParentBottom="true"
                                 android:background="@drawable/change_bgnd"
                                 android:fontFamily="@font/museosans"
-                                android:textColor="@color/white"/>
+                                android:textColor="@color/white"/>-->
 
                         </RelativeLayout>
 
                     </androidx.cardview.widget.CardView>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layout_product"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/common_edittext"
                         android:layout_marginTop="10dp">
 
                         <EditText
@@ -175,25 +204,25 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:autofillHints="@string/store_name"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                             android:fontFamily="@font/museosans"
                             android:hint="@string/product_name"
                             android:inputType="textCapSentences"
+                            android:padding="3dp"
+                            android:background="@null"
+                            android:textColorHint="@color/gray_btn_bg_color"
                             android:maxLength="30"
                             android:singleLine="true"
                             android:textColor="@color/black"
-                            android:textColorHint="@color/black"
                             android:textSize="@dimen/input_text_size" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
                     <EditText
                         android:id="@+id/product_description"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/desc_bgnd"
-                        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789., "
+                        android:background="@drawable/common_edittext"
                         android:gravity="top|start"
                         android:hint="@string/product_desc"
                         android:inputType="textCapSentences"
@@ -205,7 +234,7 @@
                         android:scrollbarStyle="insideInset"
                         android:scrollbars="vertical"
                         android:textColor="@color/black"
-                        android:textColorHint="#6a6a6a"
+                        android:textColorHint="@color/gray_btn_bg_color"
                         android:textSize="@dimen/input_text_size"
                         android:textStyle="normal"
                         android:autofillHints="@string/product_desc" />
@@ -217,29 +246,46 @@
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
 
-                        <com.google.android.material.textfield.TextInputLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="5dp">
+                            android:background="@drawable/common_edittext"
+                            android:layout_marginTop="10dp">
 
                             <EditText
                                 android:id="@+id/product_subcate"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:autofillHints="@string/product_uom"
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/sub_category_text"
                                 android:singleLine="true"
+                                android:padding="3dp"
+                                android:background="@null"
+                                android:layout_alignParentStart="true"
+                                android:textColorHint="@color/gray_btn_bg_color"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
+                                android:layout_toStartOf="@+id/icon_right"
+                                android:layout_marginEnd="5dp"
                                 android:textSize="@dimen/input_text_size"
                                 android:inputType="textCapSentences" />
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                            <ImageView
+                                android:id="@+id/icon_right"
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:src="@drawable/arrow_right"
+                                android:layout_alignParentEnd="true"
+                                android:padding="3dp"
+                                app:tint="@color/black"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="@string/image_desc" />
+
+                        </RelativeLayout>
 
                     </LinearLayout>
 
-                    <com.google.android.material.textview.MaterialTextView
+                    <!--<com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/payment"
@@ -249,61 +295,74 @@
                         android:layout_marginTop="15dp"
                         android:textStyle="bold"
                         android:fontFamily="@font/museosans"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"/>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="55dp"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="12dp"
                         android:layout_gravity="center"
                         android:weightSum="2"
                         android:baselineAligned="false">
 
-                        <com.google.android.material.textfield.TextInputLayout
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="5dp"
+                            android:background="@drawable/common_edittext"
                             android:layout_weight="1">
 
                             <EditText
                                 android:id="@+id/product_qty"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:autofillHints="@string/store_name"
                                 android:digits="1234567890"
                                 android:fontFamily="@font/museosans"
+                                android:layout_gravity="center"
                                 android:hint="@string/product_quantity"
                                 android:inputType="phone"
+                                android:padding="3dp"
+                                android:background="@null"
+                                android:textColorHint="@color/gray_btn_bg_color"
                                 android:maxLength="5"
                                 android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
                                 android:textSize="@dimen/input_text_size" />
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
 
-                        <com.google.android.material.textfield.TextInputLayout
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="5dp"
+                            android:background="@drawable/common_edittext"
+                            android:orientation="vertical"
                             android:layout_weight="1">
+
+                            <Spinner
+                                android:id="@+id/uom_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"/>
 
                             <EditText
                                 android:id="@+id/product_uom"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:autofillHints="@string/product_uom"
-                                android:digits="1234567890"
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/product_uom"
+                                android:padding="3dp"
+                                android:background="@null"
+                                android:visibility="gone"
+                                android:textColorHint="@color/gray_btn_bg_color"
                                 android:inputType="textCapSentences"
                                 android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
                                 android:textSize="@dimen/input_text_size" />
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
 
                         <RelativeLayout
                             android:layout_width="0dp"
@@ -312,7 +371,6 @@
                             android:orientation="horizontal"
                             android:visibility="gone"
                             android:layout_weight="1">
-
 
                             <Spinner
                                 android:id="@+id/type_spinner"
@@ -330,7 +388,7 @@
 
                     </LinearLayout>
 
-                    <com.google.android.material.textview.MaterialTextView
+                    <!--<com.google.android.material.textview.MaterialTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/payment"
@@ -340,28 +398,29 @@
                         android:layout_marginTop="15dp"
                         android:textStyle="bold"
                         android:fontFamily="@font/museosans"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"/>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:orientation="horizontal"
                         android:layout_marginTop="10dp"
                         android:layout_gravity="center"
                         android:weightSum="2"
                         android:baselineAligned="false">
 
-                        <com.google.android.material.textfield.TextInputLayout
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="5dp"
+                            android:background="@drawable/common_edittext"
                             android:layout_weight="1">
 
                             <EditText
                                 android:id="@+id/product_sellprice"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:autofillHints="@string/store_name"
+                                android:autofillHints="@string/product_sellprice"
                                 android:digits="1234567890"
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/product_sellprice"
@@ -369,22 +428,25 @@
                                 android:maxLength="10"
                                 android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
+                                android:padding="3dp"
+                                android:background="@null"
+                                android:textColorHint="@color/gray_btn_bg_color"
                                 android:textSize="@dimen/input_text_size" />
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
 
-                        <com.google.android.material.textfield.TextInputLayout
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
+                            android:background="@drawable/common_edittext"
                             android:layout_weight="1">
 
                             <EditText
                                 android:id="@+id/product_discount_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:autofillHints="@string/store_name"
+                                android:autofillHints="@string/product_discount_price"
                                 android:digits="1234567890"
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/product_discount_price"
@@ -392,16 +454,19 @@
                                 android:maxLength="10"
                                 android:singleLine="true"
                                 android:textColor="@color/black"
-                                android:textColorHint="@color/black"
+                                android:padding="3dp"
+                                android:background="@null"
+                                android:textColorHint="@color/gray_btn_bg_color"
                                 android:textSize="@dimen/input_text_size" />
 
-                        </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
 
                     </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/common_edittext"
                         android:layout_marginTop="15dp">
 
                         <EditText
@@ -414,15 +479,18 @@
                             android:text="@string/cash_on_delivery"
                             android:inputType="textCapSentences|text"
                             android:maxLength="30"
+                            android:padding="3dp"
+                            android:background="@null"
                             android:singleLine="true"
                             android:textColor="@color/black"
                             android:textSize="@dimen/input_text_size" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/common_edittext"
                         android:layout_marginTop="15dp">
 
                         <EditText
@@ -436,10 +504,12 @@
                             android:inputType="textCapSentences|text"
                             android:maxLength="30"
                             android:singleLine="true"
+                            android:padding="3dp"
+                            android:background="@null"
                             android:textColor="@color/black"
                             android:textSize="@dimen/input_text_size" />
 
-                    </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
 
                     <Space
                         android:layout_width="match_parent"

@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.model.Products_Model;
-import com.mart.mymartbee.view.fragments.HomeFragment;
-import com.mart.mymartbee.view.fragments.ProductsFragment;
+import com.mart.mymartbee.view.fragments.CategoriesFragment;
 
 import java.util.ArrayList;
 
@@ -25,12 +23,12 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
     private ArrayList<Products_Model.ProductCategories.ProductsList> productsArrayList;
     private Context context;
 //    HomeFragment homeFragmentObj;
-    ProductsFragment productFragmentObj;
+    CategoriesFragment productFragmentObj;
     String strSubCateName;
     String strSubCateId;
 
     public HomeProductsAdapter(ArrayList<Products_Model.ProductCategories.ProductsList> productsArrayList, Context context,
-                               ProductsFragment productFragmentObj, String strSubCateName, String strSubCateId) {
+                               CategoriesFragment productFragmentObj, String strSubCateName, String strSubCateId) {
         this.productsArrayList = productsArrayList;
         this.context = context;
         this.productFragmentObj = productFragmentObj;
@@ -49,7 +47,7 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         String product_price = productsArrayList.get(position).getStrProduct_price().replace(".00", "");
-        holder.itm_product_price.setText("RM. " + product_price);
+        holder.itm_product_price.setText(product_price);
         holder.itm_product_name.setText(productsArrayList.get(position).getStrProduct_title());
         Glide.with(context).load(productsArrayList.get(position).getStrProduct_image()).into(holder.itm_product_image);
     }
@@ -85,7 +83,7 @@ public class HomeProductsAdapter extends RecyclerView.Adapter<HomeProductsAdapte
             item_product_layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((ProductsFragment) productFragmentObj).movetoProductEdit(productsArrayList.get(getAdapterPosition()),
+                    ((CategoriesFragment) productFragmentObj).movetoProductEdit(productsArrayList.get(getAdapterPosition()),
                             strSubCateName, strSubCateId);
                 }
             });

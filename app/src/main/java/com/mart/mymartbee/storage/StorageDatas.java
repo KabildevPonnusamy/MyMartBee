@@ -6,12 +6,11 @@ import android.preference.PreferenceManager;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.BusinessCategory_Model;
 import com.mart.mymartbee.model.Dashboard_Model;
 import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.Reports_Model;
-import com.mart.mymartbee.view.OrderUpdate;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -46,6 +45,24 @@ public class StorageDatas  {
     String currHour;
     ArrayList<Dashboard_Model.ViewedProductList> viewedProductLists;
     Dashboard_Model.PendingOrdersList pendingOrdersListObj;
+    ArrayList<Products_Model.ProductCategories> subCategoryList;
+    boolean isSubCateAdded;
+
+    public boolean isSubCateAdded() {
+        return isSubCateAdded;
+    }
+
+    public void setSubCateAdded(boolean subCateAdded) {
+        isSubCateAdded = subCateAdded;
+    }
+
+    public ArrayList<Products_Model.ProductCategories> getSubCategoryList() {
+        return subCategoryList;
+    }
+
+    public void setSubCategoryList(ArrayList<Products_Model.ProductCategories> subCategoryList) {
+        this.subCategoryList = subCategoryList;
+    }
 
     public Dashboard_Model.PendingOrdersList getPendingOrdersListObj() {
         return pendingOrdersListObj;
@@ -146,7 +163,7 @@ public class StorageDatas  {
         this.firebaseToken = firebaseToken;
     }
 
-    public void saveMyOwnCategory(ArrayList<Category_Model.Categorys> list, String key, Context context) {
+    public void saveMyOwnCategory(ArrayList<BusinessCategory_Model.Categorys> list, String key, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
@@ -155,11 +172,11 @@ public class StorageDatas  {
         editor.apply();
     }
 
-    public ArrayList<Category_Model.Categorys> getMyOwnCategory(String key, Context context) {
+    public ArrayList<BusinessCategory_Model.Categorys> getMyOwnCategory(String key, Context context) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();
         String json = prefs.getString(key, null);
-        Type type = new TypeToken<ArrayList<Category_Model.Categorys>>() {}.getType();
+        Type type = new TypeToken<ArrayList<BusinessCategory_Model.Categorys>>() {}.getType();
         return gson.fromJson(json, type);
     }
 

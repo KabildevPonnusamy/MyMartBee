@@ -12,7 +12,7 @@ public interface SubCategoryViewModel {
     LiveData<String> getSubCategoryError();
     LiveData<Boolean> progressSubCateUpdation();
 
-    void getSubCategories(String cate_id);
+    void getSubCategories(String seller_id, String cate_id);
     void getAddedSubCategories(Map<String, String> params);
 
 }

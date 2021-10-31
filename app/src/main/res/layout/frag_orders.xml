@@ -6,64 +6,97 @@
     android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/colorPrimary">
 
-        <TextView
+        <RelativeLayout
+            android:id="@+id/orders_title_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/museosans"
-            android:gravity="center"
-            android:text="@string/orders_txt"
-            android:textColor="@color/white"
-            android:textSize="@dimen/title_size"
-            android:textStyle="bold" />
+            android:layout_height="match_parent">
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="@font/museosans"
+                android:text="@string/orders_txt"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/icon_search"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="12dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerInParent="true"
+                android:contentDescription="@string/image_desc"
+                android:src="@drawable/icon_search"
+                app:tint="@color/white" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/search_back"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:contentDescription="@string/image_desc"
+                android:src="@drawable/back_arrow"
+                app:tint="@color/white" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/black_border">
+
+                <EditText
+                    android:id="@+id/search_orders_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:autofillHints="@string/search_content"
+                    android:background="@null"
+                    android:hint="@string/search_content"
+                    android:inputType="textCapSentences"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="0dp"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/input_text_size" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/orders_status_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:layout_marginEnd="15dp"
+        android:layout_marginStart="15dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/frag_bgnds"
         android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/search_order_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/black_border"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp">
-
-            <EditText
-                android:id="@+id/search_orders_edit"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="@string/search_rders"
-                android:background="@null"
-                android:inputType="textCapSentences"
-                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890 "
-                android:hint="@string/search_rders"
-                android:paddingStart="10dp"
-                android:paddingEnd="0dp"
-                android:singleLine="true"
-                android:textSize="@dimen/input_text_size" />
-
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/orders_status_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:clipToPadding="false"
-            android:layout_marginEnd="0dp"
-            android:layout_marginStart="15dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/orders_recycler"

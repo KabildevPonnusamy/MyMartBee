@@ -44,7 +44,7 @@ public class ViewAllProductsAdapter extends RecyclerView.Adapter<ViewAllProducts
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         String oldPrice = productsArrayList.get(position).getStrProduct_price().replace(".00", "");
-        holder.itm_product_price.setText("RM. " + oldPrice);
+        holder.itm_product_price.setText(oldPrice);
         holder.itm_product_name.setText(productsArrayList.get(position).getStrProduct_title());
         Glide.with(context).load(productsArrayList.get(position).getStrProduct_image()).into(holder.itm_product_image);
 //        holder.itm_product_price.setText("RM. " + productsArrayList.get(position).getStrProduct_price());

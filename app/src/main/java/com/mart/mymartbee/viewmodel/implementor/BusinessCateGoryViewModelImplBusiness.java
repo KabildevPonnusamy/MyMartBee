@@ -1,28 +1,26 @@
 package com.mart.mymartbee.viewmodel.implementor;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.mart.mymartbee.model.Category_Model;
-import com.mart.mymartbee.repository.implementor.CategoryListRepoImpl;
-import com.mart.mymartbee.viewmodel.interfaces.CategoryViewModel;
+import com.mart.mymartbee.model.BusinessCategory_Model;
+import com.mart.mymartbee.repository.implementor.BusinessCategoryListRepoImpl;
+import com.mart.mymartbee.viewmodel.interfaces.BusinessCategoryViewModel;
 
 import java.util.Map;
 
-public class CateGoryViewModelImpl extends ViewModel implements CategoryViewModel {
+public class BusinessCateGoryViewModelImplBusiness extends ViewModel implements BusinessCategoryViewModel {
 
-    private MutableLiveData<Category_Model> mutableCategoryList;
-    private MutableLiveData<Category_Model> mutableAddedCategoryList;
+    private MutableLiveData<BusinessCategory_Model> mutableCategoryList;
+    private MutableLiveData<BusinessCategory_Model> mutableAddedCategoryList;
     private MutableLiveData<String> mutableCateError;
     private MutableLiveData<Boolean> progressCateObserver;
-    private CategoryListRepoImpl categoryListRepo;
+    private BusinessCategoryListRepoImpl categoryListRepo;
 
-    public CateGoryViewModelImpl() {
-        categoryListRepo = new CategoryListRepoImpl();
-        mutableCategoryList = new MutableLiveData<Category_Model>();
+    public BusinessCateGoryViewModelImplBusiness() {
+        categoryListRepo = new BusinessCategoryListRepoImpl();
+        mutableCategoryList = new MutableLiveData<BusinessCategory_Model>();
         mutableCateError = new MutableLiveData<String>();
         progressCateObserver = new MutableLiveData<Boolean>();
     }
@@ -38,7 +36,7 @@ public class CateGoryViewModelImpl extends ViewModel implements CategoryViewMode
     }
 
     @Override
-    public LiveData<Category_Model> getAddedCategoryListLV() {
+    public LiveData<BusinessCategory_Model> getAddedCategoryListLV() {
         return mutableAddedCategoryList;
     }
 
@@ -52,7 +50,7 @@ public class CateGoryViewModelImpl extends ViewModel implements CategoryViewMode
     }
 
     @Override
-    public LiveData<Category_Model> getCategoryListLV() {
+    public LiveData<BusinessCategory_Model> getCategoryListLV() {
         return mutableCategoryList;
     }
 

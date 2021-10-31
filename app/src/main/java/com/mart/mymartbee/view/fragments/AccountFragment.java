@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -41,7 +42,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
 
-    CircleImageView store_image;
+    ImageView store_image;
     TextView store_name, store_category, profile_change, version_number, store_available_hours;
     RelativeLayout settings_layout, help_support_layout;
     LinearLayout logout_layout;//share_whatsapp_layout

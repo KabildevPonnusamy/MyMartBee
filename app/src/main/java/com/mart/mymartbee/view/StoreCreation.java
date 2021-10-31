@@ -73,12 +73,12 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     String strLatitude = "", strLongitude = "";
     String profile_str = "";
 
-    CircleImageView store_image;
-    EditText store_name, category_et, address_et, start_time, close_time;
+//    CircleImageView store_image;
+    ImageView store_image;
+    EditText store_name, business_category_et, address_et, start_time, close_time;
     TextView upload_image;
     Button create_btn;
     ImageView act_back;
-    TextInputLayout layout_store;
     String sel_category = "";
     int selectedId = -1;
     RegisterViewModel registerViewModel;
@@ -130,12 +130,11 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     }
 
     public void initView() {
-        layout_store = findViewById(R.id.layout_store);
         act_back = findViewById(R.id.act_back);
         create_btn = findViewById(R.id.create_btn);
         upload_image = findViewById(R.id.upload_image);
         store_name = findViewById(R.id.store_name);
-        category_et = findViewById(R.id.category_et);
+        business_category_et = findViewById(R.id.business_category_et);
         address_et = findViewById(R.id.address_et);
         start_time = findViewById(R.id.start_time);
         close_time = findViewById(R.id.close_time);
@@ -146,9 +145,9 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
         close_time.setClickable(true);
         address_et.setFocusable(false);
         address_et.setClickable(true);
-        category_et.setFocusable(false);
-        category_et.setClickable(true);
-        category_et.setOnClickListener(this);
+        business_category_et.setFocusable(false);
+        business_category_et.setClickable(true);
+        business_category_et.setOnClickListener(this);
         address_et.setOnClickListener(this);
         start_time.setOnClickListener(this);
         close_time.setOnClickListener(this);
@@ -169,15 +168,15 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 showCloseTime();
                 break;
 
-            case R.id.category_et:
+            case R.id.business_category_et:
                 if (NetworkAvailability.isNetworkAvailable(StoreCreation.this)) {
-                    hideKeyboard(category_et);
+                    hideKeyboard(business_category_et);
                     Log.e("appSample", "ID: " + selectedId);
 
                     Bundle bundle = new Bundle();
                     bundle.putString("mobileNumber", strCountryCode + strMobile);
                     bundle.putInt("SelectedId", selectedId);
-                    Intent intent = new Intent(StoreCreation.this, CategorySelection.class);
+                    Intent intent = new Intent(StoreCreation.this, BusinessCategorySelection.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, STORE_CREATION_to_CATEGORY_SELECTION);
                 } else {
@@ -214,7 +213,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
 
             case R.id.create_btn:
                 strShop = store_name.getText().toString().trim();
-                strCategory = category_et.getText().toString().trim();
+                strCategory = business_category_et.getText().toString().trim();
                 strAddress = address_et.getText().toString().trim();
                 strStartTime = start_time.getText().toString().trim();
                 strCloseTime = close_time.getText().toString().trim();
@@ -230,7 +229,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 }
 
                 if(strCategory.equalsIgnoreCase("")) {
-                    showErrorMessage("Please select category.");
+                    showErrorMessage("Please select business category.");
                     return;
                 }
 
@@ -321,7 +320,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAllowFlipping(false)
                 .setActivityTitle("Select Image")
-                .setCropShape(CropImageView.CropShape.OVAL)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
                 .setCropMenuCropButtonTitle("Save")
                 .setRequestedSize(200, 200)
                 .start(StoreCreation.this);
@@ -367,7 +366,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 hideKeyboard(store_name);
                 sel_category = data.getStringExtra("SelectedCategory");
                 selectedId = data.getIntExtra("SelectedId", 0);
-                category_et.setText(sel_category);
+                business_category_et.setText(sel_category);
             }
         }
 
@@ -417,7 +416,6 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
             Log.e("appSample", "FilePath_2: " + s);
             store_image.setImageURI(compressUri);
             upload_image.setText("Change");
-
         }
     }
 

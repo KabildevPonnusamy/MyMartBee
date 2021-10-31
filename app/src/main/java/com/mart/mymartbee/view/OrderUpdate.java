@@ -128,20 +128,31 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
         });
     }
 
-    public int addTwoNum (int a , int b) {
-        return a + b;
-    }
-
     private void setStatusAdapter() {
 
         for (int i = 0; i < ordersStatusLists.size(); i++) {
+//            Log.e("appSample", "Status: " + ordersStatusLists.get(i).getStrOrderStatusId());
             if (ordersStatusLists.get(i).getStrOrderStatusName().toLowerCase().equalsIgnoreCase(strOrderStatus.toLowerCase())) {
                 statusValue = Integer.parseInt(ordersStatusLists.get(i).getStrOrderStatusId());
             }
         }
 //        statusValue = statusValue + 1;
 
+        Log.e("appSample", "statusValue: " + statusValue);
+
+        /*if(statusValue == 3) {
+            statusValue = statusValue - 1;
+        }
+
+        Log.e("appSample", "statusValueNew: " + statusValue);*/
+
+        if(statusValue != 0) {
+            statusValue = statusValue - 1;
+        }
+
+
         for (int i = statusValue; i < ordersStatusLists.size(); i++) {
+            Log.e("appSample", "Status: " + ordersStatusLists.get(i).getStrOrderStatusId());
             ordersStatusStrList.add(ordersStatusLists.get(i).getStrOrderStatusName());
         }
 

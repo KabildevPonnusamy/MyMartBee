@@ -1,5 +1,6 @@
 package com.mart.mymartbee.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -7,8 +8,11 @@ import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -39,12 +43,15 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
     ArrayList<Products_Model.ProductCategories.ProductsList> productsListTemp;
     String strSubCateId, strSubCateName;
     ViewAllProductsAdapter viewAllProductsAdapter;
+    RelativeLayout viewall_title_layout;
+    ImageView icon_search, search_back;
+    LinearLayout search_layout;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.product_viewall);
-
 
         initView();
         getBundles();
@@ -71,6 +78,11 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
         productsList = StorageDatas.getInstance().getCateProductsList();
         productsListTemp.addAll(productsList);
 
+        viewall_title_layout = findViewById(R.id.viewall_title_layout);
+        icon_search = findViewById(R.id.icon_search);
+        search_back = findViewById(R.id.search_back);
+        search_layout = findViewById(R.id.search_layout);
+
         viewall_back = findViewById(R.id.viewall_back);
         subcate_title_tv = findViewById(R.id.subcate_title_tv);
         all_product_search = findViewById(R.id.all_product_search);
@@ -80,6 +92,8 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setListeners() {
+        icon_search.setOnClickListener(this);
+        search_back.setOnClickListener(this);
         viewall_back.setOnClickListener(this);
         all_product_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -103,6 +117,7 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
                     return true;
                 }
             });
+
             @Override
             public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
                 View child = rv.findChildViewUnder(e.getX(), e.getY());
@@ -174,8 +189,8 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
     }
 
     private void setAdapter() {
-        if(productsList != null) {
-            if(productsList.size() > 0) {
+        if (productsList != null) {
+            if (productsList.size() > 0) {
                 allproducts_recycler.setHasFixedSize(true);
                 allproducts_recycler.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
                 viewAllProductsAdapter = new ViewAllProductsAdapter(productsList, getApplicationContext(),
@@ -187,22 +202,46 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()) {
+        switch (v.getId()) {
+            case R.id.icon_search:
+                openKeyboard();
+                all_product_search.requestFocus();
+                viewall_title_layout.setVisibility(View.GONE);
+                search_layout.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.search_back:
+                closeKeyboard();
+                all_product_search.setText("");
+                viewall_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                break;
+
             case R.id.viewall_back:
                 finish();
                 break;
         }
     }
 
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search_back.getWindowToken(), 0);
+    }
+
+    public void openKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow( search_back.getApplicationWindowToken(),  InputMethodManager.SHOW_FORCED, 0);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == VIEW_ALL_to_PRODUCT_DETAILS) {
-            if(resultCode == PRODUCT_UPDATED_success) {
+        if (requestCode == VIEW_ALL_to_PRODUCT_DETAILS) {
+            if (resultCode == PRODUCT_UPDATED_success) {
                 setResult(PRODUCT_UPDATED_success);
                 finish();
             }
-            if(resultCode == PRODUCT_DELETION_success) {
+            if (resultCode == PRODUCT_DELETION_success) {
                 setResult(PRODUCT_DELETION_success);
                 finish();
             }

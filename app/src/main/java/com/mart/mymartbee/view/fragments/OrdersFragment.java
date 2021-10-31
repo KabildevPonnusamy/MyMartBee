@@ -1,6 +1,7 @@
 package com.mart.mymartbee.view.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,8 +12,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +37,7 @@ import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.OrderUpdate;
+import com.mart.mymartbee.view.adapters.NewOrdersAdapter;
 import com.mart.mymartbee.view.adapters.OrderStatusAdapter;
 import com.mart.mymartbee.view.adapters.OrdersAdapter;
 import com.mart.mymartbee.view.adapters.OrdersDetailsAdapter;
@@ -41,10 +46,10 @@ import com.mart.mymartbee.viewmodel.interfaces.OrdersViewModel;
 
 import java.util.ArrayList;
 
-public class OrdersFragment extends Fragment implements Constants {
+public class OrdersFragment extends Fragment implements Constants, View.OnClickListener {
 
     RecyclerView orders_recycler, orders_status_recycler;
-    LinearLayout no_orders_found_layout, search_order_layout;
+    LinearLayout no_orders_found_layout; // search_order_layout
     ProgressDialog progressDialog;
     EditText search_orders_edit;
 
@@ -58,17 +63,19 @@ public class OrdersFragment extends Fragment implements Constants {
     ArrayList<Orders_Model.OrdersList.OrderedProducts> orderedProductsList;
     LinearLayoutManager lManager = null;
     OrdersViewModel ordersViewModel;
-    OrdersAdapter ordersAdapter;
-//    int orderListposition = 0;
     ArrayList<Order_Status_Model.OrdersStatusList> ordersStatusLists;
     int selectedId = 0;
+    NewOrdersAdapter ordersAdapter;
     OrderStatusAdapter orderStatusAdapter;
+    RelativeLayout orders_title_layout;
+    ImageView icon_search, search_back;
+    LinearLayout search_layout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_orders, container, false);
-        Log.e("appSample", "OrdersFragement");
+
         ordersViewModel = ViewModelProviders.of(getActivity()).get(OrdersViewModelImpl.class);
         initView(view);
         myPreferenceDatas();
@@ -77,6 +84,11 @@ public class OrdersFragment extends Fragment implements Constants {
     }
 
     private void initView(View view) {
+        orders_title_layout = view.findViewById(R.id.orders_title_layout);
+        icon_search = view.findViewById(R.id.icon_search);
+        search_back = view.findViewById(R.id.search_back);
+        search_layout = view.findViewById(R.id.search_layout);
+
         ordersStatusLists = new ArrayList<Order_Status_Model.OrdersStatusList>();
         ordersLists = new ArrayList<Orders_Model.OrdersList>();
         mainOrdersList = new ArrayList<Orders_Model.OrdersList>();
@@ -86,7 +98,7 @@ public class OrdersFragment extends Fragment implements Constants {
         orders_recycler = view.findViewById(R.id.orders_recycler);
         orders_status_recycler = view.findViewById(R.id.orders_status_recycler);
         no_orders_found_layout = view.findViewById(R.id.no_orders_found_layout);
-        search_order_layout = view.findViewById(R.id.search_order_layout);
+//        search_order_layout = view.findViewById(R.id.search_order_layout);
         setListeners();
     }
 
@@ -97,6 +109,9 @@ public class OrdersFragment extends Fragment implements Constants {
     }
 
     private void setListeners() {
+        icon_search.setOnClickListener(this);
+        search_back.setOnClickListener(this);
+
         search_orders_edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -187,6 +202,28 @@ public class OrdersFragment extends Fragment implements Constants {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.icon_search:
+                orders_title_layout.setVisibility(View.GONE);
+                search_layout.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.search_back:
+                closeKeyboard();
+                search_orders_edit.setText("");
+                orders_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                break;
+        }
+    }
+
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
     public void statusUpdateAdapter(String strStatusName) {
         search_orders_edit.setText("");
         ordersLists.clear();
@@ -253,6 +290,23 @@ public class OrdersFragment extends Fragment implements Constants {
                                 item.setOrderedProductsList(ordersListsTemp.get(i).getOrderedProductsList());
                                 item.setOrderHistoryList(ordersListsTemp.get(i).getOrderHistoryList());
                                 ordersLists.add(item);
+                            } else {
+                                for(int j=0; j < ordersListsTemp.get(i).getOrderedProductsList().size(); j++) {
+                                    if (ordersListsTemp.get(i).getOrderedProductsList().get(j).getStrCategoryName().toLowerCase().
+                                            contains(value.toLowerCase()) ) {
+                                        Orders_Model.OrdersList item = new Orders_Model.OrdersList();
+                                        item.setStrOrderId(ordersListsTemp.get(i).getStrOrderId());
+                                        item.setStrStatus(ordersListsTemp.get(i).getStrStatus());
+                                        item.setStrOrderDate(ordersListsTemp.get(i).getStrOrderDate());
+                                        item.setStrTotalAmount(ordersListsTemp.get(i).getStrTotalAmount());
+                                        item.setStrCountryCode(ordersListsTemp.get(i).getStrCountryCode());
+                                        item.setStrPhone(ordersListsTemp.get(i).getStrPhone());
+                                        item.setStrAddress(ordersListsTemp.get(i).getStrAddress());
+                                        item.setOrderedProductsList(ordersListsTemp.get(i).getOrderedProductsList());
+                                        item.setOrderHistoryList(ordersListsTemp.get(i).getOrderHistoryList());
+                                        ordersLists.add(item);
+                                    }
+                                }
                             }
                         }
                     }
@@ -300,10 +354,6 @@ public class OrdersFragment extends Fragment implements Constants {
                     mainOrdersList.clear();
                     ordersLists.clear();
                     ordersListsTemp.clear();
-
-                    /*Log.e("appSample", "MOListSize: " + mainOrdersList.size());
-                    Log.e("appSample", "OListSize: " + mainOrdersList.size());
-                    Log.e("appSample", "TempOListSize: " + mainOrdersList.size());*/
                     mainOrdersList = orders_model.getOrdersList();
                     ordersLists.addAll(mainOrdersList);
                     ordersListsTemp.addAll(ordersLists);
@@ -328,6 +378,7 @@ public class OrdersFragment extends Fragment implements Constants {
         } else {
             noInternetConnection(GET_MY_ORDERS);
         }
+
         ordersViewModel.getOrderStatusListLV().observe(this, new Observer<Order_Status_Model>() {
             @Override
             public void onChanged(Order_Status_Model order_status_model) {
@@ -337,6 +388,7 @@ public class OrdersFragment extends Fragment implements Constants {
                     Order_Status_Model.OrdersStatusList item = new Order_Status_Model.OrdersStatusList();
                     item.setStrOrderStatusId("0");
                     item.setStrOrderStatusName("All");
+                    item.setStrOrderStatusCount("0");
                     ordersStatusLists.add(item);
                 }
 
@@ -362,22 +414,44 @@ public class OrdersFragment extends Fragment implements Constants {
     }
 
     private void setOrdersAdapter() {
+
+        if(mainOrdersList != null) {
+            if(mainOrdersList.size() > 0) {
+                ordersStatusLists.get(0).setStrOrderStatusCount("" + mainOrdersList.size());
+
+                for(int i=1; i < ordersStatusLists.size(); i++) {
+                    int count = 0;
+                    for(int j=0; j < mainOrdersList.size(); j++) {
+
+                        if(mainOrdersList.get(j).getStrStatus().toLowerCase().equalsIgnoreCase(ordersStatusLists.get(i).getStrOrderStatusName())) {
+                            count++;
+
+                            ordersStatusLists.get(i).setStrOrderStatusCount("" + count);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        orderStatusAdapter.notifyDataSetChanged();
+
         orders_recycler.setHasFixedSize(true);
         lManager = new LinearLayoutManager(getActivity());
         orders_recycler.setLayoutManager(lManager);
-        ordersAdapter = new OrdersAdapter(ordersLists, getActivity());
+        ordersAdapter = new NewOrdersAdapter(ordersLists, getActivity());
         orders_recycler.setAdapter(ordersAdapter);
     }
 
     private void noOrdersFound() {
         orders_recycler.setVisibility(View.GONE);
-        search_order_layout.setVisibility(View.INVISIBLE);
+        icon_search.setVisibility(View.GONE);
         no_orders_found_layout.setVisibility(View.VISIBLE);
     }
 
     private void ordersFound() {
         no_orders_found_layout.setVisibility(View.GONE);
-        search_order_layout.setVisibility(View.VISIBLE);
+        icon_search.setVisibility(View.VISIBLE);
         orders_recycler.setVisibility(View.VISIBLE);
     }
 
@@ -426,6 +500,7 @@ public class OrdersFragment extends Fragment implements Constants {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == GET_MY_ORDERS) {
+            selectedId = 0;
             getOrderStatus();
         } /*else if (requestCode == MOVE_ORDER_DETAILS) {
             sentToOrderDetails();
@@ -438,7 +513,7 @@ public class OrdersFragment extends Fragment implements Constants {
                 } else {
                     ordersLists.clear();
                 }
-
+                selectedId = 0;
                 getOrderStatus();
             }
         }

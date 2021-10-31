@@ -28,7 +28,8 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#21ADA8</color>
+    <!--<color name="colorPrimary">#21ADA8</color>-->
+    <color name="colorPrimary">#FF9408</color>
     <color name="colorPrimaryDark">#21ADA8</color>
     <color name="text_red">#d82032</color>
     <color name="button_red">#fa1027</color>
@@ -37,8 +38,11 @@
     <color name="text_blue1">#3F51B5</color>
     <color name="red">#FA0015</color>
 
-    <color name="main_color">#21ADA8</color>
-    <color name="yellow_btn_color">#F5A603</color>
+    <!--<color name="main_color">#21ADA8</color>-->
+    <!--<color name="yellow_btn_color">#F5A603</color>-->
+    <color name="main_color_two">#21ADA8</color>
+    <color name="main_color">#FF9408</color>
+    <color name="yellow_btn_color">#FF9408</color>
     <color name="textColorPrimary">#F5A603</color>
     <color name="light_yellow">#FAD281</color>
     <color name="shadow_color">#8888</color>
@@ -46,6 +50,7 @@
     <color name="light_white_two">#E5E5E5</color>
     <color name="light_sandle">#FDF4DC</color>
     <color name="whatsapp_icon_color">#25D366</color>
-    <color name="snow_color">#FFFAFA </color>
+    <color name="snow_color">#FFFAFA</color>
+    <color name="snow_thick_color">#FADAE2</color>
 
 </resources>

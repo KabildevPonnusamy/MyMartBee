@@ -1,6 +1,7 @@
 package com.mart.mymartbee.view.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,8 +13,11 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -47,9 +51,9 @@ import java.util.ArrayList;
 public class ReportsFragment extends Fragment implements View.OnClickListener, Constants {
 
     RecyclerView report_complete_recycler, report_reject_recycler;
-    LinearLayout completed_layout, rejected_layout, reports_title_layout,
+    LinearLayout completed_layout, rejected_layout,
             reports_found_layout, no_reports_found_layout;
-//    TextView completed_count, rejected_count;
+    TextView completed_count, rejected_count;
     ProgressDialog progressDialog;
 
     MyPreferenceDatas preferenceDatas;
@@ -73,6 +77,11 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
     int rejListPosition = 0;
     CardView completed_cardView, rejected_cardView;
 
+    RelativeLayout reports_title_layout;
+    ImageView icon_search, search_back;
+    LinearLayout search_layout;
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -86,6 +95,11 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
     }
 
     private void initView(View view) {
+        reports_title_layout = view.findViewById(R.id.reports_title_layout);
+        icon_search = view.findViewById(R.id.icon_search);
+        search_back = view.findViewById(R.id.search_back);
+        search_layout = view.findViewById(R.id.search_layout);
+
         completed_cardView = view.findViewById(R.id.completed_cardView);
         rejected_cardView = view.findViewById(R.id.rejected_cardView);
         search_compreport_layout = view.findViewById(R.id.search_compreport_layout);
@@ -102,15 +116,12 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
         report_reject_recycler = view.findViewById(R.id.report_reject_recycler);
         completed_layout = view.findViewById(R.id.completed_layout);
         rejected_layout = view.findViewById(R.id.rejected_layout);
-        reports_title_layout = view.findViewById(R.id.reports_title_layout);
         reports_found_layout = view.findViewById(R.id.reports_found_layout);
         no_reports_found_layout = view.findViewById(R.id.no_reports_found_layout);
-//        rejected_count = view.findViewById(R.id.rejected_count);
-//        completed_count = view.findViewById(R.id.completed_count);
+        completed_count = view.findViewById(R.id.completed_count);
+        rejected_count = view.findViewById(R.id.rejected_count);
         completed_layout.setOnClickListener(this);
         rejected_layout.setOnClickListener(this);
-        /*completed_cardView.setOnClickListener(this);
-        rejected_cardView.setOnClickListener(this);*/
         setListeners();
     }
 
@@ -121,7 +132,8 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
     }
 
     private void setListeners() {
-
+        icon_search.setOnClickListener(this);
+        search_back.setOnClickListener(this);
         search_compreport_edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -283,6 +295,14 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
         Log.e("appSample", "CompletedListSize: " + completedReportList.size());
         Log.e("appSample", "RejectedListSize: " + rejectedReportList.size());
 
+        if(rejectedReportList != null) {
+            rejected_count.setText(" ("+ rejectedReportList.size() +")");
+        }
+
+        if(completedReportList != null) {
+            completed_count.setText(" ("+ completedReportList.size() +")");
+        }
+
         completedReportListTemp.addAll(completedReportList);
         rejectedReportListTemp.addAll(rejectedReportList);
         report_complete_recycler.setVisibility(View.VISIBLE);
@@ -338,35 +358,29 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
         }
     }
 
-    public void setMargin(CardView view, int marginValue, int cardElevation, int radius) {
-
-        /*LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        params.setMargins(marginValue, marginValue, marginValue, marginValue);
-        view.setLayoutParams(params);
-//        view.setMaxCardElevation(cardElevation);
-        view.setRadius(radius);*/
-//        view.setCardBackgroundColor(getActivity().getResources().getColor(color));
-    }
-
-    public void setDesignforLayout(CardView cardView, int cardBgColor) {
-        cardView.setCardBackgroundColor(cardBgColor);
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.completed_layout:
-//                completed_layout.setBackgroundResource(R.drawable.main_color_bgnd);
-//                rejected_layout.setBackgroundResource(R.drawable.btn_bgnd);
-//                setMargin(completed_cardView, 15, 15, 8);
-//                setMargin(rejected_cardView, 0, 0, 0);
+            case R.id.icon_search:
+                reports_title_layout.setVisibility(View.GONE);
+                search_layout.setVisibility(View.VISIBLE);
+                break;
 
-//                setDesignforLayout(completed_cardView, R.color.white);
-//                setDesignforLayout(rejected_cardView, R.color.snow_color);
+            case R.id.search_back:
+                search_compreport_edit.setText("");
+                search_rejreport_edit.setText("");
+                reports_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                closeKeyboard();
+                break;
+
+            case R.id.completed_layout:
+                search_compreport_edit.setText("");
+                search_rejreport_edit.setText("");
+                reports_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                closeKeyboard();
+
 
                 completed_cardView.setCardBackgroundColor(getActivity().getResources().getColor(R.color.white));
                 rejected_cardView.setCardBackgroundColor(getActivity().getResources().getColor(R.color.snow_color));
@@ -376,14 +390,13 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
                 search_rejreport_layout.setVisibility(View.GONE);
                 setReportCompleteAdapter();
                 break;
-            case R.id.rejected_layout:
-//                setMargin(completed_cardView, 0, 0, 0);
-//                setMargin(rejected_cardView, 15, 15, 8);
-//                completed_layout.setBackgroundResource(R.drawable.btn_bgnd);
-//                rejected_layout.setBackgroundResource(R.drawable.main_color_bgnd);
 
-//                setDesignforLayout(completed_cardView, R.color.snow_color);
-//                setDesignforLayout(rejected_cardView, R.color.white);
+            case R.id.rejected_layout:
+                search_compreport_edit.setText("");
+                search_rejreport_edit.setText("");
+                reports_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                closeKeyboard();
 
                 completed_cardView.setCardBackgroundColor(getActivity().getResources().getColor(R.color.snow_color));
                 rejected_cardView.setCardBackgroundColor(getActivity().getResources().getColor(R.color.white));
@@ -393,14 +406,6 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
                 search_rejreport_layout.setVisibility(View.VISIBLE);
                 setReportRejectedAdapter();
                 break;
-        }
-    }
-
-    private void showStatus() {
-        if (report_layout_status == 0) {
-
-        } else {
-
         }
     }
 
@@ -418,6 +423,11 @@ public class ReportsFragment extends Fragment implements View.OnClickListener, C
                 progressDialog = null;
             }
         }
+    }
+
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
     }
 
     public void noInternetConnection(int requestCode) {

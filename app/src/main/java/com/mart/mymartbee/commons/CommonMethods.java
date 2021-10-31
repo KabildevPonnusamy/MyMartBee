@@ -7,7 +7,11 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,25 +29,51 @@ public class CommonMethods extends Application  {
     }
 
     public static void Toast(Context context, String message) {
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.toast, null); // (ViewGroup) findViewById(R.id.toast_layout_root)
+
+        TextView msg_content = (TextView) layout.findViewById(R.id.msg_content);
+        msg_content.setText(message);
+
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.BOTTOM, 0, 200);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+
+        /*Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         View view = toast.getView();
         view.setBackgroundResource(R.drawable.main_color_bgnd);
         view.setPadding(30,30,30,30);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
         v.setTextColor(Color.WHITE);
         v.setText(message);
-        toast.show();
+        toast.show();*/
     }
 
     public static void LinkCopiedToast(Context context, String message) {
-        Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.toast_whatsapp, null); // (ViewGroup) findViewById(R.id.toast_layout_root)
+
+        TextView msg_content = (TextView) layout.findViewById(R.id.msg_content);
+        msg_content.setText(message);
+
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.BOTTOM, 0, 150);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setView(layout);
+        toast.show();
+
+        /*Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
         View view = toast.getView();
         view.setBackgroundResource(R.drawable.link_copied_bgnd);
         view.setPadding(25,25,25,25);
         TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
         v.setTextColor(Color.WHITE);
         v.setText(message);
-        toast.show();
+        toast.show();*/
     }
 
     public static String getContactName(Context context, String number) {

@@ -44,9 +44,9 @@ public class DashboardViewModelImpl extends ViewModel implements DashboardViewMo
     }
 
     @Override
-    public void getDashboardDatas(String sellerId) {
+    public void getDashboardDatas(String sellerId, String short_value) {
         try {
-            mutablegetDashboardDatas = dashboardRepo.getDashboardModel(sellerId);
+            mutablegetDashboardDatas = dashboardRepo.getDashboardModel(sellerId, short_value);
         } catch(Exception e) {
             mutableDashboardErrors.setValue(e.getMessage());
         }

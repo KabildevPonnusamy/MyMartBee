@@ -5,10 +5,12 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.model.Reports_Model;
@@ -30,7 +32,7 @@ public class ReportRejectedAdapter extends RecyclerView.Adapter<ReportRejectedAd
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rejected_reports, parent,
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_rejected_reports_new, parent,
                 false);
         return new ViewHolder(v);
     }
@@ -38,23 +40,36 @@ public class ReportRejectedAdapter extends RecyclerView.Adapter<ReportRejectedAd
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.report_no.setText(reportsLists.get(position).getStrOrderId());
-        String strPrice = reportsLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.report_total.setText("RM. " + strPrice);
-        strName = CommonMethods.getContactName(context, reportsLists.get(position).getStrPhone());
+
+        holder.order_number.setText("#" + reportsLists.get(position).getStrOrderId() );
+        holder.order_date.setText(formatDate(reportsLists.get(position).getStrOrderedDate()));
+        holder.order_status.setText(reportsLists.get(position).getStrStatus());
+        strName = CommonMethods.getContactName(context,  reportsLists.get(position).getStrPhone());
         if(strName.equalsIgnoreCase("")) {
-            holder.report_user_mobile.setText(reportsLists.get(position).getStrCountryCode() + " " +
+            holder.ordered_mobile_number.setText(reportsLists.get(position).getStrCountryCode() + " " +
                     reportsLists.get(position).getStrPhone());
         } else {
-            holder.report_user_mobile.setText(strName);
+            holder.ordered_mobile_number.setText(strName);
         }
 
-        String strDate = "";
-        for (int i=0; i<reportsLists.get(position).getOrderHistoryList().size(); i++) {
-            strDate = reportsLists.get(position).getOrderHistoryList().get(i).getStrDateAdded();
-        }
+        String product_price = reportsLists.get(position).getStrTotalAmount().replace(".00", "");
+        holder.order_total_price.setText( "RM. " + product_price);
 
-        holder.report_rejected_date.setText(formatDate(strDate));
+        if(reportsLists.get(position).getProductsList().size() > 0 ) {
+
+            if(reportsLists.get(position).getProductsList().size() == 1) {
+                holder.order_quantity.setText(reportsLists.get(position).getProductsList().size() + " Item");
+            } else {
+                holder.order_quantity.setText(reportsLists.get(position).getProductsList().size() + " Items");
+            }
+
+            String image = reportsLists.get(position).getProductsList().get(0).getStrImage();
+            if(image != null) {
+                if(!image.equalsIgnoreCase("")) {
+                    Glide.with(context).load(image).into(holder.order_image);
+                }
+            }
+        }
     }
 
     private String formatDate(String inputDate) {
@@ -74,14 +89,22 @@ public class ReportRejectedAdapter extends RecyclerView.Adapter<ReportRejectedAd
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView report_no, report_total, report_rejected_date, report_user_mobile;
+
+        TextView order_number, order_date, order_quantity, order_total_price,
+                ordered_mobile_number, order_status;
+        ImageView order_image;
 
         ViewHolder(View itemView) {
             super(itemView);
-            report_user_mobile = (TextView) itemView.findViewById(R.id.report_user_mobile);
-            report_no = (TextView) itemView.findViewById(R.id.report_no);
-            report_total = (TextView) itemView.findViewById(R.id.report_total);
-            report_rejected_date = (TextView) itemView.findViewById(R.id.report_rejected_date);
+
+            order_image = itemView.findViewById(R.id.order_image);
+            order_number = itemView.findViewById(R.id.order_number);
+            order_date = itemView.findViewById(R.id.order_date);
+            order_quantity = itemView.findViewById(R.id.order_quantity);
+            order_total_price = itemView.findViewById(R.id.order_total_price);
+            ordered_mobile_number = itemView.findViewById(R.id.ordered_mobile_number);
+            order_status = itemView.findViewById(R.id.order_status);
+
         }
     }
 }

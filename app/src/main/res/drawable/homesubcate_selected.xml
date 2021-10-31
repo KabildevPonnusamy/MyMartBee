@@ -4,7 +4,7 @@
         android:color="@color/yellow_btn_color" />
 
     <solid android:color="@color/yellow_btn_color" />
-    <corners android:radius="6dp" />
+    <corners android:radius="0dp" />
     <padding
         android:bottom="5dp"
         android:left="5dp"

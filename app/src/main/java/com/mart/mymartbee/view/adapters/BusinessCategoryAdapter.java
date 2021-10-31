@@ -15,17 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.mart.mymartbee.R;
-import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.BusinessCategory_Model;
 
 import java.util.ArrayList;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class BusinessCategoryAdapter extends RecyclerView.Adapter<BusinessCategoryAdapter.ViewHolder> {
 
-    private ArrayList<Category_Model.Categorys> categoryList;
+    private ArrayList<BusinessCategory_Model.Categorys> categoryList;
     private Context context;
     private int selectedId;
 
-    public CategoryAdapter(ArrayList<Category_Model.Categorys> categoryList, Context context, int selectedId) {
+    public BusinessCategoryAdapter(ArrayList<BusinessCategory_Model.Categorys> categoryList, Context context, int selectedId) {
         this.categoryList = categoryList;
         this.context = context;
         this.selectedId = selectedId;
@@ -67,7 +67,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         return categoryList.size();
     }
 
-    public void updateAdapter(ArrayList<Category_Model.Categorys> categoryList) {
+    public void updateAdapter(ArrayList<BusinessCategory_Model.Categorys> categoryList) {
         this.categoryList = categoryList;
         notifyDataSetChanged();
     }

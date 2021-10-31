@@ -1,12 +1,16 @@
 package com.mart.mymartbee.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +39,9 @@ public class ProductViewsAct extends AppCompatActivity implements View.OnClickLi
     ArrayList<Dashboard_Model.ViewedProductList> viewedProductList;
     ArrayList<Dashboard_Model.ViewedProductList> viewedProductListTemp;
     ViewedProductsAdapter viewedProductsAdapter;
+    RelativeLayout productviews_title_layout;
+    ImageView icon_search, search_back;
+    LinearLayout search_layout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +53,11 @@ public class ProductViewsAct extends AppCompatActivity implements View.OnClickLi
     }
 
     public void initView() {
+        productviews_title_layout = findViewById(R.id.productviews_title_layout);
+        icon_search = findViewById(R.id.icon_search);
+        search_back = findViewById(R.id.search_back);
+        search_layout = findViewById(R.id.search_layout);
+
         viewedProductList = new ArrayList<>();
         viewedProductListTemp = new ArrayList<>();
         viewedProductList = StorageDatas.getInstance().getViewedProductLists();
@@ -65,6 +77,8 @@ public class ProductViewsAct extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setListeners() {
+        icon_search.setOnClickListener(this);
+        search_back.setOnClickListener(this);
         product_views_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -137,9 +151,32 @@ public class ProductViewsAct extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public void closeKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(search_back.getWindowToken(), 0);
+    }
+
+    public void openKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInputFromWindow( product_views_search.getApplicationWindowToken(),  InputMethodManager.SHOW_FORCED, 0);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.icon_search:
+                openKeyboard();
+                product_views_search.requestFocus();
+                productviews_title_layout.setVisibility(View.GONE);
+                search_layout.setVisibility(View.VISIBLE);
+                break;
+
+            case R.id.search_back:
+                closeKeyboard();
+                product_views_search.setText("");
+                productviews_title_layout.setVisibility(View.VISIBLE);
+                search_layout.setVisibility(View.GONE);
+                break;
             case R.id.productview_back:
                 finish();
                 break;

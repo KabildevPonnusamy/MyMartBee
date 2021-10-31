@@ -115,7 +115,7 @@ public class Splash extends AppCompatActivity implements Constants{
 
                         if(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue) != null &&
                                 !TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue).equalsIgnoreCase("")) {
-                            Intent intent= new Intent(Splash.this, HomeActivity.class);
+                            Intent intent= new Intent(Splash.this, HomeActivity.class); // Map_Activity
                             startActivity(intent);
                             finish();
                         } else {

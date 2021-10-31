@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/snow_color"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/add_cate_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <!--<ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginStart="6dp"
+            android:contentDescription="@string/image_desc"
+            android:src="@drawable/icon_edit" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museosans"
+            android:text="@string/add_categoryy"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shadow_color"/>
+
+
+    <LinearLayout
+        android:id="@+id/edit_cate_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <!--<ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginStart="6dp"
+            android:contentDescription="@string/image_desc"
+            android:src="@drawable/icon_edit" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museosans"
+            android:text="@string/edit_category"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/shadow_color"/>
+
+    <LinearLayout
+        android:id="@+id/detele_cate_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:orientation="horizontal">
+
+        <!--<ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_marginStart="6dp"
+            app:tint="@color/black"
+            android:contentDescription="@string/image_desc"
+            android:src="@drawable/icon_delete_subcate" />-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/museosans"
+            android:text="@string/delete_category"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/black"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="normal" />
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

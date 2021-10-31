@@ -4,10 +4,10 @@ import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.mart.mymartbee.model.Category_Model;
+import com.mart.mymartbee.model.BusinessCategory_Model;
 import com.mart.mymartbee.networking.retrofit.ApiCallBack;
 import com.mart.mymartbee.networking.retrofit.ApiClient;
-import com.mart.mymartbee.repository.interfaces.CategoryListRepo;
+import com.mart.mymartbee.repository.interfaces.BusinessCategoryListRepo;
 
 import java.util.Map;
 
@@ -15,23 +15,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CategoryListRepoImpl implements CategoryListRepo {
+public class BusinessCategoryListRepoImpl implements BusinessCategoryListRepo {
 
-    private MutableLiveData<Category_Model> category_modelMLD;
+    private MutableLiveData<BusinessCategory_Model> category_modelMLD;
     private MutableLiveData<String> cateErrorMLD;
     private MutableLiveData<Boolean> progressCateObervable;
 
-    private static CategoryListRepoImpl instance = null;
+    private static BusinessCategoryListRepoImpl instance = null;
 
-    private static CategoryListRepoImpl getInstance() {
+    private static BusinessCategoryListRepoImpl getInstance() {
         if(instance == null) {
-            instance = new CategoryListRepoImpl();
+            instance = new BusinessCategoryListRepoImpl();
         }
         return instance;
     }
 
-    public CategoryListRepoImpl() {
-        category_modelMLD = new MutableLiveData<Category_Model>();
+    public BusinessCategoryListRepoImpl() {
+        category_modelMLD = new MutableLiveData<BusinessCategory_Model>();
         cateErrorMLD = new MutableLiveData<String>();
         progressCateObervable = new MutableLiveData<Boolean>();
     }
@@ -42,14 +42,14 @@ public class CategoryListRepoImpl implements CategoryListRepo {
     }
 
     @Override
-    public MutableLiveData<Category_Model> getCategoryRepo() throws Exception {
+    public MutableLiveData<BusinessCategory_Model> getCategoryRepo() throws Exception {
         progressCateObervable.setValue(true);
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
 
-        Call<Category_Model> call = callBack.getCategory();
-        call.enqueue(new Callback<Category_Model>() {
+        Call<BusinessCategory_Model> call = callBack.getCategory();
+        call.enqueue(new Callback<BusinessCategory_Model>() {
             @Override
-            public void onResponse(Call<Category_Model> call, Response<Category_Model> response) {
+            public void onResponse(Call<BusinessCategory_Model> call, Response<BusinessCategory_Model> response) {
                 progressCateObervable.setValue(false);
                 try {
                     if(response.isSuccessful()) {
@@ -68,7 +68,7 @@ public class CategoryListRepoImpl implements CategoryListRepo {
             }
 
             @Override
-            public void onFailure(Call<Category_Model> call, Throwable t) {
+            public void onFailure(Call<BusinessCategory_Model> call, Throwable t) {
                 progressCateObervable.setValue(false);
                 category_modelMLD.setValue(null);
                 cateErrorMLD.setValue("Connection Error");
@@ -78,14 +78,14 @@ public class CategoryListRepoImpl implements CategoryListRepo {
     }
 
     @Override
-    public MutableLiveData<Category_Model> getAddedCategoryRepo(Map<String, String> params) throws Exception {
+    public MutableLiveData<BusinessCategory_Model> getAddedCategoryRepo(Map<String, String> params) throws Exception {
         progressCateObervable.setValue(true);
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
-        MutableLiveData<Category_Model> category_modelAddedMLD = new MutableLiveData<Category_Model>();
-        Call<Category_Model> call = callBack.addMyCateGory(params);
-        call.enqueue(new Callback<Category_Model>() {
+        MutableLiveData<BusinessCategory_Model> category_modelAddedMLD = new MutableLiveData<BusinessCategory_Model>();
+        Call<BusinessCategory_Model> call = callBack.addMyCateGory(params);
+        call.enqueue(new Callback<BusinessCategory_Model>() {
             @Override
-            public void onResponse(Call<Category_Model> call, Response<Category_Model> response) {
+            public void onResponse(Call<BusinessCategory_Model> call, Response<BusinessCategory_Model> response) {
                 progressCateObervable.setValue(false);
                 try {
                     if(response.isSuccessful()) {
@@ -104,7 +104,7 @@ public class CategoryListRepoImpl implements CategoryListRepo {
             }
 
             @Override
-            public void onFailure(Call<Category_Model> call, Throwable t) {
+            public void onFailure(Call<BusinessCategory_Model> call, Throwable t) {
                 progressCateObervable.setValue(false);
                 category_modelAddedMLD.setValue(null);
                 cateErrorMLD.setValue("Connection Error");

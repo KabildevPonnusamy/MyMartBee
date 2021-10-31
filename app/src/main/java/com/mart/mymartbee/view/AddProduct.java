@@ -15,14 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.ListPopupWindow;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -42,6 +46,7 @@ import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.HintAdapter;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.Products_Model;
@@ -53,6 +58,7 @@ import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
 import com.zjun.widget.tagflowlayout.TagFlowLayout;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +73,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     EditText product_payment, product_delivery, product_name, product_qty, product_sellprice,
             product_discount_price, product_description, product_uom, product_subcate;
-    MaterialTextView profile_change_text;
+//    MaterialTextView profile_change_text;
+    LinearLayout profile_change;
     TextView addpage_title;
     LinearLayout upload_view, upload_layout;
     ImageView product_image, product_back;
@@ -77,6 +84,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     String cate_id = "";
     String sellerId = "";
     String strProductId = "";
+    Boolean isSubCateAdded;
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     String sel_subcategory = "";
@@ -91,6 +99,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     ImageView close_img;
     Uri fileUri;
     int showUOMStatus = 0; // 0 for Initial, 1 for After No Internet Call
+    Spinner uom_spinner;
+    ArrayList<String> uomSpinnerList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +115,21 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         getMyPreferences();
         observeProgress();
         showUOMSheet(0);
+        addListeners();
+    }
 
+    public void addListeners() {
+        uom_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                strPType = uom_spinner.getSelectedItem().toString();
+                product_uom.setText(strPType);
+                Log.e("appSample", "Selected: " + strPType);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     public void bottomSheetImageUpload() {
@@ -149,6 +173,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void init() {
+        uomSpinnerList = new ArrayList<String>();
+        uom_spinner = findViewById(R.id.uom_spinner);
         uomDatasList = new ArrayList<UOMModel.UOMList>();
         product_payment = findViewById(R.id.product_payment);
         addpage_title = findViewById(R.id.addpage_title);
@@ -161,7 +187,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         product_discount_price = findViewById(R.id.product_discount_price);
         product_description = findViewById(R.id.product_description);
         upload_view = findViewById(R.id.upload_view);
-        profile_change_text = findViewById(R.id.profile_change_text);
+        profile_change = findViewById(R.id.profile_change);
         upload_layout = findViewById(R.id.upload_layout);
         product_image = findViewById(R.id.product_image);
         cardImage = findViewById(R.id.cardImage);
@@ -176,14 +202,12 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         product_subcate.setFocusable(false);
         product_subcate.setClickable(true);
         upload_view.setOnClickListener(this);
-        profile_change_text.setOnClickListener(this);
+        profile_change.setOnClickListener(this);
         product_back.setOnClickListener(this);
         add_product_btn.setOnClickListener(this);
         product_uom.setOnClickListener(this);
         product_subcate.setOnClickListener(this);
-
         getBundles();
-
     }
 
     private void getBundles() {
@@ -265,7 +289,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 startActivityForResult(cropintent, ADD_PRODUCT_to_CROP_SAMPLE_ACTIVITY);*/
                 break;
 
-            case R.id.profile_change_text:
+            case R.id.profile_change:
                 checkCameraPermission();
                 /*if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
                     Toast.makeText(getApplicationContext(), getString(R.string.device_dont_have_camera),
@@ -341,7 +365,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     return;
                 }
 
-                if (strPType.equalsIgnoreCase("")) {
+                if (strPType.equalsIgnoreCase("") || strPType.equalsIgnoreCase("Select Status")) {
                     showErrorMsg("Please select product UOM.");
                     return;
                 }
@@ -567,20 +591,6 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
             }
         }
 
-        /*if (requestCode == ADD_PRODUCT_to_CROP_SAMPLE_ACTIVITY) {
-            if (resultCode == CROP_success) {
-                strPImage = "" + data.getStringExtra("FilePath");
-                finalPath = new File(strPImage);
-                Uri compressUri = Uri.fromFile(finalPath);
-                showUploadedImage();
-
-                Glide.with(getApplicationContext())
-                        .load(compressUri)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(product_image);
-            }
-        }*/
     }
 
     private void showProgress() {
@@ -610,6 +620,17 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void showUOMAdapter(int showUOMStatus) {
+        for(int i=0; i < uomDatasList.size(); i++) {
+            uomSpinnerList.add((uomDatasList.get(i).getStrUom()));
+        }
+
+        uomSpinnerList.add("Select Status");
+
+        HintAdapter dataAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, uomSpinnerList);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        uom_spinner.setAdapter(dataAdapter);
+        uom_spinner.setSelection(dataAdapter.getCount());
+
         com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter adapter =
                 new com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter(getApplicationContext()) {
                     private View.OnClickListener onClickListener = new View.OnClickListener() {

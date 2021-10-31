@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
@@ -32,7 +32,6 @@
             android:gravity="center"
             android:text="@string/settings_text"
             android:textColor="@color/white"
-            android:textAllCaps="true"
             android:textSize="@dimen/title_size"
             android:textStyle="bold" />
 
@@ -100,7 +99,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
+                    android:layout_height="0.3dp"
                     android:background="@color/shadow_color"
                     android:layout_marginTop="10dp"/>
 
@@ -135,79 +134,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <!--<LinearLayout
-            android:id="@+id/logout_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/version_layout"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:background="@drawable/btn_bgnd"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:contentDescription="@string/image_desc"
-                android:src="@drawable/icon_logout"
-                app:tint="@color/white" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/museosans"
-                android:gravity="center"
-                android:paddingStart="2dp"
-                android:paddingEnd="8dp"
-                android:text="@string/logout_text"
-                android:textColor="@color/white"
-                android:layout_marginStart="7dp"
-                android:textAllCaps="true"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/version_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:layout_marginBottom="10dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/museosans"
-                android:gravity="center"
-                android:text="@string/version_text"
-                android:textAllCaps="true"
-                android:textColor="@color/text_color"
-                android:textSize="13sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/version_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/museosans"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textAllCaps="true"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>-->
 
     </RelativeLayout>
 

@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +41,8 @@ import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.OrderUpdate;
+import com.mart.mymartbee.view.PendingOrders;
+import com.mart.mymartbee.view.adapters.NewPendingOrdersAdapter;
 import com.mart.mymartbee.view.adapters.PendingOrdersAdapter;
 import com.mart.mymartbee.view.ProductViewsAct;
 import com.mart.mymartbee.viewmodel.implementor.DashboardViewModelImpl;
@@ -49,7 +53,7 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment implements View.OnClickListener, Constants {
 
     String whatsAppLink = "", strCategoryName = "";
-    String strCateId, strSellerId;
+    String strCateId, strSellerId, strShortValue = "all";
     LinearLayout whatsapp_layout;
     TextView store_link, store_view_value, product_view_value, total_orders_value, revenue_value,
             status_short_value;
@@ -59,14 +63,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
     ProgressDialog progressDialog;
     RecyclerView pending_orders_recycler;
 
-    LinearLayout copy_link, product_views_layout, order_views_layout, revenue_layout;
+    LinearLayout copy_link, product_views_layout, order_views_layout, revenue_layout, no_orders_found_layout;
     ArrayList<Dashboard_Model.ViewedProductList> viewedProductLists;
     ArrayList<Dashboard_Model.PendingOrdersList> pendingOrdersLists;
     Dashboard_Model dashboard_model;
     private ClipboardManager myClipboard;
     private ClipData myClip;
     LinearLayoutManager lManager = null;
-    PendingOrdersAdapter ordersAdapter;
+    NewPendingOrdersAdapter ordersAdapter;
     BottomNavigationView bottom_navigation;
     Orders_Model.OrdersList ordersListObj;
 
@@ -91,6 +95,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         copy_link = (LinearLayout) view.findViewById(R.id.copy_link);
         order_views_layout = (LinearLayout) view.findViewById(R.id.order_views_layout);
         revenue_layout = (LinearLayout) view.findViewById(R.id.revenue_layout);
+        no_orders_found_layout = (LinearLayout) view.findViewById(R.id.no_orders_found_layout);
         product_views_layout = (LinearLayout) view.findViewById(R.id.product_views_layout);
         viewedProductLists = new ArrayList<Dashboard_Model.ViewedProductList>();
         pendingOrdersLists = new ArrayList<Dashboard_Model.PendingOrdersList>();
@@ -180,7 +185,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
             Bundle bundle = new Bundle();
             bundle.putString("orderStatus", strStatus);
             bundle.putString("orderId", strOrderId);
-            Intent intent = new Intent(getActivity(), OrderUpdate.class);
+            Intent intent = new Intent(getActivity(), PendingOrders.class); // PendingOrders
             intent.putExtras(bundle);
             startActivityForResult(intent, HOME_FRAG_to_ORDER_DETAILS);
         } else {
@@ -195,10 +200,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 status_short_value.setText(item.getTitle());
+                if(item.getTitle().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.menu_today))) {
+                    strShortValue = "today";
+                    getDashboardDatas(strShortValue);
+                } else if(item.getTitle().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.menu_yesterday))) {
+                    strShortValue = "yesterday";
+                    getDashboardDatas(strShortValue);
+                } else if(item.getTitle().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.menu_last_week))) {
+                    strShortValue = "last_week";
+                    getDashboardDatas(strShortValue);
+                } else if(item.getTitle().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.menu_last_month))) {
+                    strShortValue = "last_month";
+                    getDashboardDatas(strShortValue);
+                } else if(item.getTitle().toString().equalsIgnoreCase(getActivity().getResources().getString(R.string.menu_all))) {
+                    strShortValue = "all";
+                    getDashboardDatas(strShortValue);
+                }
+
                 return true;
             }
         });
-
         popup.show();
     }
 
@@ -270,12 +291,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
                 }
             }
         });
-        getDashboardDatas();
+        getDashboardDatas(strShortValue);
     }
 
-    public void getDashboardDatas() {
+    public void getDashboardDatas(String strShortValue) {
         if (NetworkAvailability.isNetworkAvailable(getActivity())) {
-            dashboardViewModel.getDashboardDatas(strSellerId);
+            dashboardViewModel.getDashboardDatas(strSellerId, strShortValue);
         } else {
             noInternetConnection();
         }
@@ -304,8 +325,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         if (dashboard_model.getPendingOrdersLists() != null) {
             if (dashboard_model.getPendingOrdersLists().size() > 0) {
                 pendingOrdersLists = dashboard_model.getPendingOrdersLists();
+                pending_orders_recycler.setVisibility(View.VISIBLE);
+                no_orders_found_layout.setVisibility(View.GONE);
                 setPendingOrdersAdapter();
+            } else {
+                pending_orders_recycler.setVisibility(View.GONE);
+                no_orders_found_layout.setVisibility(View.VISIBLE);
             }
+        } else {
+            pending_orders_recycler.setVisibility(View.GONE);
+            no_orders_found_layout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -313,7 +342,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         pending_orders_recycler.setHasFixedSize(true);
         lManager = new LinearLayoutManager(getActivity());
         pending_orders_recycler.setLayoutManager(lManager);
-        ordersAdapter = new PendingOrdersAdapter(pendingOrdersLists, getActivity());
+        ordersAdapter = new NewPendingOrdersAdapter(pendingOrdersLists, getActivity());
         pending_orders_recycler.setAdapter(ordersAdapter);
     }
 
@@ -368,7 +397,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
                     pendingOrdersLists.clear();
                 }
 
-                getDashboardDatas();
+                getDashboardDatas(strShortValue);
             }
         }
     }

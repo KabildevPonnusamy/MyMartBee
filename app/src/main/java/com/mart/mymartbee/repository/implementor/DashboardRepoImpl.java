@@ -34,12 +34,12 @@ public class DashboardRepoImpl implements DashboardRepo {
     }
 
     @Override
-    public MutableLiveData<Dashboard_Model> getDashboardModel(String sellerId) throws Exception {
+    public MutableLiveData<Dashboard_Model> getDashboardModel(String sellerId, String short_value) throws Exception {
         Log.e("appSample", "SELLERID: " + sellerId);
         progressDashboardUpdate.setValue(true);
         MutableLiveData<Dashboard_Model> dashboard_MLD = new MutableLiveData<Dashboard_Model>();
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
-        Call<Dashboard_Model> call = callBack.getDashboardDatas(sellerId);
+        Call<Dashboard_Model> call = callBack.getDashboardDatas(sellerId, short_value);
         call.enqueue(new Callback<Dashboard_Model>() {
             @Override
             public void onResponse(Call<Dashboard_Model> call, Response<Dashboard_Model> response) {
