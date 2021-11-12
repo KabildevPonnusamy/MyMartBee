@@ -182,11 +182,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
 
     public void sentToOrderDetails(String strStatus, String strOrderId) {
         if (NetworkAvailability.isNetworkAvailable(getActivity())) {
-            Bundle bundle = new Bundle();
-            bundle.putString("orderStatus", strStatus);
-            bundle.putString("orderId", strOrderId);
+//            Bundle bundle = new Bundle();
+            StorageDatas.getInstance().setStrOrderId(strOrderId);
+            StorageDatas.getInstance().setStrOrderStatus(strStatus);
+            StorageDatas.getInstance().setFromNotification(false);
+//            bundle.putString("orderStatus", strStatus);
+//            bundle.putString("orderId", strOrderId);
             Intent intent = new Intent(getActivity(), PendingOrders.class); // PendingOrders
-            intent.putExtras(bundle);
+//            intent.putExtras(bundle);
             startActivityForResult(intent, HOME_FRAG_to_ORDER_DETAILS);
         } else {
             noInternetConnection();

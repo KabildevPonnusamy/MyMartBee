@@ -46,7 +46,7 @@ import java.util.Map;
 public class PendingOrders extends AppCompatActivity implements View.OnClickListener, Constants {
 
     ImageView ord_details_back;
-    RecyclerView orders_details_recycler, orders_history_recycler;
+    RecyclerView orders_details_recycler; // orders_history_recycler
     RelativeLayout total_amount_layout;
     TextView total_amount;
     Orders_Model.OrdersList ordersListObj;
@@ -59,7 +59,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     TextView order_time, ordered_address, ordered_number;
-    RelativeLayout orderhist_layout, prod_simm_layout;
+    RelativeLayout prod_simm_layout; // orderhist_layout
     ImageView orderhis_arrow, productsumm_arrow;
     String strName = "", strComments = "";
     TextView accepted_view, rejected_view;
@@ -77,9 +77,11 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
     }
 
     private void getBundles() {
-        Bundle bundle = getIntent().getExtras();
-        strOrderStatus = bundle.getString("orderStatus");
-        strOrderId = bundle.getString("orderId");
+//        Bundle bundle = getIntent().getExtras();
+        strOrderStatus = StorageDatas.getInstance().getStrOrderStatus();
+        strOrderId = StorageDatas.getInstance().getStrOrderId();
+//        strOrderStatus = bundle.getString("orderStatus");
+//        strOrderId = bundle.getString("orderId");
     }
 
     private void getMyPreferences() {
@@ -106,7 +108,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
 
         accepted_view = findViewById(R.id.accepted_view);
         rejected_view = findViewById(R.id.rejected_view);
-        orderhist_layout = findViewById(R.id.orderhist_layout);
+//        orderhist_layout = findViewById(R.id.orderhist_layout);
         prod_simm_layout = findViewById(R.id.prod_simm_layout);
         orderhis_arrow = findViewById(R.id.orderhis_arrow);
         productsumm_arrow = findViewById(R.id.productsumm_arrow);
@@ -118,12 +120,12 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         ord_details_back = findViewById(R.id.ord_details_back);
         total_amount_layout = findViewById(R.id.total_amount_layout);
         orders_details_recycler = findViewById(R.id.orders_details_recycler);
-        orders_history_recycler = findViewById(R.id.orders_history_recycler);
+//        orders_history_recycler = findViewById(R.id.orders_history_recycler);
         ViewCompat.setNestedScrollingEnabled(orders_details_recycler, false);
-        ViewCompat.setNestedScrollingEnabled(orders_history_recycler, false);
+//        ViewCompat.setNestedScrollingEnabled(orders_history_recycler, false);
         total_amount = findViewById(R.id.total_amount);
         ord_details_back.setOnClickListener(this);
-        orderhist_layout.setOnClickListener(this);
+//        orderhist_layout.setOnClickListener(this);
         prod_simm_layout.setOnClickListener(this);
         accepted_view.setOnClickListener(this);
         rejected_view.setOnClickListener(this);
@@ -133,7 +135,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
 
     private void setValues() {
         orders_details_recycler.setVisibility(View.GONE);
-        orders_history_recycler.setVisibility(View.GONE);
+//        orders_history_recycler.setVisibility(View.GONE);
         total_amount_layout.setVisibility(View.GONE);
 
         order_time.setText(formatDate(ordersListObj.getStrOrderDate()));
@@ -149,14 +151,14 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         total_amount.setText("RM. " + oldPrice);
 //        total_amount.setText("RM. " + ordersListObj.getStrTotalAmount());
 
-        if(ordersListObj.getOrderHistoryList() != null) {
+        /*if(ordersListObj.getOrderHistoryList() != null) {
             if(ordersListObj.getOrderHistoryList().size() > 0) {
                 orders_history_recycler.setHasFixedSize(true);
                 orders_history_recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                 OrderHistoryAdapter orderHistoryAdapter = new OrderHistoryAdapter(ordersListObj.getOrderHistoryList(), getApplicationContext());
                 orders_history_recycler.setAdapter(orderHistoryAdapter);
             }
-        }
+        }*/
 
         if (ordersListObj.getOrderedProductsList() != null) {
             if (ordersListObj.getOrderedProductsList().size() > 0) {
@@ -183,7 +185,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
                 orderUpdate(strStatusId, strComments);
                 break;
 
-            case R.id.orderhist_layout:
+            /*case R.id.orderhist_layout:
                 if(orders_history_recycler.getVisibility() == View.VISIBLE) {
                     orders_history_recycler.setVisibility(View.GONE);
                     orderhis_arrow.setImageResource(getImage("arrow_up"));
@@ -191,23 +193,30 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
                     orders_history_recycler.setVisibility(View.VISIBLE);
                     orderhis_arrow.setImageResource(getImage("arrow_down"));
                 }
-                break;
+                break;*/
 
             case R.id.prod_simm_layout:
                 if(orders_details_recycler.getVisibility() == View.VISIBLE) {
                     total_amount_layout.setVisibility(View.GONE);
                     orders_details_recycler.setVisibility(View.GONE);
-                    productsumm_arrow.setImageResource(getImage("arrow_up"));
+                    productsumm_arrow.setImageResource(getImage("icon_new_uparrow"));
                 } else {
                     total_amount_layout.setVisibility(View.VISIBLE);
                     orders_details_recycler.setVisibility(View.VISIBLE);
-                    productsumm_arrow.setImageResource(getImage("arrow_down"));
+                    productsumm_arrow.setImageResource(getImage("icon_new_downarrow"));
                 }
 
                 break;
 
             case R.id.ord_details_back:
-                finish();
+                if(StorageDatas.getInstance().isFromNotification()) {
+                    Intent intent= new Intent(PendingOrders.this, HomeActivity.class); // Map_Activity
+                    startActivity(intent);
+                    finish();
+                } else {
+                    finish();
+                }
+
                 break;
         }
     }
@@ -219,10 +228,10 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         params.put("status", strStatusId);
         params.put("seller_comment", strComments);
 
-        Log.e("appSample", "SellerId: " + strSellerId);
+        /*Log.e("appSample", "SellerId: " + strSellerId);
         Log.e("appSample", "OrderId: " + strOrderId);
         Log.e("appSample", "StatusId: " + strStatusId);
-        Log.e("appSample", "Comments: " + strComments);
+        Log.e("appSample", "Comments: " + strComments);*/
 
         if (NetworkAvailability.isNetworkAvailable(PendingOrders.this)) {
             ordersViewModel.updateOrderStatusList(params);
@@ -234,7 +243,6 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         ordersViewModel.updateOrderStatusLV().observe(this, new Observer<Orders_Model>() {
             @Override
             public void onChanged(Orders_Model orders_model) {
-                Log.e("appSample", "Status: " + orders_model.isStrStatus());
                 if(orders_model.isStrStatus() == true) {
                     showSuccessDialog(orders_model, "Orders updated successfully.", ORDER_STATUS_UPDATE_success);
                 }
@@ -253,10 +261,30 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
             public void onDismiss(DialogInterface dialogInterface) {
                 sweetAlertDialog.dismiss();
                 StorageDatas.getInstance().setOrders_model(orders_model);
-                setResult(resultCode);
-                finish();
+
+                if(StorageDatas.getInstance().isFromNotification()) {
+                    Intent intent= new Intent(PendingOrders.this, HomeActivity.class); // Map_Activity
+                    startActivity(intent);
+                    finish();
+                } else {
+                    setResult(resultCode);
+                    finish();
+                }
+
+
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(StorageDatas.getInstance().isFromNotification()) {
+            Intent intent= new Intent(PendingOrders.this, HomeActivity.class); // Map_Activity
+            startActivity(intent);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     private void showProgress() {

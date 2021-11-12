@@ -159,7 +159,7 @@
     <string name="add_categoryy">Add</string>
     <string name="location">Location*</string>
     <string name="pending_orders_txt">Pending Orders</string>
-    <string name="order_accept">Accepted</string>
-    <string name="order_reject">Rejected</string>
+    <string name="order_accept">Accept</string>
+    <string name="order_reject">Reject</string>
 
 </resources>

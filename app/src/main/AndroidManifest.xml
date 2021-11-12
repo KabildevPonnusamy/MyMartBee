@@ -79,6 +79,12 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
+            android:name="com.mart.mymartbee.view.AddProductNew"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_new"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
             android:name="com.mart.mymartbee.view.SubCategorySelection"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_new"

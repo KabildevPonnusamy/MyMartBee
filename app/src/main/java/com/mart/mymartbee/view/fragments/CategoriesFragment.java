@@ -40,6 +40,7 @@ import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.AddProduct;
+import com.mart.mymartbee.view.AddProductNew;
 import com.mart.mymartbee.view.ProductDetails;
 import com.mart.mymartbee.view.ProductViewAll;
 import com.mart.mymartbee.view.SubCategorySelection;
@@ -322,7 +323,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 closeKeyboard();
                 Bundle newprod_bundle = new Bundle();
                 newprod_bundle.putString("fromActivity", "HomeFragment");
-                Intent addProdIntent = new Intent(getActivity(), AddProduct.class);
+                Intent addProdIntent = new Intent(getActivity(), AddProductNew.class);
                 addProdIntent.putExtras(newprod_bundle);
                 startActivityForResult(addProdIntent, HOME_FRAG_to_ADD_PRODUCT);
                 break;
@@ -404,7 +405,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         if (position == 0) {
             Bundle bundle = new Bundle();
             bundle.putString("fromActivity", "HomeFragment");
-            Intent intent = new Intent(getActivity(), AddProduct.class);
+            Intent intent = new Intent(getActivity(), AddProductNew.class);
             intent.putExtras(bundle);
             startActivityForResult(intent, HOME_FRAG_to_ADD_PRODUCT);
         } else {

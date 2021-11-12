@@ -86,6 +86,11 @@ public interface ApiCallBack {
     @FormUrlEncoded
     Call<Products_Model> deleteProduct(@FieldMap Map<String, String> params);
 
+    @Multipart
+    @POST("product/upload-product-images")
+    Call<Products_Model> uploadProductImages(@Part MultipartBody.Part product_image, @Part("seller_id") RequestBody seller_id, @Part("product_id") RequestBody product_id,
+                                            @Part("cat_id") RequestBody cat_id);
+
     @GET("product/product-list/{cat_id}/{seller_id}")
     Call<Products_Model> getProducts(@Path("cat_id") String cat_id, @Path("seller_id") String seller_id);
 

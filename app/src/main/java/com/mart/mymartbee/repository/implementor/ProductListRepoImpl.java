@@ -137,6 +137,57 @@ public class ProductListRepoImpl implements ProductListRepo {
     }
 
     @Override
+    public MutableLiveData<Products_Model> uploadProductImage(File file, Map<String, String> params) throws Exception {
+        Log.e("appSample", "uploadProductImage");
+        progressProductObservable.setValue(true);
+        RequestBody p_cat_id = RequestBody.create(MediaType.parse("text/plain"), params.get("cat_id"));
+        RequestBody p_seller_id = RequestBody.create(MediaType.parse("text/plain"), params.get("seller_id"));
+//        RequestBody p_product_id = RequestBody.create(MediaType.parse("text/plain"), params.get("product_id"));
+
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("image/*"), file);
+        Retrofit retrofit = ApiClient.getRetrofit();
+
+        MutableLiveData<Products_Model> uploadProductImageMLD = new MutableLiveData<Products_Model>();
+
+        MultipartBody.Part body =
+                MultipartBody.Part.createFormData("product_image", file.getName(), requestFile);
+
+        ApiCallBack apiService = retrofit.create(ApiCallBack.class);
+        RequestBody p_product_id = null;
+
+        apiService.uploadProductImages(body, p_seller_id, p_product_id, p_cat_id).enqueue(new Callback<Products_Model>() {
+            @Override
+            public void onResponse(Call<Products_Model> call, Response<Products_Model> response) {
+                progressProductObservable.setValue(false);
+                try {
+                    if(response.isSuccessful()) {
+                        if (response.body() != null) {
+                            uploadProductImageMLD.setValue(response.body());
+                        }
+                    } else {
+                        uploadProductImageMLD.setValue(null);
+                        productErrorMLD.setValue("No Response");
+                    }
+                } catch(Exception e) {
+                    Log.e("appSample", "ResponseExc: " + e.getMessage());
+                    uploadProductImageMLD.setValue(null);
+                    productErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Products_Model> call, Throwable t) {
+                Log.e("appSample", "Failure: " + t.getMessage());
+                progressProductObservable.setValue(false);
+                uploadProductImageMLD.setValue(null);
+                productErrorMLD.setValue("Connection Error");
+            }
+        });
+        return uploadProductImageMLD;
+    }
+
+    @Override
     public MutableLiveData<Products_Model> editProductRepoWithImage(File file, Map<String, String> params) throws Exception {
         progressProductObservable.setValue(true);
         RequestBody p_title = RequestBody.create(MediaType.parse("text/plain"), params.get("title"));

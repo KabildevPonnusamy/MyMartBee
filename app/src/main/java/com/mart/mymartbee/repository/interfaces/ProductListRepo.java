@@ -12,6 +12,7 @@ public interface ProductListRepo {
 
     MutableLiveData<Products_Model> addProductRepo(File file, Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> editProductRepoWithImage(File file, Map<String, String> params) throws Exception;
+    MutableLiveData<Products_Model> uploadProductImage(File file, Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> editProductRepo(Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> deleteProductRepo(Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> getProductRepo(String cate_id, String seller_id) throws Exception;

@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -26,8 +25,6 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ListPopupWindow;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -37,15 +34,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.textview.MaterialTextView;
 import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.commons.CameraUtils;
-import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.CommonMethods;
+import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.HintAdapter;
@@ -57,19 +52,17 @@ import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.adapters.ImageUploadingAdapter;
-import com.mart.mymartbee.view.adapters.OrderStatusAdapter;
 import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
 import com.zjun.widget.tagflowlayout.TagFlowLayout;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class AddProduct extends AppCompatActivity implements View.OnClickListener, Constants,
+public class AddProductNew extends AppCompatActivity implements View.OnClickListener, Constants,
         ImageUploadingAdapter.ImageRemoveClickListener {
 
     ProgressDialog progressDialog;
@@ -110,11 +103,12 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     RecyclerView photos_recycle;
     ArrayList<UploadingImageList> uploadingImageLists;
     ImageUploadingAdapter imageUploadingAdapter;
+    int imageCount = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_product);
+        setContentView(R.layout.add_product_new);
 
         productsViewModel = ViewModelProviders.of(this).get(ProductsViewModelImpl.class);
 
@@ -176,7 +170,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     private void getMyPreferences() {
         myKeyValue = getResources().getString(R.string.myTripleKey);
-        preferenceDatas = new MyPreferenceDatas(AddProduct.this);
+        preferenceDatas = new MyPreferenceDatas(AddProductNew.this);
         cate_id = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
         sellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
     }
@@ -272,7 +266,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (android.os.Build.VERSION.SDK_INT >= 24) {
                     tempFile = Util.getOutputMediaFile();
-                    fileUri = FileProvider.getUriForFile(AddProduct.this,
+                    fileUri = FileProvider.getUriForFile(AddProductNew.this,
                             BuildConfig.APPLICATION_ID + ".provider",
                             tempFile);
 
@@ -289,10 +283,10 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
             case R.id.gallery_layout:
                 bottomSheetUpload.dismiss();
 
-                if (ContextCompat.checkSelfPermission(AddProduct.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(AddProduct.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                if (ContextCompat.checkSelfPermission(AddProductNew.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(AddProductNew.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
-                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                    Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                     i.setType("image/*");
                     startActivityForResult(i, PICK_IMAGE);
                 }
@@ -302,7 +296,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 if(uploadingImageLists.size() < 5) {
                     checkCameraPermission();
                 } else {
-                    CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
+                    CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");
                 }
                 break;
 
@@ -310,7 +304,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 if(uploadingImageLists.size() < 5) {
                     checkCameraPermission();
                 } else {
-                    CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
+                    CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");
                 }
                 /*Intent cropintent = new Intent(AddProduct.this, CrapImageSample.class);
                 startActivityForResult(cropintent, ADD_PRODUCT_to_CROP_SAMPLE_ACTIVITY);*/
@@ -333,23 +327,23 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.product_subcate:
-                if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                     hideKeyboard(product_subcate);
                     Bundle bundle = new Bundle();
                     bundle.putInt("SelectedSubId", selSubCateId);
                     bundle.putString("SellerId", sellerId);
                     bundle.putString("CategoryId", cate_id);
-                    Intent intent = new Intent(AddProduct.this, SubCategorySelection.class);
+                    Intent intent = new Intent(AddProductNew.this, SubCategorySelection.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, ADD_PRODUCT_to_SUBCATE_SELECTION);
                 } else {
                     NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(AddProduct.this, MOVE_SUB_CATEGORY);
+                    networkAvailability.noInternetConnection(AddProductNew.this, MOVE_SUB_CATEGORY);
                 }
                 break;
 
             case R.id.product_uom:
-                if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                     if(uomDatasList.size() > 0) {
                         bottomSheetDialog.show();
                     } else {
@@ -357,7 +351,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     }
                 } else {
                     NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(AddProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
+                    networkAvailability.noInternetConnection(AddProductNew.this, Constants.NETWORK_ENABLE_SETTINGS);
                 }
                 break;
 
@@ -422,7 +416,12 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     return;
                 }
 
-                Map<String, String> params = new HashMap<>();
+                if (uploadingImageLists.size() == 0) {
+                    showErrorMsg("Please select product image.");
+                    return;
+                }
+
+                /*Map<String, String> params = new HashMap<>();
                 params.put("title", strPName);
                 params.put("description", strPDesc);
                 params.put("meta_title", strPName);
@@ -434,25 +433,26 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 params.put("sub_cat_id", "" + selSubCateId);
                 params.put("quantity", strPQty);
                 params.put("seller_id", sellerId);
-                params.put("uom", strPType);
+                params.put("uom", strPType);*/
 
-                if (fromActivity.equalsIgnoreCase("HomeFragment")) {
+                if(uploadingImageLists.size() > 0) {
+                    uploadingImage(uploadingImageLists.get(imageCount).getImage());
+                }
 
-                    /*if (finalPath == null) {
+
+
+                /*if (fromActivity.equalsIgnoreCase("HomeFragment")) {
+
+                    *//*if (finalPath == null) {
                         showErrorMsg("Please select product image.");
                         return;
-                    }*/
+                    }*//*
 
-                    if (uploadingImageLists.size() == 0) {
-                        showErrorMsg("Please select product image.");
-                        return;
-                    }
-
-                    if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                    if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                         productsViewModel.addProducts(finalPath, params);
                     } else {
                         NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                        networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                        networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
                     }
 
                     productsViewModel.addProductLV().observe(this, new Observer<Products_Model>() {
@@ -468,11 +468,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     Log.e("appSample", "Params: " + params.toString());
 
                     if (finalPath == null) {
-                        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                             productsViewModel.editProducts(params);
                         } else {
                             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                            networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                            networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
                         }
                         productsViewModel.editProductLV().observe(this, new Observer<Products_Model>() {
                             @Override
@@ -483,11 +483,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                             }
                         });
                     } else {
-                        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                             productsViewModel.editProductwithImage(finalPath, params);
                         } else {
                             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                            networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                            networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
                         }
                         productsViewModel.editProductwithImageLV().observe(this, new Observer<Products_Model>() {
                             @Override
@@ -499,18 +499,86 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                         });
                     }
 
-                }
+                }*/
 
                 break;
         }
     }
 
+    public void uploadingImage(String upd_image) {
+        Log.e("appSample", "uploadingImage");
+        finalPath = new File(upd_image);
+
+        Map<String, String> params = new HashMap<>();
+//        params.put("product_id", "product_id);
+        params.put("cat_id", cate_id);
+        params.put("seller_id", sellerId);
+
+        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
+            productsViewModel.uploadingProductImage(finalPath, params);
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
+        }
+
+        productsViewModel.uploadingProductImagesLV().observe(this, new Observer<Products_Model>() {
+            @Override
+            public void onChanged(Products_Model products_model) {
+                Log.e("appSample", "Came");
+                if (products_model.isStrStatus() == true) {
+                    Log.e("appSample", "TRUE");
+                    imageCount = imageCount + 1;
+
+                    if(imageCount == uploadingImageLists.size()) {
+                        // Image Sending Completed
+                        Map<String, String> my_params = new HashMap<>();
+                        my_params.put("title", strPName);
+                        my_params.put("description", strPDesc);
+                        my_params.put("meta_title", strPName);
+                        my_params.put("meta_description", strPDesc);
+                        my_params.put("meta_keyword", "MartBee");
+                        my_params.put("price", strPDiscount);
+                        my_params.put("old_price", strPPrice);
+                        my_params.put("cat_id", cate_id);
+                        my_params.put("sub_cat_id", "" + selSubCateId);
+                        my_params.put("quantity", strPQty);
+                        my_params.put("seller_id", sellerId);
+                        my_params.put("uom", strPType);
+
+                        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
+                            productsViewModel.addProducts(finalPath, params);
+                        } else {
+                            NetworkAvailability networkAvailability = new NetworkAvailability(AddProductNew.this);
+                            networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
+                        }
+
+                        productsViewModel.addProductLV().observe(AddProductNew.this, new Observer<Products_Model>() {
+                            @Override
+                            public void onChanged(Products_Model products_model) {
+                                if (products_model.isStrStatus() == true) {
+                                    showSuccessDialog(products_model, "Product successfully added.", PRODUCT_ADDED_success);
+                                }
+                            }
+                        });
+
+
+                    } else {
+                        Log.e("appSample", "UploadedImage: " + uploadingImageLists.get(imageCount -1).getImage());
+                        uploadingImage(uploadingImageLists.get(imageCount).getImage());
+                    }
+                } else {
+                    Log.e("appSample", "Else_False");
+                }
+            }
+        });
+    }
+
     private void showUOMSheet(int showUOMStatus) {
-        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
             productsViewModel.getUOM();
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-            networkAvailability.noInternetConnection(AddProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
+            networkAvailability.noInternetConnection(AddProductNew.this, Constants.NETWORK_ENABLE_SETTINGS);
         }
         productsViewModel.getUOMLV().observe(this, new Observer<UOMModel>() {
             @Override
@@ -522,7 +590,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void showSuccessDialog(Products_Model products_model, String strMessage, int resultCode) {
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(AddProduct.this, SweetAlertDialog.SUCCESS_TYPE);
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(AddProductNew.this, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog.setTitleText("Success");
         sweetAlertDialog.setContentText(strMessage);
         sweetAlertDialog.setCancelable(false);
@@ -544,7 +612,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     public void showErrorMsg(String error) {
-        CommonMethods.Toast(AddProduct.this, error);
+        CommonMethods.Toast(AddProductNew.this, error);
     }
 
     @Override
@@ -560,9 +628,9 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         if(requestCode == NETWORK_ENABLE_SETTINGS) {
             showUOMSheet(1);
         } else if(requestCode == ADD_PRODUCT_INFO) {
-            if (!NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+            if (!NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
                 NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
             }
         }
 
@@ -597,7 +665,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     if(uploadingImageLists.size() > 0) {
                         photos_recycle.setHasFixedSize(true);
                         photos_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProduct.this);
+                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProductNew.this);
                         photos_recycle.setAdapter(imageUploadingAdapter);
                     }
                 }
@@ -637,7 +705,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     if(uploadingImageLists.size() > 0) {
                         photos_recycle.setHasFixedSize(true);
                         photos_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProduct.this);
+                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProductNew.this);
                         photos_recycle.setAdapter(imageUploadingAdapter);
                     }
                 }
@@ -703,8 +771,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         uom_spinner.setAdapter(dataAdapter);
         uom_spinner.setSelection(dataAdapter.getCount());
 
-        com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter adapter =
-                new com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter(getApplicationContext()) {
+        TagFlowLayout.Adapter adapter =
+                new TagFlowLayout.Adapter(getApplicationContext()) {
                     private View.OnClickListener onClickListener = new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -753,10 +821,10 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     public void checkCameraPermission() {
         if (PermissionManager.checkIsGreaterThanM()) {
-            if (!PermissionManager.checkPermissionForReadExternalStorage(AddProduct.this) ||
-                    !PermissionManager.checkPermissionForWriteExternalStorage(AddProduct.this) ||
-                    !PermissionManager.checkPermissionForCamara(AddProduct.this)) {
-                PermissionManager.requestPermissionForCamera(AddProduct.this);
+            if (!PermissionManager.checkPermissionForReadExternalStorage(AddProductNew.this) ||
+                    !PermissionManager.checkPermissionForWriteExternalStorage(AddProductNew.this) ||
+                    !PermissionManager.checkPermissionForCamara(AddProductNew.this)) {
+                PermissionManager.requestPermissionForCamera(AddProductNew.this);
             } else {
                 openCamera();
             }
@@ -768,7 +836,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     public void openCamera() {
         if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
-            CommonMethods.Toast(AddProduct.this,  getString(R.string.device_dont_have_camera));
+            CommonMethods.Toast(AddProductNew.this,  getString(R.string.device_dont_have_camera));
             return;
         }
         bottomSheetUpload.show();
@@ -784,7 +852,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     openCamera();
 
                 } else {
-                    CommonMethods.Toast(AddProduct.this, "This App required Location permission." +
+                    CommonMethods.Toast(AddProductNew.this, "This App required Location permission." +
                             "Please enable from app settings.");
                 }
         }

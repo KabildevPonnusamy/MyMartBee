@@ -47,6 +47,33 @@ public class StorageDatas  {
     Dashboard_Model.PendingOrdersList pendingOrdersListObj;
     ArrayList<Products_Model.ProductCategories> subCategoryList;
     boolean isSubCateAdded;
+    String strOrderId;
+    String strOrderStatus;
+    boolean isFromNotification;
+
+    public boolean isFromNotification() {
+        return isFromNotification;
+    }
+
+    public void setFromNotification(boolean fromNotification) {
+        isFromNotification = fromNotification;
+    }
+
+    public String getStrOrderId() {
+        return strOrderId;
+    }
+
+    public void setStrOrderId(String strOrderId) {
+        this.strOrderId = strOrderId;
+    }
+
+    public String getStrOrderStatus() {
+        return strOrderStatus;
+    }
+
+    public void setStrOrderStatus(String strOrderStatus) {
+        this.strOrderStatus = strOrderStatus;
+    }
 
     public boolean isSubCateAdded() {
         return isSubCateAdded;

@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -24,6 +27,7 @@ import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.HintAdapter;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.OTPModel;
@@ -33,6 +37,7 @@ import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.viewmodel.implementor.OTPViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.OTPViewModel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +57,9 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     SweetAlertDialog sweetAlertDialog;
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
+    Spinner pincode_spinner;
+    String str_country_code = "";
+    ArrayList<String> pincodeList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,11 +90,13 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
         preferenceDatas = new MyPreferenceDatas(MobileLogin.this);
         mobile_edit = findViewById(R.id.mobile_edit);
 
+        pincodeList = new ArrayList<String>();
         submit_btn = (Button) findViewById(R.id.submit_btn);
         bottomSheetDialog = new BottomSheetDialog(this);
         bottomSheetDialog.setContentView(R.layout.bottomsheet_otp);
         bottomSheetDialog.setCancelable(false);
 
+        pincode_spinner = (Spinner) findViewById(R.id.pincode_spinner);
         otp_view = (OtpTextView)bottomSheetDialog.findViewById(R.id.otp_view);
         resend_otp = (TextView) bottomSheetDialog.findViewById(R.id.resend_otp);
         otp_seconds = (TextView) bottomSheetDialog.findViewById(R.id.otp_seconds);
@@ -100,6 +110,25 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     }
 
     public void setListener() {
+        pincodeList.add("+60");
+        pincodeList.add("+65");
+        pincodeList.add("+91");
+
+        ArrayAdapter dataAdapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, pincodeList);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        pincode_spinner.setAdapter(dataAdapter);
+
+        pincode_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                str_country_code = pincode_spinner.getSelectedItem().toString();
+                Log.e("appSample", "CountryCode: " + str_country_code);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         otpViewModel.getPendingTime().observe(MobileLogin.this, new Observer<String>() {
             @Override
             public void onChanged(String countString) {
@@ -163,7 +192,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     private void sendOTP() {
         if (NetworkAvailability.isNetworkAvailable(MobileLogin.this)) {
             getLifecycle().addObserver(otpViewModel);
-            otpViewModel.getOTP("+60", mobileStr);
+            otpViewModel.getOTP(str_country_code, mobileStr);
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
             networkAvailability.noInternetConnection(MobileLogin.this, Constants.NETWORK_ENABLE_SETTINGS);
@@ -173,7 +202,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onChanged(OTPModel otpModel) {
                 Log.e("appSample", "OTP: " + otpModel.getStrOtp());
-                otp_mobile.setText( "Please enter OTP sent to " + "+60 " + mobileStr);
+                otp_mobile.setText( "Please enter OTP sent to " + str_country_code + " " + mobileStr);
                 disableResendBtn();
                 bottomSheetDialog.show();
 
@@ -187,7 +216,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
     public void verifyOTP() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("country_code", "+60");
+        params.put("country_code", str_country_code );
         params.put("mobile_number", mobileStr);
         params.put("otp", otpStr);
         params.put("gcm_id", StorageDatas.getInstance().getFirebaseToken());
@@ -221,7 +250,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegCategoryName(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_IMAGE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegImage(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ADDRESS, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegAddress(), myKeyValue) );
-                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_COUNTRY_CODE, TripleDes.getDESEncryptValue("+60", myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_COUNTRY_CODE, TripleDes.getDESEncryptValue(str_country_code, myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_MOBILE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegMobileNumber(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LATITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLatitude(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_LONGITUDE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegLongitude(), myKeyValue) );
@@ -234,7 +263,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         finish();
                     } else {
                         Bundle bundle = new Bundle();
-                        bundle.putString("CountryCode", "+60");
+                        bundle.putString("CountryCode", str_country_code);
                         bundle.putString("MobileNumber", mobileNum);
                         Intent intent = new Intent(MobileLogin.this, StoreCreation.class);
                         intent.putExtras(bundle);

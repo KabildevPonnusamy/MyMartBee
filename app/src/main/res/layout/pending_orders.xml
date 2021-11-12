@@ -214,13 +214,14 @@
 
                             <ImageView
                                 android:id="@+id/productsumm_arrow"
-                                android:layout_width="26dp"
-                                android:layout_height="26dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:padding="5dp"
                                 android:layout_alignParentEnd="true"
                                 android:layout_centerInParent="true"
                                 android:layout_gravity="end"
                                 android:contentDescription="@string/image_desc"
-                                android:src="@drawable/arrow_up" />
+                                android:src="@drawable/icon_new_uparrow" />
 
                         </RelativeLayout>
 
@@ -268,7 +269,7 @@
                             android:textStyle="normal" />
 
                     </RelativeLayout>
-
+<!--
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -330,7 +331,7 @@
                             android:clipToPadding="false"
                             android:padding="10dp" />
 
-                    </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>-->
 
                 </LinearLayout>
 

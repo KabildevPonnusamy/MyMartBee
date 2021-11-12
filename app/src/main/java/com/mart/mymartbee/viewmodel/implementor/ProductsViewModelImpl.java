@@ -1,5 +1,7 @@
 package com.mart.mymartbee.viewmodel.implementor;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,6 +19,7 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
     private MutableLiveData<Products_Model> mutableAddProducts;
     private MutableLiveData<Products_Model> mutableEditProducts;
     private MutableLiveData<Products_Model> mutableEditWithImageProducts;
+    private MutableLiveData<Products_Model> mutableUploadingImage;
     private MutableLiveData<Products_Model> mutableDeleteProducts;
     private MutableLiveData<Products_Model> mutableGetProducts;
     private MutableLiveData<UOMModel> mutableGetUOM;
@@ -29,6 +32,7 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
         mutableAddProducts = new MutableLiveData<Products_Model>();
         mutableEditProducts = new MutableLiveData<Products_Model>();
         mutableEditWithImageProducts = new MutableLiveData<Products_Model>();
+        mutableUploadingImage = new MutableLiveData<Products_Model>();
         mutableDeleteProducts = new MutableLiveData<Products_Model>();
         mutableGetProducts = new MutableLiveData<Products_Model>();
         mutableGetUOM = new MutableLiveData<UOMModel>();
@@ -70,6 +74,21 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
     @Override
     public LiveData<Products_Model> editProductwithImageLV() {
         return mutableEditWithImageProducts;
+    }
+
+    @Override
+    public LiveData<Products_Model> uploadingProductImagesLV() {
+        return mutableUploadingImage;
+    }
+
+    @Override
+    public void uploadingProductImage(File file, Map<String, String> params) {
+        try {
+            Log.e("appSample", "uploadingProductImage");
+            mutableUploadingImage = productListRepo.uploadProductImage(file, params);
+        } catch(Exception e) {
+            mutableProductError.setValue(e.getMessage());
+        }
     }
 
     @Override
