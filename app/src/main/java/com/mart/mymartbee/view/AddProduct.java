@@ -235,7 +235,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         } else {
             upload_layout.setVisibility(View.GONE);
 //            cardImage.setVisibility(View.VISIBLE);
-            imagelist_layout.setVisibility(View.VISIBLE);
+//            imagelist_layout.setVisibility(View.VISIBLE);
+            imagelist_layout.setVisibility(View.GONE);
             addpage_title.setText("EDIT PRODUCT");
             add_product_btn.setText("UPDATE PRODUCT");
 
@@ -299,7 +300,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.upload_view_img:
-                if(uploadingImageLists.size() < 5) {
+                if(uploadingImageLists.size() < 3) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
@@ -307,7 +308,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.upload_view:
-                if(uploadingImageLists.size() < 5) {
+                if(uploadingImageLists.size() < 3) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
@@ -602,11 +603,6 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     }
                 }
 
-                /*Glide.with(getApplicationContext())
-                        .load(compressUri)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(product_image);*/
             }
         }
 
@@ -641,13 +637,6 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                         photos_recycle.setAdapter(imageUploadingAdapter);
                     }
                 }
-
-
-                /*Glide.with(getApplicationContext())
-                        .load(compressUri)
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .into(product_image);*/
 
             }
         }

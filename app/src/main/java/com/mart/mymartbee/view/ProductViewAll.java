@@ -47,7 +47,6 @@ public class ProductViewAll extends AppCompatActivity implements View.OnClickLis
     ImageView icon_search, search_back;
     LinearLayout search_layout;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

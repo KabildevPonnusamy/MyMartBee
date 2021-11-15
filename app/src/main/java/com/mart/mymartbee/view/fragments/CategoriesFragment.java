@@ -169,6 +169,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
                         productsList = products_model.getProductCategories();
                         productsListTemp.addAll(productsList);
+                        StorageDatas.getInstance().setProducts_model(products_model);
 
                         product_creation_layout.setVisibility(View.GONE);
                         product_layout.setVisibility(View.VISIBLE);
@@ -541,6 +542,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 updateProduct();
             }
         }
+
     }
 
 }

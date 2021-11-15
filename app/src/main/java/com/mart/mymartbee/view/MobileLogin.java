@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +59,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     Spinner pincode_spinner;
-    String str_country_code = "";
+    String str_country_code = "+60";
     ArrayList<String> pincodeList;
 
     @Override
@@ -190,6 +191,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
 
     private void sendOTP() {
+        Toast.makeText(getApplicationContext(), str_country_code + " " + mobileStr, Toast.LENGTH_SHORT).show();
         if (NetworkAvailability.isNetworkAvailable(MobileLogin.this)) {
             getLifecycle().addObserver(otpViewModel);
             otpViewModel.getOTP(str_country_code, mobileStr);

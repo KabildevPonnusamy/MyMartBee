@@ -1,5 +1,6 @@
 package com.mart.mymartbee.networking.retrofit;
 
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MultipartBody;
@@ -68,6 +69,14 @@ public interface ApiCallBack {
                                     @Part("price") RequestBody price, @Part("old_price") RequestBody old_price, @Part("cat_id") RequestBody cat_id,
                                     @Part("sub_cat_id") RequestBody sub_cat_id, @Part("quantity") RequestBody quantity, @Part("seller_id") RequestBody seller_id,
                                     @Part("uom") RequestBody uom);
+
+    @Multipart
+    @POST("product/add-product-new")
+    Call<Products_Model> addProductNew(@Part List<MultipartBody.Part> product_image_more, @Part("title") RequestBody title, @Part("description") RequestBody description,
+                                       @Part("meta_title") RequestBody meta_title, @Part("meta_description") RequestBody meta_description, @Part("meta_keyword") RequestBody meta_keyword,
+                                       @Part("price") RequestBody price, @Part("old_price") RequestBody old_price, @Part("cat_id") RequestBody cat_id,
+                                       @Part("sub_cat_id") RequestBody sub_cat_id, @Part("quantity") RequestBody quantity, @Part("seller_id") RequestBody seller_id,
+                                       @Part("uom") RequestBody uom);
 
     @Multipart
     @POST("product/edit-product")

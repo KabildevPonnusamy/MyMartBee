@@ -4,13 +4,16 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.UOMModel;
+import com.mart.mymartbee.model.UploadingImageList;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 public interface ProductListRepo {
 
     MutableLiveData<Products_Model> addProductRepo(File file, Map<String, String> params) throws Exception;
+    MutableLiveData<Products_Model> addProductRepoNew(ArrayList<UploadingImageList> uploadingImageLists, Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> editProductRepoWithImage(File file, Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> uploadProductImage(File file, Map<String, String> params) throws Exception;
     MutableLiveData<Products_Model> editProductRepo(Map<String, String> params) throws Exception;

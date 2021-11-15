@@ -52,5 +52,6 @@
     <color name="whatsapp_icon_color">#25D366</color>
     <color name="snow_color">#FFFAFA</color>
     <color name="snow_thick_color">#FADAE2</color>
+    <color name="tint">#f44336</color>
 
 </resources>

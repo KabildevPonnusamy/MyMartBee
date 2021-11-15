@@ -6,11 +6,14 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.UOMModel;
+import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.networking.retrofit.ApiCallBack;
 import com.mart.mymartbee.networking.retrofit.ApiClient;
 import com.mart.mymartbee.repository.interfaces.ProductListRepo;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -38,6 +41,91 @@ public class ProductListRepoImpl implements ProductListRepo {
     public ProductListRepoImpl() {
         productErrorMLD = new MutableLiveData<String>();
         progressProductObservable = new MutableLiveData<Boolean>();
+    }
+
+    @Override
+    public MutableLiveData<Products_Model> addProductRepoNew(ArrayList<UploadingImageList> uploadingImageLists, Map<String, String> params) throws Exception {
+
+        progressProductObservable.setValue(true);
+        RequestBody p_title = RequestBody.create(MediaType.parse("text/plain"), params.get("title"));
+        RequestBody p_description = RequestBody.create(MediaType.parse("text/plain"), params.get("description"));
+        RequestBody p_meta_title = RequestBody.create(MediaType.parse("text/plain"), params.get("meta_title"));
+        RequestBody p_meta_description = RequestBody.create(MediaType.parse("text/plain"), params.get("meta_description"));
+        RequestBody p_meta_keyword = RequestBody.create(MediaType.parse("text/plain"), params.get("meta_keyword"));
+        RequestBody p_price = RequestBody.create(MediaType.parse("text/plain"), params.get("price"));
+        RequestBody p_old_price = RequestBody.create(MediaType.parse("text/plain"), params.get("old_price"));
+        RequestBody p_cat_id = RequestBody.create(MediaType.parse("text/plain"), params.get("cat_id"));
+        RequestBody p_sub_cat_id = RequestBody.create(MediaType.parse("text/plain"), params.get("sub_cat_id"));
+        RequestBody p_quantity = RequestBody.create(MediaType.parse("text/plain"), params.get("quantity"));
+        RequestBody p_seller_id = RequestBody.create(MediaType.parse("text/plain"), params.get("seller_id"));
+        RequestBody p_uom = RequestBody.create(MediaType.parse("text/plain"), params.get("uom"));
+
+        MultipartBody.Part[] imageParts = new MultipartBody.Part[uploadingImageLists.size()];
+
+        List<MultipartBody.Part> list = new ArrayList<>();
+        /*File file1 = new File("/storage/emulated/0/DCIM/Feid_Camera/IMG_20211113_100108.jpg");
+        File file2 = new File("/storage/emulated/0/DCIM/Feid_Camera/IMG_20211113_204740.jpg");
+
+        RequestBody surveyBody1 = RequestBody.create(MediaType.parse("image/*"), file1);
+        RequestBody surveyBody2 = RequestBody.create(MediaType.parse("image/*"), file2);
+
+        list.add(MultipartBody.Part.createFormData("product_image_more",  "ImageOne",
+                surveyBody1));
+        list.add(MultipartBody.Part.createFormData("product_image_more",  "ImageTwo",
+                surveyBody2));*/
+
+        for (int index = 0; index < uploadingImageLists.size(); index++) {
+
+            Log.e("appSample", "Index: " + index + " Path: " + uploadingImageLists.get(index).getImage());
+
+            File file1 = new File(uploadingImageLists.get(index).getImage());
+            RequestBody surveyBody = RequestBody.create(MediaType.parse("image/*"), file1);
+            imageParts[index] = MultipartBody.Part.createFormData("product_image_more",  file1.getName(),
+                    surveyBody);
+
+            list.add(MultipartBody.Part.createFormData("product_image_more[]",  file1.getName(),
+                    surveyBody));
+                }
+
+        Log.e("appSample", "LENGTH: " + imageParts.length);
+
+        Retrofit retrofit = ApiClient.getRetrofit();
+
+        MutableLiveData<Products_Model> addProductModelMLD = new MutableLiveData<Products_Model>();
+
+        ApiCallBack apiService = retrofit.create(ApiCallBack.class);
+
+        apiService.addProductNew(list, p_title, p_description, p_meta_title, p_meta_description, p_meta_keyword, p_price,
+                p_old_price, p_cat_id, p_sub_cat_id, p_quantity, p_seller_id, p_uom).enqueue(new Callback<Products_Model>() {
+            @Override
+            public void onResponse(Call<Products_Model> call, Response<Products_Model> response) {
+                Log.e("appSample", "onResponse");
+                progressProductObservable.setValue(false);
+                try {
+                    if(response.isSuccessful()) {
+                        if (response.body() != null) {
+                            addProductModelMLD.setValue(response.body());
+                        }
+                    } else {
+                        addProductModelMLD.setValue(null);
+                        productErrorMLD.setValue("No Response");
+                    }
+                } catch(Exception e) {
+                    Log.e("appSample", "ResponseExc: " + e.getMessage());
+                    addProductModelMLD.setValue(null);
+                    productErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Products_Model> call, Throwable t) {
+                Log.e("appSample", "Failure: " + t.getMessage());
+                progressProductObservable.setValue(false);
+                addProductModelMLD.setValue(null);
+                productErrorMLD.setValue("Connection Error");
+            }
+        });
+        return addProductModelMLD;
     }
 
     @Override
@@ -142,7 +230,7 @@ public class ProductListRepoImpl implements ProductListRepo {
         progressProductObservable.setValue(true);
         RequestBody p_cat_id = RequestBody.create(MediaType.parse("text/plain"), params.get("cat_id"));
         RequestBody p_seller_id = RequestBody.create(MediaType.parse("text/plain"), params.get("seller_id"));
-//        RequestBody p_product_id = RequestBody.create(MediaType.parse("text/plain"), params.get("product_id"));
+        RequestBody p_product_id = RequestBody.create(MediaType.parse("text/plain"), params.get("product_id"));
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/*"), file);
@@ -154,7 +242,6 @@ public class ProductListRepoImpl implements ProductListRepo {
                 MultipartBody.Part.createFormData("product_image", file.getName(), requestFile);
 
         ApiCallBack apiService = retrofit.create(ApiCallBack.class);
-        RequestBody p_product_id = null;
 
         apiService.uploadProductImages(body, p_seller_id, p_product_id, p_cat_id).enqueue(new Callback<Products_Model>() {
             @Override

@@ -8,10 +8,12 @@ import androidx.lifecycle.ViewModel;
 
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.UOMModel;
+import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.repository.implementor.ProductListRepoImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class ProductsViewModelImpl extends ViewModel implements ProductsViewModel {
@@ -123,6 +125,15 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
     public void addProducts(File file, Map<String, String> params) {
         try {
             mutableAddProducts = productListRepo.addProductRepo(file, params);
+        } catch (Exception e) {
+            mutableProductError.setValue(e.getMessage());
+        }
+    }
+
+    @Override
+    public void addProductsNew(ArrayList<UploadingImageList> uploadingImageLists, Map<String, String> params) {
+        try {
+            mutableAddProducts = productListRepo.addProductRepoNew(uploadingImageLists, params);
         } catch (Exception e) {
             mutableProductError.setValue(e.getMessage());
         }

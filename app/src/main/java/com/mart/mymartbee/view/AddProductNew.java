@@ -293,7 +293,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.upload_view_img:
-                if(uploadingImageLists.size() < 5) {
+                if(uploadingImageLists.size() < 3 ) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");
@@ -301,7 +301,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.upload_view:
-                if(uploadingImageLists.size() < 5) {
+                if(uploadingImageLists.size() < 3 ) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");
@@ -436,7 +436,8 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 params.put("uom", strPType);*/
 
                 if(uploadingImageLists.size() > 0) {
-                    uploadingImage(uploadingImageLists.get(imageCount).getImage());
+//                    uploadingImage(uploadingImageLists.get(imageCount).getImage());
+                    addMyProduct(uploadingImageLists);
                 }
 
 
@@ -505,6 +506,62 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public void addMyProduct(ArrayList<UploadingImageList> uploadingImageLists) {
+
+        for(int i=0; i < uploadingImageLists.size(); i++) {
+            Log.e("appSample", "ImagePath: " + uploadingImageLists.get(i).getImage());
+        }
+
+        Map<String, String> params = new HashMap<>();
+        params.put("title", strPName);
+        params.put("description", strPDesc);
+        params.put("meta_title", strPName);
+        params.put("meta_description", strPDesc);
+        params.put("meta_keyword", "MartBee");
+        params.put("price", strPDiscount);
+        params.put("old_price", strPPrice);
+        params.put("cat_id", cate_id);
+        params.put("sub_cat_id", "" + selSubCateId);
+        params.put("quantity", strPQty);
+        params.put("seller_id", sellerId);
+        params.put("uom", strPType);
+
+        Log.e("appSample", "");
+        Log.e("appSample", "Title: " + strPName);
+        Log.e("appSample", "Description: " + strPDesc);
+        Log.e("appSample", "MetaTitle: " + strPName);
+        Log.e("appSample", "MetaDesc: " + strPDesc);
+        Log.e("appSample", "MetaKeyword: MartBee");
+        Log.e("appSample", "Price: " + strPDiscount);
+        Log.e("appSample", "DiscountPrice: " + strPPrice);
+        Log.e("appSample", "CateId: " + cate_id);
+        Log.e("appSample", "SubCateId: " + selSubCateId);
+        Log.e("appSample", "Quantity: " + strPQty);
+        Log.e("appSample", "sellerId: " + sellerId);
+        Log.e("appSample", "Uom: " + strPType);
+
+
+        if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
+            productsViewModel.addProductsNew(uploadingImageLists, params);
+        } else {
+            NetworkAvailability networkAvailability = new NetworkAvailability(this);
+            networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
+        }
+
+        productsViewModel.addProductLV().observe(AddProductNew.this, new Observer<Products_Model>() {
+            @Override
+            public void onChanged(Products_Model products_model) {
+                if (products_model.isStrStatus() == true) {
+                    showSuccessDialog(products_model, "Product successfully added.", PRODUCT_ADDED_success);
+                } else {
+                    showErrorDialog(products_model.getStrMessage());
+                }
+            }
+        });
+
+    }
+
+    /*
     public void uploadingImage(String upd_image) {
         Log.e("appSample", "uploadingImage");
         finalPath = new File(upd_image);
@@ -546,7 +603,8 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                         my_params.put("uom", strPType);
 
                         if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
-                            productsViewModel.addProducts(finalPath, params);
+//                            productsViewModel.addProducts(finalPath, params);
+                            productsViewModel.addProductsNew(finalPath, params);
                         } else {
                             NetworkAvailability networkAvailability = new NetworkAvailability(AddProductNew.this);
                             networkAvailability.noInternetConnection(AddProductNew.this, Constants.ADD_PRODUCT_INFO);
@@ -573,6 +631,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    */
     private void showUOMSheet(int showUOMStatus) {
         if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
             productsViewModel.getUOM();
@@ -602,6 +661,20 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 StorageDatas.getInstance().setProducts_model(products_model);
                 setResult(resultCode);
                 finish();
+            }
+        });
+    }
+
+    private void showErrorDialog(String strMessage) {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(AddProductNew.this, SweetAlertDialog.ERROR_TYPE);
+        sweetAlertDialog.setTitleText("Error!");
+        sweetAlertDialog.setContentText(strMessage);
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                sweetAlertDialog.dismiss();
             }
         });
     }

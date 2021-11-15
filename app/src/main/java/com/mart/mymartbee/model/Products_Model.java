@@ -119,6 +119,43 @@ public class Products_Model {
             @SerializedName("uom")
             @Expose
             private String strProduct_uom;
+            @SerializedName("other_images")
+            @Expose
+            ArrayList<OtherImages> otherImages;
+
+            public ArrayList<OtherImages> getOtherImages() {
+                return otherImages;
+            }
+
+            public void setOtherImages(ArrayList<OtherImages> otherImages) {
+                this.otherImages = otherImages;
+            }
+
+            public static class OtherImages {
+                @SerializedName("image")
+                @Expose
+                public String strImage;
+                @SerializedName("folder")
+                @Expose
+                public String strFolder;
+
+                public String getStrImage() {
+                    return strImage;
+                }
+
+                public void setStrImage(String strImage) {
+                    this.strImage = strImage;
+                }
+
+                public String getStrFolder() {
+                    return strFolder;
+                }
+
+                public void setStrFolder(String strFolder) {
+                    this.strFolder = strFolder;
+                }
+
+            }
 
             public String getStrProdut_id() {
                 return strProdut_id;
