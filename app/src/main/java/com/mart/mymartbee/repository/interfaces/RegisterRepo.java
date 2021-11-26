@@ -12,6 +12,7 @@ import java.util.Map;
 public interface RegisterRepo {
 
     MutableLiveData<RegisterModel> checkRegisterRepo(File file, Map<String, String> params) throws Exception;
+    MutableLiveData<RegisterModel> checkRegisterRepoWithoutImage(Map<String, String> params) throws Exception;
     MutableLiveData<RegisterModel> updateProfileRepo(Map<String, String> params) throws Exception;
     MutableLiveData<String> CheckREgRepoERror() throws Exception;
     MutableLiveData<Boolean> progressUpdation();

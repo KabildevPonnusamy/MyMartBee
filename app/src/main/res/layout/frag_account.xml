@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -57,18 +57,18 @@
                         android:layout_height="96dp"
                         android:layout_margin="4dp"
                         android:elevation="15dp"
-                        app:cardBackgroundColor="@color/white"
                         android:foreground="?android:attr/selectableItemBackground"
+                        app:cardBackgroundColor="@color/white"
                         app:cardCornerRadius="10dp"
                         card_view:cardUseCompatPadding="true">
 
-                    <ImageView
-                        android:id="@+id/store_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/image_desc"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/store_zero" />
+                        <ImageView
+                            android:id="@+id/store_image"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/image_desc"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/store_zero" />
 
                     </androidx.cardview.widget.CardView>
 
@@ -84,12 +84,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="25dp"
+                            android:fontFamily="@font/museosans"
                             android:foreground="?android:attr/selectableItemBackground"
                             android:singleLine="true"
                             android:text="Thulasi Electricals and Electronics"
                             android:textColor="@color/black"
                             android:textSize="17sp"
-                            android:fontFamily="@font/museosans"
                             android:textStyle="bold" />
 
                         <TextView
@@ -97,12 +97,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/museosans"
                             android:foreground="?android:attr/selectableItemBackground"
                             android:singleLine="true"
                             android:text="Electronics"
-                            android:fontFamily="@font/museosans"
                             android:textColor="@color/black"
-                            android:layout_marginTop="3dp"
                             android:textSize="13sp"
                             android:textStyle="normal" />
 
@@ -111,11 +111,11 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/museosans"
                             android:foreground="?android:attr/selectableItemBackground"
                             android:singleLine="true"
                             android:text=""
-                            android:layout_marginTop="3dp"
-                            android:fontFamily="@font/museosans"
                             android:textColor="@color/black"
                             android:textSize="13sp"
                             android:textStyle="normal" />
@@ -124,6 +124,21 @@
                     </LinearLayout>
 
                 </RelativeLayout>
+
+
+                <!--<TextView
+                    android:id="@+id/timeView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="12dp"
+                    android:fontFamily="@font/museosans"
+                    android:text="Select Time"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="normal" />-->
+
 
                 <TextView
                     android:id="@+id/profile_change"
@@ -156,18 +171,18 @@
                             android:id="@+id/setting_icon"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            android:layout_gravity="center"
                             android:layout_alignParentStart="true"
+                            android:layout_gravity="center"
                             android:contentDescription="@string/image_desc"
                             android:src="@drawable/icon_settings" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_toEndOf="@+id/setting_icon"
                             android:layout_centerInParent="true"
+                            android:layout_gravity="center"
                             android:layout_marginStart="13dp"
+                            android:layout_toEndOf="@+id/setting_icon"
                             android:fontFamily="@font/museosans"
                             android:text="@string/settings_text"
                             android:textColor="@color/black"
@@ -178,20 +193,20 @@
                             android:id="@+id/setting_arrow"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_gravity="center"
                             android:layout_alignParentEnd="true"
-                            app:tint="@color/shadow_color"
+                            android:layout_gravity="center"
                             android:contentDescription="@string/image_desc"
-                            android:src="@drawable/arrow_right" />
+                            android:src="@drawable/arrow_right"
+                            app:tint="@color/shadow_color" />
 
                     </RelativeLayout>
 
-                   <!-- <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="@color/shadow_color" />-->
+                    <!-- <View
+                         android:layout_width="match_parent"
+                         android:layout_height="1dp"
+                         android:layout_marginStart="5dp"
+                         android:layout_marginEnd="10dp"
+                         android:background="@color/shadow_color" />-->
 
                     <RelativeLayout
                         android:id="@+id/help_support_layout"
@@ -204,22 +219,22 @@
                             android:id="@+id/help_icon"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
                             android:layout_gravity="center"
                             android:layout_marginStart="3dp"
-                            android:layout_alignParentStart="true"
                             android:contentDescription="@string/image_desc"
                             android:src="@drawable/icon_help_support" />
 
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
                             android:layout_gravity="center"
                             android:layout_marginStart="13dp"
+                            android:layout_toEndOf="@+id/help_icon"
                             android:fontFamily="@font/museosans"
                             android:text="@string/help_and_support"
                             android:textColor="@color/black"
-                            android:layout_centerInParent="true"
-                            android:layout_toEndOf="@+id/help_icon"
                             android:textSize="14sp"
                             android:textStyle="normal" />
 
@@ -227,11 +242,11 @@
                             android:id="@+id/help_arrow"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_gravity="center"
                             android:layout_alignParentEnd="true"
-                            app:tint="@color/shadow_color"
+                            android:layout_gravity="center"
                             android:contentDescription="@string/image_desc"
-                            android:src="@drawable/arrow_right" />
+                            android:src="@drawable/arrow_right"
+                            app:tint="@color/shadow_color" />
 
                     </RelativeLayout>
 

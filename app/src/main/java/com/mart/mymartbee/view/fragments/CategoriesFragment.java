@@ -39,7 +39,6 @@ import com.mart.mymartbee.model.ShopStatusModel;
 import com.mart.mymartbee.model.SubCategory_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
-import com.mart.mymartbee.view.AddProduct;
 import com.mart.mymartbee.view.AddProductNew;
 import com.mart.mymartbee.view.ProductDetails;
 import com.mart.mymartbee.view.ProductViewAll;
@@ -73,7 +72,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     ImageView icon_options, icon_search;
-    TextView shop_tv, new_product_txt;
+    TextView new_product_txt; // shop_tv
     String strCateId, strSellerId;
     LinearLayoutManager lManager = null;
     Products_Model.ProductCategories.ProductsList productsObj;
@@ -111,7 +110,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         search_layout = view.findViewById(R.id.search_layout);
         category_title_layout = view.findViewById(R.id.category_title_layout);
         search_back = view.findViewById(R.id.search_back);
-        shop_tv = (TextView) view.findViewById(R.id.shop_tv);
+//        shop_tv = (TextView) view.findViewById(R.id.shop_tv);
         icon_options = (ImageView) view.findViewById(R.id.icon_options);
         icon_search = (ImageView) view.findViewById(R.id.icon_search);
         new_product_txt = (TextView) view.findViewById(R.id.new_product_txt);
@@ -126,7 +125,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     private void getMyPreferences() {
         myKeyValue = getActivity().getResources().getString(R.string.myTripleKey);
         preferenceDatas = new MyPreferenceDatas(getActivity());
-        shop_tv.setText(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue));
+//        shop_tv.setText(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue));
         strCateId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
         strSellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
         strCategoryName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
@@ -257,8 +256,14 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
             case R.id.add_cate_layout:
                 closeKeyboard();
-                mypopupWindow.dismiss();
-                bottomSheetDialog.show();
+                if(mypopupWindow != null) {
+                    mypopupWindow.dismiss();
+                }
+
+                if(bottomSheetDialog != null) {
+                    bottomSheetDialog.show();
+                }
+
                 break;
 
             case R.id.edit_cate_layout:
@@ -538,7 +543,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
 
 
         if (requestCode == HOME_FRAG_to_PRODUCT_DETAILS) {
-            if (resultCode == PRODUCT_DELETION_success) {
+            if (resultCode == PRODUCT_DELETION_success || resultCode == IMAGE_DELETION_success) {
                 updateProduct();
             }
         }

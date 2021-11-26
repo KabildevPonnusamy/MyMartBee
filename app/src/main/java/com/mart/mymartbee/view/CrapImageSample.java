@@ -18,15 +18,15 @@ import com.mart.mymartbee.R;
 import com.mart.mymartbee.commons.PathUtil;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+//import com.theartofdev.edmodo.cropper.CropImage;
+//import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.net.URISyntaxException;
 
 public class CrapImageSample extends AppCompatActivity implements Constants {
 
-    ProgressDialog progressDialog;
+    /*ProgressDialog progressDialog;
     File tempPath, finalPath;
 
     @Override
@@ -122,5 +122,5 @@ public class CrapImageSample extends AppCompatActivity implements Constants {
             finish();
 
         }
-    }
+    }*/
 }

@@ -1,29 +1,39 @@
 package com.mart.mymartbee.view;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.commons.CameraUtils;
@@ -31,12 +41,15 @@ import com.mart.mymartbee.commons.CustomTimePickerDialog;
 import com.mart.mymartbee.commons.GPSTracker;
 import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.CommonMethods;
+import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.RegisterModel;
+import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
+import com.mart.mymartbee.view.adapters.ImageUploadingAdapter;
 import com.mart.mymartbee.viewmodel.implementor.RegisterViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.RegisterViewModel;
 
@@ -74,6 +87,15 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
     SweetAlertDialog sweetAlertDialog;
     String strStartTime = "";
     String strCloseTime = "";
+    File tempFile;
+    Uri fileUri;
+    Calendar startCalDate;
+    TimePickerDialog mTimePicker;
+    Calendar prefCaldate;
+    int prefmHour, prefmMinute;
+    BottomSheetDialog bottomSheetUpload;
+    LinearLayout gallery_layout, camera_layout;
+    ImageView close_img;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,6 +106,19 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         getMyPreferences();
         initView();
         observeProgress();
+        bottomSheetImageUpload();
+    }
+
+    public void bottomSheetImageUpload() {
+        bottomSheetUpload = new BottomSheetDialog(this);
+        bottomSheetUpload.setContentView(R.layout.bottomsheet_imageupload);
+        bottomSheetUpload.setCancelable(false);
+        close_img = (ImageView) bottomSheetUpload.findViewById(R.id.close_img);
+        gallery_layout = (LinearLayout) bottomSheetUpload.findViewById(R.id.gallery_layout);
+        camera_layout = (LinearLayout) bottomSheetUpload.findViewById(R.id.camera_layout);
+        close_img.setOnClickListener(this);
+        gallery_layout.setOnClickListener(this);
+        camera_layout.setOnClickListener(this);
     }
 
     private void getMyPreferences() {
@@ -112,6 +147,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
     }
 
     public void initView() {
+        startCalDate = Calendar.getInstance();
+        prefCaldate = Calendar.getInstance();
         profile_change = findViewById(R.id.profile_change);
         store_image = findViewById(R.id.store_image);
         profile_back = findViewById(R.id.profile_back);
@@ -171,15 +208,125 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         });
     }
 
+    public void startTimePickerDialog(int hour, int minute) {
+        mTimePicker = new TimePickerDialog(Profile.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                String timeSet = "";
+                if (selectedHour > 12) {
+                    selectedHour -= 12;
+                    timeSet = "PM";
+                } else if (selectedHour == 0) {
+                    selectedHour += 12;
+                    timeSet = "AM";
+                } else if (selectedHour == 12) {
+                    timeSet = "PM";
+                } else {
+                    timeSet = "AM";
+                }
+
+                String min = "";
+                if (selectedMinute < 10)
+                    min = "0" + selectedMinute;
+                else
+                    min = String.valueOf(selectedMinute);
+
+                String aTime = new StringBuilder().append(selectedHour).append(':')
+                        .append(min).append(" ").append(timeSet).toString();
+
+                start_time.setText(aTime);
+            }
+        }, hour, minute, false);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }
+
+    public void closetimePickerDialog(int hour, int minute) {
+        mTimePicker = new TimePickerDialog(Profile.this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                String timeSet = "";
+                if (selectedHour > 12) {
+                    selectedHour -= 12;
+                    timeSet = "PM";
+                } else if (selectedHour == 0) {
+                    selectedHour += 12;
+                    timeSet = "AM";
+                } else if (selectedHour == 12) {
+                    timeSet = "PM";
+                } else {
+                    timeSet = "AM";
+                }
+
+                String min = "";
+                if (selectedMinute < 10)
+                    min = "0" + selectedMinute;
+                else
+                    min = String.valueOf(selectedMinute);
+
+                String aTime = new StringBuilder().append(selectedHour).append(':')
+                        .append(min).append(" ").append(timeSet).toString();
+
+                close_time.setText(aTime);
+            }
+        }, hour, minute, false);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }
+
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.close_img:
+                bottomSheetUpload.dismiss();
+                break;
+
+            case R.id.camera_layout:
+                bottomSheetUpload.dismiss();
+                Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (android.os.Build.VERSION.SDK_INT >= 24) {
+                    tempFile = Util.getOutputMediaFile();
+                    fileUri = FileProvider.getUriForFile(Profile.this,
+                            BuildConfig.APPLICATION_ID + ".provider",
+                            tempFile);
+
+                    intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+                } else {
+                    fileUri = Uri.fromFile(Util.getOutputMediaFile());
+                }
+
+                intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+                startActivityForResult(intent1, CAMERA_IMAGE);
+                break;
+
+            case R.id.gallery_layout:
+                bottomSheetUpload.dismiss();
+
+                if (ContextCompat.checkSelfPermission(Profile.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(Profile.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                } else {
+                    Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                    i.setType("image/*");
+                    startActivityForResult(i, PICK_IMAGE);
+                }
+                break;
+
             case R.id.start_time:
-                showStartTime();
+                prefmHour = prefCaldate.get(Calendar.HOUR_OF_DAY);
+                prefmMinute = prefCaldate.get(Calendar.MINUTE);
+                startTimePickerDialog(prefmHour, prefmMinute);
+//                showStartTime();
                 break;
 
             case R.id.close_time:
-                showCloseTime();
+                prefmHour = prefCaldate.get(Calendar.HOUR_OF_DAY);
+                prefmMinute = prefCaldate.get(Calendar.MINUTE);
+                closetimePickerDialog(prefmHour, prefmMinute);
+//                showCloseTime();
                 break;
 
             case R.id.profile_change:
@@ -335,6 +482,58 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == PICK_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Video.Media.DATA};
+
+                Cursor cursor = getContentResolver().query(selectedImage,
+                        filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String picturePath = cursor.getString(columnIndex);
+                cursor.close();
+                Log.e("appSample", "GalleryPath: " + picturePath);
+                finalPath = new File(picturePath);
+
+                int file_size_two = Integer.parseInt(String.valueOf(finalPath.length() / 1024));
+                Log.e("appSample", "GalleryPathSize: " + file_size_two);
+
+                Uri compressUri = Uri.fromFile(finalPath);
+
+                Glide.with(getApplicationContext())
+                        .load(compressUri)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(store_image);
+
+            }
+        }
+
+        if (requestCode == CAMERA_IMAGE) {
+            if (resultCode == RESULT_OK) {
+                String path1;
+                if (android.os.Build.VERSION.SDK_INT >= 24) {
+                    path1 = tempFile.getAbsolutePath();
+                } else {
+                    path1 = fileUri.getPath();
+                }
+
+                finalPath = new File(path1);
+                int file_size = Integer.parseInt(String.valueOf(finalPath.length() / 1024));
+                Log.e("appSample", "TakenFileSize: " + file_size);
+
+                Uri compressUri = Uri.fromFile(finalPath);
+
+                Glide.with(getApplicationContext())
+                        .load(compressUri)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(store_image);
+            }
+        }
+
         if(requestCode == PROFILE_UPD_WITHOUT_IMAGE) {
 
         } else if(requestCode == PROFILE_UPD_WITH_IMAGE) {
@@ -350,7 +549,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
             }
         }
 
-        if(requestCode == ACCOUNT_FRAG_to_CROP_SAMPLE_ACTIVITY) {
+        /*if(requestCode == ACCOUNT_FRAG_to_CROP_SAMPLE_ACTIVITY) {
             if(resultCode == CROP_success) {
                 strImage = "" + data.getStringExtra("FilePath");
                 finalPath = new File(strImage);
@@ -362,7 +561,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(store_image);
             }
-        }
+        }*/
 
         if(requestCode == ACCOUNT_FRAG_to_CATEGORY_SELECTION) {
             if(resultCode == CATEGORY_SELECTED) {
@@ -445,8 +644,27 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
             CommonMethods.Toast(Profile.this, getString(R.string.device_dont_have_camera));
             return;
         }
-        Intent intent = new Intent(Profile.this, CrapImageSample.class);
-        startActivityForResult(intent, ACCOUNT_FRAG_to_CROP_SAMPLE_ACTIVITY);
+
+        bottomSheetUpload.show();
+
+        /*Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (android.os.Build.VERSION.SDK_INT >= 24) {
+            tempFile = Util.getOutputMediaFile();
+            fileUri = FileProvider.getUriForFile(Profile.this,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    tempFile);
+
+            intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        } else {
+            fileUri = Uri.fromFile(Util.getOutputMediaFile());
+        }
+
+        intent1.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+        startActivityForResult(intent1, CAMERA_IMAGE);*/
+
+        /*Intent intent = new Intent(Profile.this, CrapImageSample.class);
+        startActivityForResult(intent, ACCOUNT_FRAG_to_CROP_SAMPLE_ACTIVITY);*/
     }
 
     @Override
@@ -465,13 +683,16 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
     }
 
     public void showStartTime() {
-        Calendar prefCaldate = Calendar.getInstance();
-        int mHour = prefCaldate.get(Calendar.HOUR_OF_DAY);
-        int mMinute = prefCaldate.get(Calendar.MINUTE);
+        startCalDate = Calendar.getInstance();
+        int mHour = startCalDate.get(Calendar.HOUR_OF_DAY);
+        int mMinute = startCalDate.get(Calendar.MINUTE);
+        Log.e("appSample", "Hour: " + mHour);
+        Log.e("appSample", "Hour: " + mMinute);
 
         TimePickerDialog.OnTimeSetListener myTimeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+
                 if (view.isShown()) {
 
                     view.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
@@ -479,6 +700,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                         public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                             int hour = view.getCurrentHour();
                             int minutes = view.getCurrentMinute();
+
                         }
                     });
 
@@ -510,10 +732,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                     else
                         min = String.valueOf(minutes);
 
-                    strStartTime = new StringBuilder().append(hour).append(':')
+                    String aTime = new StringBuilder().append(hour).append(':')
                             .append(min).append(" ").append(timeSet).toString();
 
-                    start_time.setText(strStartTime);
+                    start_time.setText(aTime);
+
                 }
             }
         };

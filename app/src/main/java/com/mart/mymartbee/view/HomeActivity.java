@@ -19,6 +19,7 @@ import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.view.fragments.AccountFragment;
 import com.mart.mymartbee.view.fragments.HomeFragment;
+import com.mart.mymartbee.view.fragments.NewReportsFragment;
 import com.mart.mymartbee.view.fragments.OrdersFragment;
 import com.mart.mymartbee.view.fragments.CategoriesFragment;
 import com.mart.mymartbee.view.fragments.ReportsFragment;
@@ -112,8 +113,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void moveReports(){
-        Fragment reportFragment = new ReportsFragment();
+    private void moveReports() {
+        Fragment reportFragment = new NewReportsFragment(); //  ReportsFragment
         if(reportFragment != null) {
             FragmentTransaction rft = getSupportFragmentManager().beginTransaction();
             rft.replace(R.id.frame_layout, reportFragment);

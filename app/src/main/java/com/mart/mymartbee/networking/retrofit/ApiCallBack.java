@@ -49,6 +49,10 @@ public interface ApiCallBack {
 
     @POST("seller/register")
     @FormUrlEncoded
+    Call<RegisterModel> sellerRegistrationWithoutImage(@FieldMap Map<String, String> params);
+
+    @POST("seller/register")
+    @FormUrlEncoded
     Call<RegisterModel> updateProfile(@FieldMap Map<String, String> params);
 
     @POST("seller/add-category")
@@ -94,6 +98,10 @@ public interface ApiCallBack {
     @POST("product/delete-product")
     @FormUrlEncoded
     Call<Products_Model> deleteProduct(@FieldMap Map<String, String> params);
+
+    @POST("product/delete-product-image")
+    @FormUrlEncoded
+    Call<Products_Model> deleteProductImage(@FieldMap Map<String, String> params);
 
     @Multipart
     @POST("product/upload-product-images")

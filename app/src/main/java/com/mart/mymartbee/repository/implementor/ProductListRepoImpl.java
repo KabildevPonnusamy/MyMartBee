@@ -63,16 +63,6 @@ public class ProductListRepoImpl implements ProductListRepo {
         MultipartBody.Part[] imageParts = new MultipartBody.Part[uploadingImageLists.size()];
 
         List<MultipartBody.Part> list = new ArrayList<>();
-        /*File file1 = new File("/storage/emulated/0/DCIM/Feid_Camera/IMG_20211113_100108.jpg");
-        File file2 = new File("/storage/emulated/0/DCIM/Feid_Camera/IMG_20211113_204740.jpg");
-
-        RequestBody surveyBody1 = RequestBody.create(MediaType.parse("image/*"), file1);
-        RequestBody surveyBody2 = RequestBody.create(MediaType.parse("image/*"), file2);
-
-        list.add(MultipartBody.Part.createFormData("product_image_more",  "ImageOne",
-                surveyBody1));
-        list.add(MultipartBody.Part.createFormData("product_image_more",  "ImageTwo",
-                surveyBody2));*/
 
         for (int index = 0; index < uploadingImageLists.size(); index++) {
 
@@ -222,6 +212,43 @@ public class ProductListRepoImpl implements ProductListRepo {
         });
 
         return editProductModelMLD;
+    }
+
+    @Override
+    public MutableLiveData<Products_Model> deleteProductImage(Map<String, String> params) throws Exception {
+        progressProductObservable.setValue(true);
+        MutableLiveData<Products_Model> delProductImgMLD = new MutableLiveData<Products_Model>();
+        ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);
+        Call<Products_Model> call = callBack.deleteProductImage(params);
+        call.enqueue(new Callback<Products_Model>() {
+            @Override
+            public void onResponse(Call<Products_Model> call, Response<Products_Model> response) {
+                progressProductObservable.setValue(false);
+                try {
+                    if(response.isSuccessful()) {
+                        if (response.body() != null) {
+                            delProductImgMLD.setValue(response.body());
+                        }
+                    } else {
+                        delProductImgMLD.setValue(null);
+                        productErrorMLD.setValue("No Response");
+                    }
+                } catch(Exception e) {
+                    Log.e("appSample", "ResponseExc: " + e.getMessage());
+                    delProductImgMLD.setValue(null);
+                    productErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Products_Model> call, Throwable t) {
+                progressProductObservable.setValue(false);
+                delProductImgMLD.setValue(null);
+                productErrorMLD.setValue("Connection Error");
+            }
+        });
+
+        return delProductImgMLD;
     }
 
     @Override

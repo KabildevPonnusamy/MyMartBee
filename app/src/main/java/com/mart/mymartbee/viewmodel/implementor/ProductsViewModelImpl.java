@@ -23,6 +23,7 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
     private MutableLiveData<Products_Model> mutableEditWithImageProducts;
     private MutableLiveData<Products_Model> mutableUploadingImage;
     private MutableLiveData<Products_Model> mutableDeleteProducts;
+    private MutableLiveData<Products_Model> mutableDeleteProductImages;
     private MutableLiveData<Products_Model> mutableGetProducts;
     private MutableLiveData<UOMModel> mutableGetUOM;
     private MutableLiveData<String> mutableProductError;
@@ -36,6 +37,7 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
         mutableEditWithImageProducts = new MutableLiveData<Products_Model>();
         mutableUploadingImage = new MutableLiveData<Products_Model>();
         mutableDeleteProducts = new MutableLiveData<Products_Model>();
+        mutableDeleteProductImages = new MutableLiveData<Products_Model>();
         mutableGetProducts = new MutableLiveData<Products_Model>();
         mutableGetUOM = new MutableLiveData<UOMModel>();
         mutableProductError = new MutableLiveData<String>();
@@ -51,6 +53,11 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
     @Override
     public LiveData<Products_Model> deleteProductLV() {
         return mutableDeleteProducts;
+    }
+
+    @Override
+    public LiveData<Products_Model> deleteProductImagesLV() {
+        return mutableDeleteProductImages;
     }
 
     @Override
@@ -144,6 +151,15 @@ public class ProductsViewModelImpl extends ViewModel implements ProductsViewMode
         try {
             mutableDeleteProducts = productListRepo.deleteProductRepo(params);
         } catch (Exception e) {
+            mutableProductError.setValue(e.getMessage());
+        }
+    }
+
+    @Override
+    public void deleteProductImages(Map<String, String> params) {
+        try {
+            mutableDeleteProductImages = productListRepo.deleteProductImage(params);
+        } catch(Exception e) {
             mutableProductError.setValue(e.getMessage());
         }
     }

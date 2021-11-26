@@ -138,6 +138,17 @@ public class Products_Model {
                 @SerializedName("folder")
                 @Expose
                 public String strFolder;
+                @SerializedName("image_name")
+                @Expose
+                public String strImageName;
+
+                public String getStrImageName() {
+                    return strImageName;
+                }
+
+                public void setStrImageName(String strImageName) {
+                    this.strImageName = strImageName;
+                }
 
                 public String getStrImage() {
                     return strImage;

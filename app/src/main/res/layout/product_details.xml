@@ -319,7 +319,6 @@
                         android:layout_marginTop="20dp"
                         android:fontFamily="@font/museosans"
                         android:text="@string/description_txt"
-                        android:textAllCaps="true"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="normal" />
@@ -349,7 +348,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/stock_text"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="normal" />
@@ -361,7 +359,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/colon_only"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -374,7 +371,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="15 pieces"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -394,7 +390,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/payment"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="normal" />
@@ -406,7 +401,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/colon_only"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -419,7 +413,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/cash_on_delivery"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -439,7 +432,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/delivery"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="15sp"
                             android:textStyle="normal" />
@@ -451,7 +443,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/colon_only"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -464,7 +455,6 @@
                             android:fontFamily="@font/museosans"
                             android:gravity="center"
                             android:text="@string/free_delivery"
-                            android:textAllCaps="true"
                             android:textColor="@color/black"
                             android:textSize="16sp"
                             android:textStyle="bold" />

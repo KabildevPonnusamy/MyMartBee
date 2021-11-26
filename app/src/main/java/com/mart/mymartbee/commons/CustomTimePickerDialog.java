@@ -1,5 +1,9 @@
 package com.mart.mymartbee.commons;
 
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,10 +12,6 @@ import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import com.mart.mymartbee.storage.StorageDatas;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CustomTimePickerDialog extends TimePickerDialog {
 
@@ -31,7 +31,6 @@ public class CustomTimePickerDialog extends TimePickerDialog {
         lastMinute = minute;
         mTimeSetListener = listener;
         mIs24HourView = is24HourView;
-        mTimePicker = new TimePicker(context);
     }
 
     @Override
@@ -45,19 +44,20 @@ public class CustomTimePickerDialog extends TimePickerDialog {
         switch (which) {
             case BUTTON_POSITIVE:
                 if (mTimeSetListener != null) {
-                    mTimeSetListener.onTimeSet(mTimePicker, mTimePicker.getCurrentHour(),
-                            mTimePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                    mTimeSetListener.onTimeSet(mTimePicker, mTimePicker.getHour(),
+                            mTimePicker.getMinute() * TIME_PICKER_INTERVAL);
 
-                    Log.e("appSample", "CustomHour: " + mTimePicker.getCurrentHour());
-                    Log.e("appSample", "CustomMinute: " + mTimePicker.getCurrentMinute());
-                    Log.e("appSample", "CustomMinute2: " + mTimePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                    Log.e("appSample", "CustomHour: " + mTimePicker.getHour());
+                    Log.e("appSample", "CustomMinute: " + mTimePicker.getMinute());
+                    Log.e("appSample", "CustomMinute2: " + mTimePicker.getMinute() * TIME_PICKER_INTERVAL);
 
                     Log.e("appSample", "Hour: " + mTimePicker.getHour());
                     Log.e("appSample", "Minute: " + mTimePicker.getMinute());
 
-                    StorageDatas.getInstance().setCurrHour("" + mTimePicker.getCurrentHour());
-                    StorageDatas.getInstance().setCurrMint("" + mTimePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
+                    StorageDatas.getInstance().setCurrHour("" + mTimePicker.getHour());
+                    StorageDatas.getInstance().setCurrMint("" + mTimePicker.getMinute() * TIME_PICKER_INTERVAL);
                 }
+
 
                 break;
             case BUTTON_NEGATIVE:
@@ -92,32 +92,6 @@ public class CustomTimePickerDialog extends TimePickerDialog {
 
                 }
             });
-
-            /*final NumberPicker mHourSpinner = (NumberPicker) mTimePicker
-                    .findViewById(field.getInt(null));
-
-            if (mIs24HourView) {
-                mHourSpinner.setMinValue(8);
-                mHourSpinner.setMaxValue(20);
-            }else {
-                Field amPm = classForid.getField("amPm");
-
-                mHourSpinner.setMinValue(8);
-                final NumberPicker new_amPm = (NumberPicker) mTimePicker
-                        .findViewById(amPm.getInt(null));
-                new_amPm.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                    @Override
-                    public void onValueChange(NumberPicker np1, int oldVal, int newVal) {
-                        if (newVal == 0) { // case AM
-                            mHourSpinner.setMinValue(8);
-                            mHourSpinner.setMaxValue(20);
-                        } else { // case PM
-                            mHourSpinner.setMinValue(8);
-                            mHourSpinner.setMaxValue(20);
-                        }
-                    }
-                });
-            }*/
 
         } catch (Exception e) {
             e.printStackTrace();

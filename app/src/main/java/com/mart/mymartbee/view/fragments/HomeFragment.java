@@ -52,11 +52,11 @@ import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements View.OnClickListener, Constants {
 
-    String whatsAppLink = "", strCategoryName = "";
+    String whatsAppLink = "", strCategoryName = "", strSelleShop = "", strSellerMobile = "";
     String strCateId, strSellerId, strShortValue = "all";
     LinearLayout whatsapp_layout;
     TextView store_link, store_view_value, product_view_value, total_orders_value, revenue_value,
-            status_short_value;
+            status_short_value, shop_tv;
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     DashboardViewModel dashboardViewModel;
@@ -101,6 +101,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         pendingOrdersLists = new ArrayList<Dashboard_Model.PendingOrdersList>();
         whatsapp_layout = (LinearLayout) view.findViewById(R.id.whatsapp_layout);
         store_link = (TextView) view.findViewById(R.id.store_link);
+        shop_tv = (TextView) view.findViewById(R.id.shop_tv);
         status_short_value = (TextView) view.findViewById(R.id.status_short_value);
         store_view_value = (TextView) view.findViewById(R.id.store_view_value);
         product_view_value = (TextView) view.findViewById(R.id.product_view_value);
@@ -266,7 +267,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
         whatsappIntent.setType("text/plain");
         whatsappIntent.setPackage("com.whatsapp");
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, whatsAppLink + " \n\n   Please visit my store to buy " + strCategoryName + " products on very low cost.");
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, " \n  Hello! \nNow you can order from " + "*" +  strSelleShop  + "*"+ " using this link: " + whatsAppLink +
+                "\nFeel free to call us on " + strSellerMobile + " if you need any help with ordering. \n\n Thank you." );
         try {
             startActivity(whatsappIntent);
         } catch (android.content.ActivityNotFoundException ex) {
@@ -280,6 +282,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         strCateId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
         strSellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
         strCategoryName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
+        strSelleShop = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue);
+        strSellerMobile = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue);
+
+        shop_tv.setText(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue));
         viewModelInits();
     }
 
@@ -323,6 +329,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
         revenue_value.setText("RM. " + dashboard_model.getStrTotalRevenue());
         store_link.setText(dashboard_model.getStrStoreLink());
         whatsAppLink = dashboard_model.getStrStoreLink();
+        StorageDatas.getInstance().setStoreWhatsappLink(whatsAppLink);
         store_link.setPaintFlags(store_link.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         if (dashboard_model.getPendingOrdersLists() != null) {

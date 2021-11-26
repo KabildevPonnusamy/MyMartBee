@@ -67,6 +67,7 @@
                 android:id="@+id/store_image"
                 android:layout_width="96dp"
                 android:layout_height="96dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/store_zero"/>
 
             </androidx.cardview.widget.CardView>

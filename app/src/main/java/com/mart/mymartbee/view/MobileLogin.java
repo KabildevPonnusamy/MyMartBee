@@ -50,7 +50,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     EditText mobile_edit;
     String mobileStr = "", otpStr = "";
     private OtpTextView otp_view;
-    TextView resend_otp, otp_seconds, otp_mobile;
+    TextView resend_otp, otp_seconds, otp_mobile, change_mobile_mobile;
     Button verify_btn, submit_btn;
     BottomSheetDialog bottomSheetDialog;
     OTPViewModel otpViewModel;
@@ -99,6 +99,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
         pincode_spinner = (Spinner) findViewById(R.id.pincode_spinner);
         otp_view = (OtpTextView)bottomSheetDialog.findViewById(R.id.otp_view);
+        change_mobile_mobile = (TextView) bottomSheetDialog.findViewById(R.id.change_mobile_mobile);
         resend_otp = (TextView) bottomSheetDialog.findViewById(R.id.resend_otp);
         otp_seconds = (TextView) bottomSheetDialog.findViewById(R.id.otp_seconds);
         verify_btn = (Button) bottomSheetDialog.findViewById(R.id.verify_btn);
@@ -107,6 +108,7 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
         submit_btn.setOnClickListener(this);
         verify_btn.setOnClickListener(this);
         resend_otp.setOnClickListener(this);
+        change_mobile_mobile.setOnClickListener(this);
         setListener();
     }
 
@@ -162,13 +164,18 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.change_mobile_mobile:
+                otpViewModel.stopCounter();
+                bottomSheetDialog.dismiss();
+                break;
+
             case R.id.resend_otp:
                 sendOTP();
                 break;
 
             case R.id.verify_btn:
                 if(otpStr.equalsIgnoreCase("")) {
-                    CommonMethods.Toast(MobileLogin.this, "Please enter OTP!");
+                    CommonMethods.Toast(MobileLogin.this, "Please enter TAC!");
                     return;
                 }
                 verifyOTP();
@@ -191,7 +198,6 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
 
 
     private void sendOTP() {
-        Toast.makeText(getApplicationContext(), str_country_code + " " + mobileStr, Toast.LENGTH_SHORT).show();
         if (NetworkAvailability.isNetworkAvailable(MobileLogin.this)) {
             getLifecycle().addObserver(otpViewModel);
             otpViewModel.getOTP(str_country_code, mobileStr);
@@ -203,8 +209,8 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
         otpViewModel.getOTPLiveData().observe(MobileLogin.this, new Observer<OTPModel>() {
             @Override
             public void onChanged(OTPModel otpModel) {
-                Log.e("appSample", "OTP: " + otpModel.getStrOtp());
-                otp_mobile.setText( "Please enter OTP sent to " + str_country_code + " " + mobileStr);
+                Log.e("appSample", "TAC: " + otpModel.getStrOtp());
+                otp_mobile.setText( "Please enter TAC sent to " + str_country_code + " " + mobileStr);
                 disableResendBtn();
                 bottomSheetDialog.show();
 

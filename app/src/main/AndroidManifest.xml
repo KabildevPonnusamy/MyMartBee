@@ -132,11 +132,11 @@
             android:theme="@style/AppTheme_new"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-        <activity
+        <!--<activity
             android:name="com.mart.mymartbee.view.CrapImageSample"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_new"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+            android:windowSoftInputMode="stateHidden|adjustResize" />-->
 
         <activity
             android:name="com.mart.mymartbee.view.SubCategory_Options"
@@ -156,10 +156,13 @@
             android:theme="@style/AppTheme_new"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
-
-
         <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <!--<activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>-->
 
         <service
             android:name=".receiver.MyFirebaseMessagingService" android:exported="false">

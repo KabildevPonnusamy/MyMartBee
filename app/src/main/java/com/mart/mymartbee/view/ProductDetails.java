@@ -85,6 +85,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     LinearLayout gallery_layout, camera_layout;
     ImageView close_img;
     Uri fileUri;
+    boolean isImgDeleted = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -170,13 +171,13 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
     }
 
     public void checkDeleteImageStatus() {
-        if(imagesArrayList.size() == 1) {
+        if (imagesArrayList.size() == 1) {
             delete_image_layout.setVisibility(View.GONE);
         } else {
             delete_image_layout.setVisibility(View.VISIBLE);
         }
 
-        if(imagesArrayList.size() == 3) {
+        if (imagesArrayList.size() == 3) {
             upload_img.setVisibility(View.GONE);
         } else {
             upload_img.setVisibility(View.VISIBLE);
@@ -242,14 +243,54 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.delete_image_layout:
+                // Get View Pagers current Position
+                int pos = viewPager.getCurrentItem();
+
+                Map<String, String> delparams = new HashMap<>();
+                delparams.put("seller_id", strSellerId);
+                delparams.put("cat_id", strCateId);
+                delparams.put("product_id", strProductId);
+                delparams.put("image", imagesArrayList.get(pos).getStrImageName());
+
+                Log.e("appSample", "seller_id: " + strSellerId);
+                Log.e("appSample", "cat_id: " + strCateId);
+                Log.e("appSample", "product_id: " + strProductId);
+                Log.e("appSample", "image: " + imagesArrayList.get(pos).getStrImageName());
+
+                if (NetworkAvailability.isNetworkAvailable(ProductDetails.this)) {
+                    productsViewModel.deleteProductImages(delparams);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(ProductDetails.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
+
+                productsViewModel.deleteProductImagesLV().observe(this, new Observer<Products_Model>() {
+                    @Override
+                    public void onChanged(Products_Model products_model) {
+
+                        if (products_model.isStrStatus() == false) {
+                            showErrorDialog(products_model.getStrMessage());
+                        } else {
+                            for (int i = 0; i < imagesArrayList.size(); i++) {
+                                if (imagesArrayList.get(i).getStrImageName().
+                                        equalsIgnoreCase(imagesArrayList.get(pos).getStrImageName())) {
+                                    imagesArrayList.remove(i);
+                                }
+                            }
+                            viewPagerAdapter.notifyDataSetChanged();
+                            checkDeleteImageStatus();
+                            showImgDeleteSuccessDialog(products_model);
+                        }
+                    }
+                });
 
                 break;
 
             case R.id.upload_img:
-                if(imagesArrayList.size() < 3) {
+                if (imagesArrayList.size() < 3) {
                     checkCameraPermission();
                 } else {
-                    CommonMethods.Toast(ProductDetails.this,  "Sorry! You have reached maximum photos to upload.");
+                    CommonMethods.Toast(ProductDetails.this, "Sorry! You have reached maximum photos to upload.");
                 }
                 break;
 
@@ -283,8 +324,15 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     @Override
     public void onBackPressed() {
-        setResult(PRODUCT_UPDATED_success);
-        finish();
+//        setResult(PRODUCT_UPDATED_success);
+
+        if (isImgDeleted == true) {
+            setResult(IMAGE_DELETION_success);
+            finish();
+        } else {
+            finish();
+        }
+
     }
 
     public void bottomSheetImageUpload() {
@@ -316,7 +364,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     public void openCamera() {
         if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
-            CommonMethods.Toast(ProductDetails.this,  getString(R.string.device_dont_have_camera));
+            CommonMethods.Toast(ProductDetails.this, getString(R.string.device_dont_have_camera));
             return;
         }
         bottomSheetUpload.show();
@@ -388,6 +436,22 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onDismiss(DialogInterface dialogInterface) {
                 sweetAlertDialog.dismiss();
+            }
+        });
+    }
+
+    private void showImgDeleteSuccessDialog(Products_Model products_model) {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ProductDetails.this, SweetAlertDialog.SUCCESS_TYPE);
+        sweetAlertDialog.setTitleText("Success");
+        sweetAlertDialog.setContentText("Image deleted successfully.");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                sweetAlertDialog.dismiss();
+                StorageDatas.getInstance().setProducts_model(products_model);
+                isImgDeleted = true;
             }
         });
     }
@@ -482,11 +546,11 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                     StorageDatas.getInstance().setProducts_model(products_model);
                     Log.e("appSample", "Status_Success");
 
-                    for(int i=0; i<products_model.getProductCategories().size(); i++) {
+                    for (int i = 0; i < products_model.getProductCategories().size(); i++) {
                         Log.e("appSample", "ProductCateSize: " + products_model.getProductCategories().size());
-                        for(int j=0; j < products_model.getProductCategories().get(i).getProductsLists().size(); j++) {
+                        for (int j = 0; j < products_model.getProductCategories().get(i).getProductsLists().size(); j++) {
 
-                            if(strProductId.equalsIgnoreCase(products_model.getProductCategories().get(i).getProductsLists().get(j).getStrProdut_id())) {
+                            if (strProductId.equalsIgnoreCase(products_model.getProductCategories().get(i).getProductsLists().get(j).getStrProdut_id())) {
                                 imagesArrayList.clear();
                                 imagesArrayList.addAll(products_model.getProductCategories().get(i).getProductsLists().get(j).getOtherImages());
                                 viewPagerAdapter.notifyDataSetChanged();

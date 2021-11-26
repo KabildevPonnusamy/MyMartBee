@@ -153,6 +153,9 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
                 params.put("mobile_no", strMobileNumber);
                 params.put("categorie_name", strCate);
 
+                Log.e("appSample", "Mobile: " + strMobileNumber);
+                Log.e("appSample", "Category: " + strCate);
+
                 if (NetworkAvailability.isNetworkAvailable(BusinessCategorySelection.this)) {
                     businessCateGoryViewModel.getAddedCategories(params);
                 } else {

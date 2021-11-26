@@ -45,7 +45,12 @@ public class RegisterViewModelImpl extends ViewModel implements RegisterViewMode
     @Override
     public void checkRegister(File file, Map<String, String> params) {
         try {
-            registerModelMutableLiveData = registerRepo.checkRegisterRepo(file, params);
+
+            if(file != null) {
+                registerModelMutableLiveData = registerRepo.checkRegisterRepo(file, params);
+            } else {
+                registerModelMutableLiveData = registerRepo.checkRegisterRepoWithoutImage(params);
+            }
         } catch (Exception e) {
             regErrorMutableLiveData.setValue(e.getMessage());
         }

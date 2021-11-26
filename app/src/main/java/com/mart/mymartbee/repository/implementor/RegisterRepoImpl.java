@@ -35,7 +35,7 @@ public class RegisterRepoImpl implements RegisterRepo {
     private static RegisterRepoImpl instance = null;
 
     private static RegisterRepoImpl getInstance() {
-        if(instance == null) {
+        if (instance == null) {
             instance = new RegisterRepoImpl();
         }
         return instance;
@@ -44,6 +44,45 @@ public class RegisterRepoImpl implements RegisterRepo {
     public RegisterRepoImpl() {
         regErrorMLD = new MutableLiveData<String>();
         progressbarObservable = new MutableLiveData<Boolean>();
+    }
+
+    @Override
+    public MutableLiveData<RegisterModel> checkRegisterRepoWithoutImage(Map<String, String> params) throws Exception {
+        progressbarObservable.setValue(true);
+        Retrofit retrofit = ApiClient.getRetrofit();
+        MutableLiveData<RegisterModel> registerModelWI_MLD = new MutableLiveData<RegisterModel>();
+        ApiCallBack apiService = retrofit.create(ApiCallBack.class);
+        apiService.sellerRegistrationWithoutImage(params).enqueue(new Callback<RegisterModel>() {
+            @Override
+            public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
+                progressbarObservable.setValue(false);
+                try {
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            Log.e("appSample", "Success: " + response.body());
+                            registerModelWI_MLD.setValue(response.body());
+                        }
+                    } else {
+                        registerModelWI_MLD.setValue(null);
+                        regErrorMLD.setValue("No Response");
+                    }
+                } catch (Exception e) {
+                    Log.e("appSample", "regExc: " + e.getMessage());
+                    registerModelWI_MLD.setValue(null);
+                    regErrorMLD.setValue(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterModel> call, Throwable t) {
+                Log.e("appSample", "RegFailure: " + t.getMessage());
+                progressbarObservable.setValue(false);
+                registerModelWI_MLD.setValue(null);
+                regErrorMLD.setValue("Connection Error");
+            }
+        });
+
+        return registerModelWI_MLD;
     }
 
     @Override
@@ -57,7 +96,7 @@ public class RegisterRepoImpl implements RegisterRepo {
             public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
                 progressbarObservable.setValue(false);
                 try {
-                    if(response.isSuccessful()) {
+                    if (response.isSuccessful()) {
                         if (response.body() != null) {
                             updateProfileModel_MLD.setValue(response.body());
                         }
@@ -65,7 +104,7 @@ public class RegisterRepoImpl implements RegisterRepo {
                         updateProfileModel_MLD.setValue(null);
                         regErrorMLD.setValue("No Response");
                     }
-                } catch(Exception e) {
+                } catch (Exception e) {
                     Log.e("appSample", "ResponseExc: " + e.getMessage());
                     updateProfileModel_MLD.setValue(null);
                     regErrorMLD.setValue(e.getMessage());
@@ -85,6 +124,8 @@ public class RegisterRepoImpl implements RegisterRepo {
 
     @Override
     public MutableLiveData<RegisterModel> checkRegisterRepo(File file, Map<String, String> params) throws Exception {
+        Log.e("appSample", "checkRegisterRepo");
+
         progressbarObservable.setValue(true);
 
         RequestBody r_CountryCode = RequestBody.create(MediaType.parse("text/plain"), params.get("country_code"));
@@ -109,8 +150,10 @@ public class RegisterRepoImpl implements RegisterRepo {
                 MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
         ApiCallBack apiService = retrofit.create(ApiCallBack.class);
+
         apiService.sellerRegistration(body, r_CountryCode, r_MobileNumber, r_ImieNo, r_GcmId, r_Latitude, r_Longitude,
-                r_Shop, r_Category, r_Address, r_open_time, r_close_time).enqueue(new Callback<RegisterModel>() {
+                r_Shop, r_Category, r_Address, r_open_time, r_close_time
+        ).enqueue(new Callback<RegisterModel>() {
             @Override
             public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {
                 progressbarObservable.setValue(false);
@@ -139,6 +182,8 @@ public class RegisterRepoImpl implements RegisterRepo {
                 regErrorMLD.setValue("Connection Error");
             }
         });
+
+
         return registerModel_MLD;
     }
 

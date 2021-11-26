@@ -18,6 +18,7 @@ public interface ProductsViewModel {
     LiveData<Products_Model> editProductwithImageLV();
     LiveData<Products_Model> getProductLV();
     LiveData<Products_Model> uploadingProductImagesLV();
+    LiveData<Products_Model> deleteProductImagesLV();
     LiveData<UOMModel> getUOMLV();
     LiveData<String> getProductError();
     LiveData<Boolean> progressProductUpdation();
@@ -25,6 +26,7 @@ public interface ProductsViewModel {
     void addProducts(File file, Map<String, String> params);
     void addProductsNew(ArrayList<UploadingImageList> uploadingImageLists, Map<String, String> params);
     void deleteProducts(Map<String, String> params);
+    void deleteProductImages(Map<String, String> params);
     void editProductwithImage(File file, Map<String, String> params);
     void uploadingProductImage(File file, Map<String, String> params);
     void editProducts(Map<String, String> params);

@@ -1,10 +1,14 @@
 package com.mart.mymartbee.view.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,6 +26,7 @@ import com.bumptech.glide.Glide;
 import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CustomTimePickerDialog;
 import com.mart.mymartbee.commons.GPSTracker;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
@@ -28,6 +34,9 @@ import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.view.MobileLogin;
 import com.mart.mymartbee.view.Profile;
 import com.mart.mymartbee.view.SettingsAct;
+
+import java.text.ParseException;
+import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -46,7 +55,9 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
     TextView store_name, store_category, profile_change, version_number, store_available_hours;
     RelativeLayout settings_layout, help_support_layout;
     LinearLayout logout_layout;//share_whatsapp_layout
-
+//    TextView timeView;
+    Calendar prefCaldate;
+    int prefmHour, prefmMinute;
 
     @Nullable
     @Override
@@ -75,6 +86,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
     }
 
     public void initView(View view){
+//        timeView = view.findViewById(R.id.timeView);
+//        timeView.setOnClickListener(this);
         store_image = view.findViewById(R.id.store_image);
         store_name = view.findViewById(R.id.store_name);
         store_category = view.findViewById(R.id.store_category);
@@ -119,9 +132,54 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         }
     }
 
+    /*protected void showDialog(int hour, int minute) {
+        Log.e("appSample", "onShowDialog");
+        //return new
+        TimePickerDialog mTimePicker;
+        mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                String timeSet = "";
+                if (selectedHour > 12) {
+                    selectedHour -= 12;
+                    timeSet = "PM";
+                } else if (selectedHour == 0) {
+                    selectedHour += 12;
+                    timeSet = "AM";
+                } else if (selectedHour == 12) {
+                    timeSet = "PM";
+                } else {
+                    timeSet = "AM";
+                }
+
+                String min = "";
+                if (selectedMinute < 10)
+                    min = "0" + selectedMinute;
+                else
+                    min = String.valueOf(selectedMinute);
+
+                String aTime = new StringBuilder().append(selectedHour).append(':')
+                        .append(min).append(" ").append(timeSet).toString();
+
+                timeView.setText(aTime);
+            }
+        }, hour, minute, false);//Yes 24 hour time
+        mTimePicker.setTitle("Select Time");
+        mTimePicker.show();
+    }*/
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            /*case R.id.timeView:
+                prefCaldate = Calendar.getInstance();
+                prefmHour = prefCaldate.get(Calendar.HOUR_OF_DAY);
+                prefmMinute = prefCaldate.get(Calendar.MINUTE);
+
+                showDialog(prefmHour, prefmMinute);
+                break;*/
+
             case R.id.logout_layout:
                 preferenceDatas.clearPreference(getActivity());
                 Intent intent = new Intent(getActivity(), MobileLogin.class);

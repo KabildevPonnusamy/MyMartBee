@@ -274,7 +274,7 @@
                         android:background="@drawable/common_edittext"
                         android:gravity="top|start"
                         android:hint="@string/product_desc"
-                        android:inputType="textCapSentences"
+                        android:inputType="textMultiLine"
                         android:lines="7"
                         android:overScrollMode="always"
                         android:paddingStart="10dp"

@@ -4,12 +4,12 @@
     <string name="submit_option">Submit</string>
     <string name="pincode">+60</string>
     <string name="image_desc">Image Desc</string>
-    <string name="enter_otp">Enter OTP</string>
-    <string name="please_enter_otp_text">Please enter OTP sent to </string>
+    <string name="enter_otp">Enter TAC</string>
+    <string name="please_enter_otp_text">Please enter TAC sent to </string>
     <string name="verify_option">Verify</string>
-    <string name="resend_otp">Resend OTP</string>
+    <string name="resend_otp">Resend TAC</string>
     <string name="enter_mbl_txt">Enter Mobile Number</string>
-    <string name="sms_info">4 digit OTP will be sent via SMS.</string>
+    <string name="sms_info">4 digit TAC will be sent via SMS.</string>
     <string name="create_your_store">Create Store</string>
     <string name="store_name">Store Name*</string>
     <string name="upload_text">Upload</string>
@@ -161,5 +161,6 @@
     <string name="pending_orders_txt">Pending Orders</string>
     <string name="order_accept">Accept</string>
     <string name="order_reject">Reject</string>
+    <string name="change_mobile_number">Entered a wrong number?</string>
 
 </resources>

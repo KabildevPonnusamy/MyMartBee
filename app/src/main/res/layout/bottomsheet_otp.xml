@@ -111,6 +111,19 @@
         android:textStyle="bold"
         android:textColor="@color/white" />
 
+    <TextView
+        android:id="@+id/change_mobile_mobile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:fontFamily="@font/museosans"
+        android:gravity="center"
+        android:text="@string/change_mobile_number"
+        android:textColor="@color/gray_btn_bg_pressed_color"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
