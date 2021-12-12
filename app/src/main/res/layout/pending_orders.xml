@@ -269,6 +269,177 @@
                             android:textStyle="normal" />
 
                     </RelativeLayout>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        card_view:cardCornerRadius="6dp"
+                        card_view:cardElevation="4dp"
+                        card_view:cardMaxElevation="1dp"
+                        card_view:cardUseCompatPadding="true">
+
+                        <RelativeLayout
+                            android:id="@+id/payment_details_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="center"
+                                android:text="@string/payment_details"
+                                android:textAllCaps="true"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/paymentdetails_arrow"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:padding="5dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                android:layout_gravity="end"
+                                android:contentDescription="@string/image_desc"
+                                android:src="@drawable/icon_new_uparrow" />
+
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:id="@+id/payment_info_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/cod_payment_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/cash_on_delivery_payment"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/important_text"
+                                android:textColor="@color/text_color"
+                                android:layout_marginTop="15dp"
+                                android:textSize="13sp"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/cod_payment_description"
+                                android:textColor="@color/text_color"
+                                android:layout_marginTop="4dp"
+                                android:textSize="13sp"
+                                android:textStyle="normal" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/banktransfer_payment_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/proof_of_payment_text"
+                                android:textColor="@color/black"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:id="@+id/attachment_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="2dp"
+                                android:layout_marginTop="8dp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:padding="3dp"
+                                    android:contentDescription="@string/image_desc"
+                                    android:src="@drawable/icon_attach" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="5dp"
+                                    android:fontFamily="@font/museosans"
+                                    android:text="@string/attachment_txt"
+                                    android:textColor="@color/black"
+                                    android:textSize="14sp"
+                                    android:textStyle="normal" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/important_text"
+                                android:textColor="@color/text_color"
+                                android:layout_marginTop="15dp"
+                                android:textSize="13sp"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/bt_description_one"
+                                android:textColor="@color/text_color"
+                                android:layout_marginTop="4dp"
+                                android:textSize="13sp"
+                                android:textStyle="normal" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/museosans"
+                                android:text="@string/bt_description_two"
+                                android:textColor="@color/text_color"
+                                android:layout_marginTop="4dp"
+                                android:textSize="13sp"
+                                android:textStyle="normal" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
 <!--
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
@@ -354,6 +525,7 @@
                 android:gravity="center"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
+                android:orientation="vertical"
                 android:layout_weight="1">
 
                 <TextView
@@ -375,6 +547,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_chat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/chat_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/chat_drawable"
+                    android:layout_gravity="center"
+                    android:paddingStart="50dp"
+                    android:paddingEnd="50dp"
+                    android:gravity="center"
+                    android:textSize="15sp"
+                    android:text="@string/order_chat"
+                    android:singleLine="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_reject"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:gravity="center"

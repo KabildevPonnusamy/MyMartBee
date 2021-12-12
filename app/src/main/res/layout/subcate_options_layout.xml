@@ -7,21 +7,21 @@
     android:background="@color/snow_color"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:id="@+id/add_cate_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:orientation="horizontal">
 
-        <!--<ImageView
+        &lt;!&ndash;<ImageView
             android:layout_width="26dp"
             android:layout_height="26dp"
             android:gravity="center"
             android:layout_gravity="center"
             android:layout_marginStart="6dp"
             android:contentDescription="@string/image_desc"
-            android:src="@drawable/icon_edit" />-->
+            android:src="@drawable/icon_edit" />&ndash;&gt;
 
         <TextView
             android:layout_width="wrap_content"
@@ -40,7 +40,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/shadow_color"/>
+        android:background="@color/shadow_color"/> -->
 
 
     <LinearLayout

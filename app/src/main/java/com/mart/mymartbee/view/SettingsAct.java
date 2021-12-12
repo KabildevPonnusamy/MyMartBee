@@ -22,7 +22,7 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
     ImageView settings_back;
     LinearLayout share_whatsapp_layout; // logout_layout
     MyPreferenceDatas preferenceDatas;
-    String myKeyValue = "", strCateName = "";
+    String myKeyValue = "", strCateName = "", strSelleShop = "", strSellerMobile = "";
     SwitchButton notification_switch;
 
     @Override
@@ -39,6 +39,8 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
         myKeyValue = getResources().getString(R.string.myTripleKey);
         preferenceDatas = new MyPreferenceDatas(SettingsAct.this);
         strCateName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
+        strSelleShop = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue);
+        strSellerMobile = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue);
     }
 
     private void initView() {
@@ -82,7 +84,12 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
         Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
         whatsappIntent.setType("text/plain");
         whatsappIntent.setPackage("com.whatsapp");
-        whatsappIntent.putExtra(Intent.EXTRA_TEXT, StorageDatas.getInstance().getStoreWhatsappLink() + " \n\n   Please visit my store to buy " + strCateName +" products on very low cost.");
+
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, " \n  Hello! \nNow you can order from " + "*" +  strSelleShop  + "*"+ " using this link: " + StorageDatas.getInstance().getStoreWhatsappLink() +
+                "\nFeel free to call us on " + strSellerMobile + " if you need any help with ordering. \n\n Thank you." );
+
+
+//        whatsappIntent.putExtra(Intent.EXTRA_TEXT, StorageDatas.getInstance().getStoreWhatsappLink() + " \n\n   Please visit my store to buy " + strCateName +" products on very low cost.");
         try {
             startActivity(whatsappIntent);
         } catch (android.content.ActivityNotFoundException ex) {

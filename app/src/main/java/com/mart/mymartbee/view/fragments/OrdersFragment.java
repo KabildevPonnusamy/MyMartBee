@@ -392,6 +392,7 @@ public class OrdersFragment extends Fragment implements Constants, View.OnClickL
                     ordersStatusLists.add(item);
                 }
 
+                //TODO completed and rejected was removed below
                 for(int i=0; i<order_status_model.getOrdersStatusList().size(); i++) {
                     if(order_status_model.getOrdersStatusList().get(i).getStrOrderStatusName().equalsIgnoreCase("completed")) {
                         order_status_model.getOrdersStatusList().remove(i);

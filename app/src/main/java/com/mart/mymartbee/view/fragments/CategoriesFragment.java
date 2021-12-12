@@ -72,13 +72,13 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
     ImageView icon_options, icon_search;
-    TextView new_product_txt; // shop_tv
+    TextView new_product_txt, new_category_txt, create_category; // shop_tv
     String strCateId, strSellerId;
     LinearLayoutManager lManager = null;
     Products_Model.ProductCategories.ProductsList productsObj;
     ArrayList<Products_Model.ProductCategories.ProductsList> cateProductsLists;
     String whatsAppLink = "", strCategoryName = "";
-    LinearLayout add_cate_layout, edit_cate_layout, detele_cate_layout;
+    LinearLayout edit_cate_layout, detele_cate_layout; // add_cate_layout
     PopupWindow mypopupWindow;
     BottomSheetDialog bottomSheetDialog;
     EditText subcategory_name;
@@ -114,6 +114,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         icon_options = (ImageView) view.findViewById(R.id.icon_options);
         icon_search = (ImageView) view.findViewById(R.id.icon_search);
         new_product_txt = (TextView) view.findViewById(R.id.new_product_txt);
+        new_category_txt = (TextView) view.findViewById(R.id.new_category_txt);
+        create_category = (TextView) view.findViewById(R.id.create_category);
         product_creation_layout = (RelativeLayout) view.findViewById(R.id.product_creation_layout);
         product_layout = (RelativeLayout) view.findViewById(R.id.product_layout);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
@@ -170,7 +172,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                         productsListTemp.addAll(productsList);
                         StorageDatas.getInstance().setProducts_model(products_model);
 
-                        product_creation_layout.setVisibility(View.GONE);
+                        product_creation_layout.setVisibility(View.GONE); //
                         product_layout.setVisibility(View.VISIBLE);
                         setProductAdapter();
                     } else {
@@ -254,7 +256,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 });
                 break;
 
-            case R.id.add_cate_layout:
+            /*case R.id.add_cate_layout:
                 closeKeyboard();
                 if(mypopupWindow != null) {
                     mypopupWindow.dismiss();
@@ -263,8 +265,7 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                 if(bottomSheetDialog != null) {
                     bottomSheetDialog.show();
                 }
-
-                break;
+                break;*/
 
             case R.id.edit_cate_layout:
                 closeKeyboard();
@@ -308,10 +309,10 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                         getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View view = inflater.inflate(R.layout.subcate_options_layout, null);
 
-                add_cate_layout = (LinearLayout) view.findViewById(R.id.add_cate_layout);
+//                add_cate_layout = (LinearLayout) view.findViewById(R.id.add_cate_layout);
                 edit_cate_layout = (LinearLayout) view.findViewById(R.id.edit_cate_layout);
                 detele_cate_layout = (LinearLayout) view.findViewById(R.id.detele_cate_layout);
-                add_cate_layout.setOnClickListener(this);
+//                add_cate_layout.setOnClickListener(this);
                 edit_cate_layout.setOnClickListener(this);
                 detele_cate_layout.setOnClickListener(this);
 
@@ -323,6 +324,28 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
                     }
                 });
                 mypopupWindow.showAsDropDown(icon_options);
+                break;
+
+            case R.id.create_category:
+                closeKeyboard();
+                if(mypopupWindow != null) {
+                    mypopupWindow.dismiss();
+                }
+
+                if(bottomSheetDialog != null) {
+                    bottomSheetDialog.show();
+                }
+                break;
+
+            case R.id.new_category_txt:
+                closeKeyboard();
+                if(mypopupWindow != null) {
+                    mypopupWindow.dismiss();
+                }
+
+                if(bottomSheetDialog != null) {
+                    bottomSheetDialog.show();
+                }
                 break;
 
             case R.id.new_product_txt:
@@ -361,6 +384,8 @@ public class CategoriesFragment extends Fragment implements View.OnClickListener
         icon_options.setOnClickListener(this);
         icon_search.setOnClickListener(this);
         search_back.setOnClickListener(this);
+        new_category_txt.setOnClickListener(this);
+        create_category.setOnClickListener(this);
         new_product_txt.setOnClickListener(this);
         search_product_edit.addTextChangedListener(new TextWatcher() {
             @Override

@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +21,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +43,7 @@ import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.commons.CameraUtils;
 import com.mart.mymartbee.commons.CommonMethods;
+import com.mart.mymartbee.commons.DecimalDigitsInputFilter;
 import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
@@ -54,6 +58,7 @@ import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.adapters.ImageUploadingAdapter;
 import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
+import com.suke.widget.SwitchButton;
 import com.zjun.widget.tagflowlayout.TagFlowLayout;
 
 import java.io.File;
@@ -67,10 +72,10 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
 
     ProgressDialog progressDialog;
     File finalPath, tempFile;
-    String strPImage = "", strPName, strPPrice, strPQty, strPDiscount, strPPayment, strPDelivery,
+    String strPImage = "", strPName, strPPrice, strPQty, strPDiscount="", strPDelivery, // strPPayment
             strPSubProduct, strPType = "", strPDesc = "";
 
-    EditText product_payment, product_delivery, product_name, product_qty, product_sellprice,
+    EditText product_delivery, product_name, product_qty, product_sellprice, // product_payment
             product_discount_price, product_description, product_uom, product_subcate;
 //    MaterialTextView profile_change_text;
     LinearLayout profile_change;
@@ -104,6 +109,14 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
     ArrayList<UploadingImageList> uploadingImageLists;
     ImageUploadingAdapter imageUploadingAdapter;
     int imageCount = 0;
+
+    LinearLayout payment_items_layout;
+    RelativeLayout payment_layout;
+    SwitchButton cashondelivery_switch, banktransfer_switch;
+    TextView payment_option_text;
+    ImageView payment_arrow;
+    boolean isPaymentOptionShowing = false;
+    String strCOD = "0", strBank_Transfer = "0";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -181,7 +194,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         uom_spinner = findViewById(R.id.uom_spinner);
         uomDatasList = new ArrayList<UOMModel.UOMList>();
         photos_recycle = findViewById(R.id.photos_recycle);
-        product_payment = findViewById(R.id.product_payment);
+//        product_payment = findViewById(R.id.product_payment);
         addpage_title = findViewById(R.id.addpage_title);
         product_uom = findViewById(R.id.product_uom);
         product_subcate = findViewById(R.id.product_subcate);
@@ -190,6 +203,18 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         product_qty = findViewById(R.id.product_qty);
         product_sellprice = findViewById(R.id.product_sellprice);
         product_discount_price = findViewById(R.id.product_discount_price);
+
+        payment_items_layout = findViewById(R.id.payment_items_layout);
+        payment_layout = findViewById(R.id.payment_layout);
+        cashondelivery_switch = findViewById(R.id.cashondelivery_switch);
+        payment_option_text = findViewById(R.id.payment_option_text);
+        banktransfer_switch = findViewById(R.id.banktransfer_switch);
+        payment_arrow = findViewById(R.id.payment_arrow);
+
+        product_sellprice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
+        product_discount_price.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
+
+
         product_description = findViewById(R.id.product_description);
         upload_view = findViewById(R.id.upload_view);
         upload_view_img = findViewById(R.id.upload_view_img);
@@ -201,7 +226,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         product_back = findViewById(R.id.product_back);
         add_product_btn = findViewById(R.id.add_product_btn);
 
-        product_payment.setEnabled(false);
+//        product_payment.setEnabled(false);
         product_delivery.setEnabled(false);
 
         product_uom.setFocusable(false);
@@ -215,7 +240,40 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         add_product_btn.setOnClickListener(this);
         product_uom.setOnClickListener(this);
         product_subcate.setOnClickListener(this);
+        payment_layout.setOnClickListener(this);
+        payment_option_text.setOnClickListener(this);
         getBundles();
+        paymentSwitchListeners();
+    }
+
+    public void paymentSwitchListeners() {
+        cashondelivery_switch.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if (isChecked) {
+                    //True
+                    strCOD = "1";
+                } else {
+                    //False
+                    strCOD = "0";
+                }
+
+            }
+        });
+
+        banktransfer_switch.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if (isChecked) {
+                    //True
+                    strBank_Transfer = "1";
+                } else {
+                    //False
+                    strBank_Transfer = "0";
+                }
+            }
+        });
+
     }
 
     private void getBundles() {
@@ -254,9 +312,38 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    public int getImage(String imageName) {
+        int drawableResourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+        return drawableResourceId;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.payment_option_text:
+                if (isPaymentOptionShowing) {
+                    isPaymentOptionShowing = false;
+                    payment_items_layout.setVisibility(View.GONE);
+                    payment_arrow.setImageResource(getImage("status_arrow_down"));
+                } else {
+                    isPaymentOptionShowing = true;
+                    payment_items_layout.setVisibility(View.VISIBLE);
+                    payment_arrow.setImageResource(getImage("status_arrow_up"));
+                }
+                break;
+
+            case R.id.payment_layout:
+                if (isPaymentOptionShowing) {
+                    isPaymentOptionShowing = false;
+                    payment_items_layout.setVisibility(View.GONE);
+                    payment_arrow.setImageResource(getImage("status_arrow_down"));
+                } else {
+                    isPaymentOptionShowing = true;
+                    payment_items_layout.setVisibility(View.VISIBLE);
+                    payment_arrow.setImageResource(getImage("status_arrow_up"));
+                }
+                break;
+
             case R.id.close_img:
                 bottomSheetUpload.dismiss();
                 break;
@@ -361,7 +448,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 strPQty = product_qty.getText().toString().trim();
                 strPDiscount = product_discount_price.getText().toString().trim();
                 strPDesc = product_description.getText().toString().trim();
-                strPPayment = product_payment.getText().toString().trim();
+//                strPPayment = product_payment.getText().toString().trim();
                 strPDelivery = product_delivery.getText().toString().trim();
                 strPSubProduct = product_subcate.getText().toString().trim();
                 strPType = product_uom.getText().toString().trim();
@@ -386,18 +473,28 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                     return;
                 }
 
-                if (strPType.equalsIgnoreCase("") || strPType.equalsIgnoreCase("Select Status")) {
+                if (strPType.equalsIgnoreCase("") || strPType.equalsIgnoreCase("UOM*")) {
                     showErrorMsg("Please select product UOM.");
                     return;
                 }
 
-                if (strPDiscount.equalsIgnoreCase("")) {
+                /*if (strPDiscount.equalsIgnoreCase("")) {
                     showErrorMsg("Please enter product discount price.");
                     return;
-                }
+                }*/
 
-                if (strPPayment.equalsIgnoreCase("")) {
+                /*if (strPPayment.equalsIgnoreCase("")) {
                     showErrorMsg("Please select product payment type.");
+                    return;
+                }*/
+
+                if(!strCOD.equalsIgnoreCase("1") && !strBank_Transfer.equalsIgnoreCase("1")) {
+                    showErrorMsg("Please select payment option.");
+
+                    isPaymentOptionShowing = true;
+                    payment_items_layout.setVisibility(View.VISIBLE);
+                    payment_arrow.setImageResource(getImage("status_arrow_up"));
+
                     return;
                 }
 
@@ -411,9 +508,11 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                     return;
                 }
 
-                if (Integer.parseInt(strPDiscount) > Integer.parseInt(strPPrice)) {
-                    showErrorMsg("Selling price was low comparing to Discount price.");
-                    return;
+                if(!strPDiscount.equalsIgnoreCase("")) {
+                    if (Float.parseFloat(strPDiscount) > Float.parseFloat(strPPrice)) {
+                        showErrorMsg("Selling price was low comparing to Discount price.");
+                        return;
+                    }
                 }
 
                 if (uploadingImageLists.size() == 0) {
@@ -512,33 +611,40 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
             Log.e("appSample", "ImagePath: " + uploadingImageLists.get(i).getImage());
         }
 
+        if(strPDiscount.equalsIgnoreCase("")) {
+            strPDiscount = "" + strPPrice;
+        }
+
         Map<String, String> params = new HashMap<>();
         params.put("title", strPName);
         params.put("description", strPDesc);
         params.put("meta_title", strPName);
         params.put("meta_description", strPDesc);
         params.put("meta_keyword", "MartBee");
-        params.put("price", strPDiscount);
-        params.put("old_price", strPPrice);
+        params.put("price", strPDiscount); // Discount Price
+        params.put("old_price", strPPrice); // Original Price
         params.put("cat_id", cate_id);
         params.put("sub_cat_id", "" + selSubCateId);
         params.put("quantity", strPQty);
         params.put("seller_id", sellerId);
         params.put("uom", strPType);
+        params.put("cod", strCOD);
+        params.put("bank_transfer", strBank_Transfer);
 
-        Log.e("appSample", "");
         Log.e("appSample", "Title: " + strPName);
         Log.e("appSample", "Description: " + strPDesc);
         Log.e("appSample", "MetaTitle: " + strPName);
         Log.e("appSample", "MetaDesc: " + strPDesc);
         Log.e("appSample", "MetaKeyword: MartBee");
-        Log.e("appSample", "Price: " + strPDiscount);
-        Log.e("appSample", "DiscountPrice: " + strPPrice);
+        Log.e("appSample", "Price: " + strPPrice);
+        Log.e("appSample", "DiscountPrice: " + strPDiscount);
         Log.e("appSample", "CateId: " + cate_id);
         Log.e("appSample", "SubCateId: " + selSubCateId);
         Log.e("appSample", "Quantity: " + strPQty);
         Log.e("appSample", "sellerId: " + sellerId);
         Log.e("appSample", "Uom: " + strPType);
+        Log.e("appSample", "COD: " + strCOD);
+        Log.e("appSample", "BankTransfer: " + strBank_Transfer);
 
 
         if (NetworkAvailability.isNetworkAvailable(AddProductNew.this)) {
@@ -837,7 +943,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
             uomSpinnerList.add((uomDatasList.get(i).getStrUom()));
         }
 
-        uomSpinnerList.add("Select Status");
+        uomSpinnerList.add("UOM*");
 
         HintAdapter dataAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, uomSpinnerList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -930,5 +1036,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 }
         }
     }
+
+
 
 }

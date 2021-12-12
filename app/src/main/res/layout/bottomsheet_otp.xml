@@ -108,6 +108,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@color/yellow_btn_color"
         android:text="@string/verify_option"
+        android:textAllCaps="false"
         android:textStyle="bold"
         android:textColor="@color/white" />
 

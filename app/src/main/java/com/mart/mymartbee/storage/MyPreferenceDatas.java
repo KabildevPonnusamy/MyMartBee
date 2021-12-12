@@ -22,13 +22,15 @@ public class MyPreferenceDatas {
     public static final String SELLER_PRODUCTS_COUNT = "sellerProductCount";
     public static final String SELLER_COUNTRY_CODE = "sellerCountryCode";
 
+    public static final String SELLER_ACC_HOLDER_NAME = "sellerAccHolderName";
+    public static final String SELLER_ACC_NUMBER = "sellerAccNumber";
+    public static final String SELLER_BANK_NAME = "sellerBankName";
+
     public MyPreferenceDatas(Context context) {
         myPrefs = context.getSharedPreferences(myPrefName, Context.MODE_PRIVATE);
     }
 
     public void clearPreference(Context context) {
-        /*SharedPreferences sharedPreferences = context.getSharedPreferences(
-                myPrefName, Context.MODE_PRIVATE);*/
         SharedPreferences.Editor editor = myPrefs.edit();
         editor.clear().commit();
     }

@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
@@ -42,10 +40,8 @@ import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
 import com.mart.mymartbee.model.Products_Model;
-import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
-import com.mart.mymartbee.view.adapters.ImageUploadingAdapter;
 import com.mart.mymartbee.view.adapters.ViewPagerAdapter;
 import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
@@ -155,8 +151,14 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         prod_details_title.setText(productsObj.getStrProduct_title());
         prod_details_subcate.setText(bundle.getString("subcateName"));
 
-        String oldPrice = productsObj.getStrProduct_oldprice().replace(".00", "");
-        prod_details_oldprice.setText("RM. " + oldPrice);
+        if(productsObj.getStrProduct_oldprice().equalsIgnoreCase(productsObj.getStrProduct_price())) {
+            prod_details_oldprice.setVisibility(View.GONE);
+        } else {
+            prod_details_oldprice.setVisibility(View.VISIBLE);
+            String oldPrice = productsObj.getStrProduct_oldprice().replace(".00", "");
+            prod_details_oldprice.setText("RM. " + oldPrice);
+        }
+
 
         String newPrice = productsObj.getStrProduct_price().replace(".00", "");
         prod_details_price.setText("RM. " + newPrice);
@@ -233,7 +235,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                     bundle.putString("fromActivity", "ProductDetails");
                     bundle.putString("fromActivitySubcategory", prod_details_subcate.getText().toString().trim());
                     bundle.putInt("fromActivitySubcategoryID", Integer.parseInt(strSubCateId));
-                    Intent intent = new Intent(ProductDetails.this, AddProduct.class);
+                    Intent intent = new Intent(ProductDetails.this, UpdateProduct.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, PRODUCT_DETAILS_to_PRODUCT_EDIT);
                 } else {

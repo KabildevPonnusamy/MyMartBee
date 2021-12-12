@@ -111,7 +111,7 @@
             android:id="@+id/sales_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -158,10 +158,10 @@
             </RelativeLayout>
 
             <ScrollView
-                android:id="@+id/sales_report_scroll"
+                android:id="@+id/sales_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -233,6 +233,18 @@
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/low_to_high"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="@font/museosans"
+                            android:gravity="center"
+                            android:text="High - Low"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/progress_sales_recycler"
                             android:layout_width="match_parent"
@@ -253,7 +265,7 @@
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -328,7 +340,7 @@
             </RelativeLayout>
 
             <ScrollView
-                android:id="@+id/product_report_scroll"
+                android:id="@+id/product_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none">
@@ -368,7 +380,12 @@
                                 android:id="@+id/pie_chart_product"
                                 android:layout_width="wrap_content"
                                 android:layout_height="200dp"
-                                android:padding="10dp"/>
+                                android:padding="10dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.5"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
                         </LinearLayout>
 
@@ -396,6 +413,17 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="15dp"
                         android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:fontFamily="@font/museosans"
+                            android:gravity="center"
+                            android:text="High - Low"
+                            android:textColor="@color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/progress_productview_recycler"

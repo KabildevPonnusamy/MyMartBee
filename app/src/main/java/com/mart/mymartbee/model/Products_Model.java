@@ -119,6 +119,14 @@ public class Products_Model {
             @SerializedName("uom")
             @Expose
             private String strProduct_uom;
+
+            @SerializedName("cod")
+            @Expose
+            private String strCOd;
+            @SerializedName("bank_transfer")
+            @Expose
+            private String strBankTransfer;
+
             @SerializedName("other_images")
             @Expose
             ArrayList<OtherImages> otherImages;
@@ -166,6 +174,22 @@ public class Products_Model {
                     this.strFolder = strFolder;
                 }
 
+            }
+
+            public String getStrCOd() {
+                return strCOd;
+            }
+
+            public void setStrCOd(String strCOd) {
+                this.strCOd = strCOd;
+            }
+
+            public String getStrBankTransfer() {
+                return strBankTransfer;
+            }
+
+            public void setStrBankTransfer(String strBankTransfer) {
+                this.strBankTransfer = strBankTransfer;
             }
 
             public String getStrProdut_id() {

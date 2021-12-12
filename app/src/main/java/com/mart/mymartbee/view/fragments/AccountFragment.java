@@ -31,6 +31,7 @@ import com.mart.mymartbee.commons.GPSTracker;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
+import com.mart.mymartbee.view.AddAccount;
 import com.mart.mymartbee.view.MobileLogin;
 import com.mart.mymartbee.view.Profile;
 import com.mart.mymartbee.view.SettingsAct;
@@ -53,7 +54,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
 
     ImageView store_image;
     TextView store_name, store_category, profile_change, version_number, store_available_hours;
-    RelativeLayout settings_layout, help_support_layout;
+    RelativeLayout settings_layout, help_support_layout, account_details_layout;
     LinearLayout logout_layout;//share_whatsapp_layout
 //    TextView timeView;
     Calendar prefCaldate;
@@ -96,11 +97,13 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         version_number = view.findViewById(R.id.version_number);
         settings_layout = view.findViewById(R.id.settings_layout);
         help_support_layout = view.findViewById(R.id.help_support_layout);
+        account_details_layout = view.findViewById(R.id.account_details_layout);
         logout_layout = view.findViewById(R.id.logout_layout);
         logout_layout.setOnClickListener(this);
         profile_change.setOnClickListener(this);
         settings_layout.setOnClickListener(this);
         help_support_layout.setOnClickListener(this);
+        account_details_layout.setOnClickListener(this);
         updateValues();
     }
 
@@ -199,6 +202,11 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
 
             case R.id.help_support_layout:
                 openAdminsWhatsapp();
+                break;
+
+            case R.id.account_details_layout:
+                Intent accDetailsIntent = new Intent(getActivity(), AddAccount.class);
+                startActivityForResult(accDetailsIntent, ACCOUNT_FRAG_to_ACCOUNT_DETAILS);
                 break;
         }
     }

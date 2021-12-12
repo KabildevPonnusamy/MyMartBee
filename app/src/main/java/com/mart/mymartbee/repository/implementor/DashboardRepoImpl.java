@@ -36,6 +36,7 @@ public class DashboardRepoImpl implements DashboardRepo {
     @Override
     public MutableLiveData<Dashboard_Model> getDashboardModel(String sellerId, String short_value) throws Exception {
         Log.e("appSample", "SELLERID: " + sellerId);
+        Log.e("appSample", "short_value: " + short_value);
         progressDashboardUpdate.setValue(true);
         MutableLiveData<Dashboard_Model> dashboard_MLD = new MutableLiveData<Dashboard_Model>();
         ApiCallBack callBack = ApiClient.getClient().create(ApiCallBack.class);

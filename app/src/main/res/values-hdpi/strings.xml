@@ -1,4 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="change_mobile_number">Entered a wrong number?</string>
+    <string name="new_product_category">Add Category</string>
+    <string name="no_sales_report_found_text">No Sales Report Found</string>
+    <string name="no_product_report_found_text">No Product Report Found</string>
+    <string name="yearly_report_txt">Yearly Report</string>
+    <string name="account_details_text">Account details</string>
+    <string name="account_text">Account</string>
+    <string name="account_holder_name_text">Account Holder Name</string>
+    <string name="account_number_text">Account Number</string>
+    <string name="bank_name_text">Bank Name</string>
+    <string name="save_text">Save</string>
+    <string name="add_account_text">Add Account</string>
+    <string name="payment_option_txt">Payment Option</string>
+    <string name="bank_transfer_text">Bank transfer</string>
+    <string name="order_chat">Chat</string>
+    <string name="payment_details">Payment details</string>
+    <string name="cash_on_delivery_payment">Cash on delivery</string>
+    <string name="important_text">Important</string>
+    <string name="cod_payment_description">**Any discrepancy in payment and/or stock availability, please contact your buyer or reject this order.</string>
+    <string name="proof_of_payment_text">Proof of payment</string>
+    <string name="bt_description_one">**Please check your bank account to confirm the receiving of payment from customer before accept this order.</string>
+    <string name="bt_description_two">**Any discrepancy in payment and/or stock availability, please contact your buyer.</string>
+    <string name="attachment_txt">Attachment</string>
 </resources>

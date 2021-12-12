@@ -73,7 +73,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <activity
-            android:name="com.mart.mymartbee.view.AddProduct"
+            android:name="com.mart.mymartbee.view.UpdateProduct"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_new"
             android:windowSoftInputMode="stateHidden|adjustResize" />
@@ -132,6 +132,12 @@
             android:theme="@style/AppTheme_new"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity
+            android:name="com.mart.mymartbee.view.Attachments"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_new"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
         <!--<activity
             android:name="com.mart.mymartbee.view.CrapImageSample"
             android:screenOrientation="portrait"
@@ -152,6 +158,18 @@
 
         <activity
             android:name="com.mart.mymartbee.view.Map_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_new"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.mart.mymartbee.view.YearlySalesReportAct"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme_new"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+
+        <activity
+            android:name="com.mart.mymartbee.view.AddAccount"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme_new"
             android:windowSoftInputMode="stateHidden|adjustResize" />

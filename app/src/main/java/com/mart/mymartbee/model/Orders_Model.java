@@ -51,12 +51,34 @@ public class Orders_Model {
         @SerializedName("address")
         @Expose
         private String strAddress;
+        @SerializedName("payment_type")
+        @Expose
+        private String strPaymentType;
+        @SerializedName("payment_receipt")
+        @Expose
+        private String strPaymentReceipt;
         @SerializedName("products")
         @Expose
         ArrayList<OrderedProducts> orderedProductsList;
         @SerializedName("order_history")
         @Expose
         ArrayList<OrderHistory> orderHistoryList;
+
+        public String getStrPaymentReceipt() {
+            return strPaymentReceipt;
+        }
+
+        public void setStrPaymentReceipt(String strPaymentReceipt) {
+            this.strPaymentReceipt = strPaymentReceipt;
+        }
+
+        public String getStrPaymentType() {
+            return strPaymentType;
+        }
+
+        public void setStrPaymentType(String strPaymentType) {
+            this.strPaymentType = strPaymentType;
+        }
 
         public ArrayList<OrderHistory> getOrderHistoryList() {
             return orderHistoryList;

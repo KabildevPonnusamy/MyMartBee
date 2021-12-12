@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -117,6 +118,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
     }
 
     public void setListeners() {
+
         pending_orders_recycler.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
             GestureDetector gestureDetector = new GestureDetector(getActivity(),
                     new GestureDetector.SimpleOnGestureListener() {
@@ -304,6 +306,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Cons
     }
 
     public void getDashboardDatas(String strShortValue) {
+        Log.e("appSample", "SellerId: "  + strSellerId);
         if (NetworkAvailability.isNetworkAvailable(getActivity())) {
             dashboardViewModel.getDashboardDatas(strSellerId, strShortValue);
         } else {

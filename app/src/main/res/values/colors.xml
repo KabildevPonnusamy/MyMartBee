@@ -46,6 +46,7 @@
     <color name="textColorPrimary">#F5A603</color>
     <color name="light_yellow">#FAD281</color>
     <color name="shadow_color">#8888</color>
+    <color name="gray_color">#808080</color>
     <color name="light_white">#F3F3F3</color>
     <color name="light_white_two">#E5E5E5</color>
     <color name="light_sandle">#FDF4DC</color>

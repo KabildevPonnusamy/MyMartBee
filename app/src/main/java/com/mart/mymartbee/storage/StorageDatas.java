@@ -8,6 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mart.mymartbee.model.BusinessCategory_Model;
 import com.mart.mymartbee.model.Dashboard_Model;
+import com.mart.mymartbee.model.NewReportProducts_Model;
+import com.mart.mymartbee.model.NewReportSales_Model;
 import com.mart.mymartbee.model.Orders_Model;
 import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.model.Reports_Model;
@@ -50,6 +52,24 @@ public class StorageDatas  {
     String strOrderId;
     String strOrderStatus;
     boolean isFromNotification;
+    ArrayList<NewReportProducts_Model.CategoryViews> categoryViewsList;
+    ArrayList<NewReportSales_Model.CategoryRevenue> categoryRevenuesList;
+
+    public ArrayList<NewReportProducts_Model.CategoryViews> getCategoryViewsList() {
+        return categoryViewsList;
+    }
+
+    public void setCategoryViewsList(ArrayList<NewReportProducts_Model.CategoryViews> categoryViewsList) {
+        this.categoryViewsList = categoryViewsList;
+    }
+
+    public ArrayList<NewReportSales_Model.CategoryRevenue> getCategoryRevenuesList() {
+        return categoryRevenuesList;
+    }
+
+    public void setCategoryRevenuesList(ArrayList<NewReportSales_Model.CategoryRevenue> categoryRevenuesList) {
+        this.categoryRevenuesList = categoryRevenuesList;
+    }
 
     public boolean isFromNotification() {
         return isFromNotification;

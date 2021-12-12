@@ -16,6 +16,8 @@ import retrofit2.http.Path;
 
 import com.mart.mymartbee.model.BusinessCategory_Model;
 import com.mart.mymartbee.model.Dashboard_Model;
+import com.mart.mymartbee.model.NewReportProducts_Model;
+import com.mart.mymartbee.model.NewReportSales_Model;
 import com.mart.mymartbee.model.OTPModel;
 import com.mart.mymartbee.model.OTPVerifyModel;
 import com.mart.mymartbee.model.Order_Status_Model;
@@ -80,7 +82,7 @@ public interface ApiCallBack {
                                        @Part("meta_title") RequestBody meta_title, @Part("meta_description") RequestBody meta_description, @Part("meta_keyword") RequestBody meta_keyword,
                                        @Part("price") RequestBody price, @Part("old_price") RequestBody old_price, @Part("cat_id") RequestBody cat_id,
                                        @Part("sub_cat_id") RequestBody sub_cat_id, @Part("quantity") RequestBody quantity, @Part("seller_id") RequestBody seller_id,
-                                       @Part("uom") RequestBody uom);
+                                       @Part("uom") RequestBody uom, @Part("cod") RequestBody cod, @Part("bank_transfer") RequestBody bank_transfer);
 
     @Multipart
     @POST("product/edit-product")
@@ -138,7 +140,17 @@ public interface ApiCallBack {
     @FormUrlEncoded
     Call<SubCategoryUpdate_Model> deleteSubCategory(@FieldMap Map<String, String> params);
 
-    //Dashboard_Model
+    @POST("dashboard/sales-report")
+    @FormUrlEncoded
+    Call<NewReportSales_Model> getSalesReport(@FieldMap Map<String, String> params);
+
+    @POST("dashboard/product-report")
+    @FormUrlEncoded
+    Call<NewReportProducts_Model> getProductReport(@FieldMap Map<String, String> params);
+
+    @POST("dashboard/sales-report")
+    @FormUrlEncoded
+    Call<NewReportSales_Model> getSalesReportByYear(@FieldMap Map<String, String> params);
 
     /*@GET("{value}/info.json")
     Call<StatesList> getStateInfos(@Path("value") String value);*/

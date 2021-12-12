@@ -333,18 +333,6 @@
 
                     </LinearLayout>
 
-                    <!--<com.google.android.material.textview.MaterialTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/payment"
-                        android:textSize="16sp"
-                        android:maxLines="1"
-                        android:text="@string/stock_text"
-                        android:layout_marginTop="15dp"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/museosans"
-                        android:textColor="@color/black"/>-->
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
@@ -470,10 +458,10 @@
                                 android:layout_height="wrap_content"
                                 android:autofillHints="@string/product_sellprice"
                                 android:background="@null"
-                                android:digits="1234567890"
+                                android:digits="1234567890."
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/product_sellprice"
-                                android:inputType="phone"
+                                android:inputType="numberDecimal"
                                 android:maxLength="10"
                                 android:padding="3dp"
                                 android:singleLine="true"
@@ -496,10 +484,10 @@
                                 android:layout_height="wrap_content"
                                 android:autofillHints="@string/product_discount_price"
                                 android:background="@null"
-                                android:digits="1234567890"
+                                android:digits="1234567890."
                                 android:fontFamily="@font/museosans"
                                 android:hint="@string/product_discount_price"
-                                android:inputType="phone"
+                                android:inputType="numberDecimal"
                                 android:maxLength="10"
                                 android:padding="3dp"
                                 android:singleLine="true"
@@ -511,7 +499,121 @@
 
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:id="@+id/payment_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:background="@drawable/common_edittext">
+
+                        <TextView
+                            android:id="@+id/payment_option_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/payment"
+                            android:background="@null"
+                            android:fontFamily="@font/museosans"
+                            android:hint="@string/payment"
+                            android:layout_centerInParent="true"
+                            android:layout_alignParentStart="true"
+                            android:maxLength="30"
+                            android:padding="3dp"
+                            android:singleLine="true"
+                            android:text="@string/payment_option_txt"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/input_text_size" />
+
+                        <ImageView
+                            android:id="@+id/payment_arrow"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@string/image_desc"
+                            android:padding="3dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/status_arrow_down"
+                            app:tint="@color/black" />
+
+                    </RelativeLayout>
+
                     <LinearLayout
+                        android:id="@+id/payment_items_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/common_edittext">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:autofillHints="@string/payment"
+                                android:background="@null"
+                                android:fontFamily="@font/museosans"
+                                android:hint="@string/payment"
+                                android:layout_centerInParent="true"
+                                android:layout_alignParentStart="true"
+                                android:maxLength="30"
+                                android:padding="3dp"
+                                android:singleLine="true"
+                                android:enabled="false"
+                                android:text="@string/cash_on_delivery"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/input_text_size" />
+
+                            <com.suke.widget.SwitchButton
+                                android:id="@+id/cashondelivery_switch"
+                                android:layout_width="50dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                app:sb_checked="false"
+                                app:sb_checked_color="@color/whatsapp_icon_color"
+                                app:sb_show_indicator="false" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/common_edittext">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:autofillHints="@string/payment"
+                                android:background="@null"
+                                android:fontFamily="@font/museosans"
+                                android:hint="@string/payment"
+                                android:layout_centerInParent="true"
+                                android:layout_alignParentStart="true"
+                                android:maxLength="30"
+                                android:padding="3dp"
+                                android:singleLine="true"
+                                android:enabled="false"
+                                android:text="@string/bank_transfer_text"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/input_text_size" />
+
+                            <com.suke.widget.SwitchButton
+                                android:id="@+id/banktransfer_switch"
+                                android:layout_width="50dp"
+                                android:layout_height="25dp"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerInParent="true"
+                                app:sb_checked="false"
+                                app:sb_checked_color="@color/whatsapp_icon_color"
+                                app:sb_show_indicator="false" />
+
+                        </RelativeLayout>
+
+                    </LinearLayout>
+
+                    <!--<LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="15dp"
@@ -533,7 +635,7 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/input_text_size" />
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -577,6 +679,7 @@
             android:background="@drawable/btn_bgnd"
             android:foreground="?android:attr/selectableItemBackground"
             android:text="@string/add_product_text"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="bold" />
 

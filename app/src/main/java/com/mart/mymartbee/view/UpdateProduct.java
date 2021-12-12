@@ -10,24 +10,23 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.ListPopupWindow;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -37,13 +36,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.textview.MaterialTextView;
 import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.commons.CameraUtils;
+import com.mart.mymartbee.commons.DecimalDigitsInputFilter;
 import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.commons.Util;
@@ -57,34 +55,32 @@ import com.mart.mymartbee.model.UploadingImageList;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.view.adapters.ImageUploadingAdapter;
-import com.mart.mymartbee.view.adapters.OrderStatusAdapter;
 import com.mart.mymartbee.viewmodel.implementor.ProductsViewModelImpl;
 import com.mart.mymartbee.viewmodel.interfaces.ProductsViewModel;
+import com.suke.widget.SwitchButton;
 import com.zjun.widget.tagflowlayout.TagFlowLayout;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class AddProduct extends AppCompatActivity implements View.OnClickListener, Constants,
+public class UpdateProduct extends AppCompatActivity implements View.OnClickListener, Constants,
         ImageUploadingAdapter.ImageRemoveClickListener {
 
     ProgressDialog progressDialog;
     File finalPath, tempFile;
-    String strPImage = "", strPName, strPPrice, strPQty, strPDiscount, strPPayment, strPDelivery,
+    String strPImage = "", strPName, strPPrice, strPQty, strPDiscount, strPDelivery, // strPPayment
             strPSubProduct, strPType = "", strPDesc = "";
 
-    EditText product_payment, product_delivery, product_name, product_qty, product_sellprice,
+    EditText product_delivery, product_name, product_qty, product_sellprice, // product_payment
             product_discount_price, product_description, product_uom, product_subcate;
-//    MaterialTextView profile_change_text;
+    //    MaterialTextView profile_change_text;
     LinearLayout profile_change;
     TextView addpage_title;
     LinearLayout upload_view, upload_layout, upload_view_img;
     ImageView product_image, product_back;
-//    CardView cardImage;
+    //    CardView cardImage;
     Button add_product_btn;
     int selSubCateId = -1;
     String cate_id = "";
@@ -110,6 +106,16 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     RecyclerView photos_recycle;
     ArrayList<UploadingImageList> uploadingImageLists;
     ImageUploadingAdapter imageUploadingAdapter;
+    String selectedUOM = "";
+
+    LinearLayout payment_items_layout;
+    RelativeLayout payment_layout;
+    SwitchButton cashondelivery_switch, banktransfer_switch;
+    TextView payment_option_text;
+    ImageView payment_arrow;
+    boolean isPaymentOptionShowing = false;
+    String strCOD = "0", strBank_Transfer = "0";
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +131,36 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         observeProgress();
         showUOMSheet(0);
         addListeners();
+        paymentSwitchListeners();
+    }
+
+    public void paymentSwitchListeners() {
+        cashondelivery_switch.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if (isChecked) {
+                    //True
+                    strCOD = "1";
+                } else {
+                    //False
+                    strCOD = "0";
+                }
+            }
+        });
+
+        banktransfer_switch.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                if (isChecked) {
+                    //True
+                    strBank_Transfer = "1";
+                } else {
+                    //False
+                    strBank_Transfer = "0";
+                }
+            }
+        });
+
     }
 
     public void addListeners() {
@@ -135,6 +171,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 product_uom.setText(strPType);
                 Log.e("appSample", "Selected: " + strPType);
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
@@ -176,7 +213,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     private void getMyPreferences() {
         myKeyValue = getResources().getString(R.string.myTripleKey);
-        preferenceDatas = new MyPreferenceDatas(AddProduct.this);
+        preferenceDatas = new MyPreferenceDatas(UpdateProduct.this);
         cate_id = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY), myKeyValue);
         sellerId = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_ID), myKeyValue);
     }
@@ -187,7 +224,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         uom_spinner = findViewById(R.id.uom_spinner);
         uomDatasList = new ArrayList<UOMModel.UOMList>();
         photos_recycle = findViewById(R.id.photos_recycle);
-        product_payment = findViewById(R.id.product_payment);
+//        product_payment = findViewById(R.id.product_payment);
         addpage_title = findViewById(R.id.addpage_title);
         product_uom = findViewById(R.id.product_uom);
         product_subcate = findViewById(R.id.product_subcate);
@@ -196,6 +233,17 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         product_qty = findViewById(R.id.product_qty);
         product_sellprice = findViewById(R.id.product_sellprice);
         product_discount_price = findViewById(R.id.product_discount_price);
+
+        payment_items_layout = findViewById(R.id.payment_items_layout);
+        payment_layout = findViewById(R.id.payment_layout);
+        cashondelivery_switch = findViewById(R.id.cashondelivery_switch);
+        payment_option_text = findViewById(R.id.payment_option_text);
+        banktransfer_switch = findViewById(R.id.banktransfer_switch);
+        payment_arrow = findViewById(R.id.payment_arrow);
+
+        product_sellprice.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
+        product_discount_price.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 2)});
+
         product_description = findViewById(R.id.product_description);
         upload_view = findViewById(R.id.upload_view);
         upload_view_img = findViewById(R.id.upload_view_img);
@@ -207,13 +255,15 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         product_back = findViewById(R.id.product_back);
         add_product_btn = findViewById(R.id.add_product_btn);
 
-        product_payment.setEnabled(false);
+//        product_payment.setEnabled(false);
         product_delivery.setEnabled(false);
 
         product_uom.setFocusable(false);
         product_uom.setClickable(true);
         product_subcate.setFocusable(false);
         product_subcate.setClickable(true);
+
+        payment_option_text.setOnClickListener(this);
         upload_view.setOnClickListener(this);
         upload_view_img.setOnClickListener(this);
         profile_change.setOnClickListener(this);
@@ -221,6 +271,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
         add_product_btn.setOnClickListener(this);
         product_uom.setOnClickListener(this);
         product_subcate.setOnClickListener(this);
+        payment_layout.setOnClickListener(this);
         getBundles();
     }
 
@@ -248,22 +299,70 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
             product_description.setText(productsObj.getStrProduct_description());
             product_qty.setText(productsObj.getStrProduct_quantity());
             product_uom.setText(productsObj.getStrProduct_uom());
+            selectedUOM = productsObj.getStrProduct_uom();
             product_subcate.setText(bundle.getString("fromActivitySubcategory"));
+
+            strCOD = productsObj.getStrCOd();
+            strBank_Transfer = productsObj.getStrBankTransfer();
+
+            if(strCOD.equalsIgnoreCase("1")) {
+                cashondelivery_switch.setChecked(true);
+            }
+
+            if(strBank_Transfer.equalsIgnoreCase("1")) {
+                banktransfer_switch.setChecked(true);
+            }
+
+            isPaymentOptionShowing = true;
+            payment_items_layout.setVisibility(View.VISIBLE);
+            payment_arrow.setImageResource(getImage("status_arrow_up"));
 
             Glide.with(getApplicationContext()).load(productsObj.getStrProduct_image()).into(product_image);
 
             String oldPrice = productsObj.getStrProduct_oldprice().replace(".00", "");
             product_sellprice.setText(oldPrice);
 
-            String newPrice = productsObj.getStrProduct_price().replace(".00", "");
-            product_discount_price.setText(newPrice);
-
+            if (productsObj.getStrProduct_oldprice().equalsIgnoreCase(productsObj.getStrProduct_price())) {
+                product_discount_price.setText("");
+            } else {
+                String newPrice = productsObj.getStrProduct_price().replace(".00", "");
+                product_discount_price.setText(newPrice);
+            }
         }
+    }
+
+    public int getImage(String imageName) {
+        int drawableResourceId = getResources().getIdentifier(imageName, "drawable", getPackageName());
+        return drawableResourceId;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.payment_option_text:
+                if (isPaymentOptionShowing) {
+                    isPaymentOptionShowing = false;
+                    payment_items_layout.setVisibility(View.GONE);
+                    payment_arrow.setImageResource(getImage("status_arrow_down"));
+                } else {
+                    isPaymentOptionShowing = true;
+                    payment_items_layout.setVisibility(View.VISIBLE);
+                    payment_arrow.setImageResource(getImage("status_arrow_up"));
+                }
+                break;
+
+            case R.id.payment_layout:
+                if (isPaymentOptionShowing) {
+                    isPaymentOptionShowing = false;
+                    payment_items_layout.setVisibility(View.GONE);
+                    payment_arrow.setImageResource(getImage("status_arrow_down"));
+                } else {
+                    isPaymentOptionShowing = true;
+                    payment_items_layout.setVisibility(View.VISIBLE);
+                    payment_arrow.setImageResource(getImage("status_arrow_up"));
+                }
+                break;
+
             case R.id.close_img:
                 bottomSheetUpload.dismiss();
                 break;
@@ -273,7 +372,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 Intent intent1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (android.os.Build.VERSION.SDK_INT >= 24) {
                     tempFile = Util.getOutputMediaFile();
-                    fileUri = FileProvider.getUriForFile(AddProduct.this,
+                    fileUri = FileProvider.getUriForFile(UpdateProduct.this,
                             BuildConfig.APPLICATION_ID + ".provider",
                             tempFile);
 
@@ -290,8 +389,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
             case R.id.gallery_layout:
                 bottomSheetUpload.dismiss();
 
-                if (ContextCompat.checkSelfPermission(AddProduct.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(AddProduct.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                if (ContextCompat.checkSelfPermission(UpdateProduct.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(UpdateProduct.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                 } else {
                     Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                     i.setType("image/*");
@@ -300,18 +399,18 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.upload_view_img:
-                if(uploadingImageLists.size() < 3) {
+                if (uploadingImageLists.size() < 3) {
                     checkCameraPermission();
                 } else {
-                    CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
+                    CommonMethods.Toast(UpdateProduct.this, "Sorry! You have reached maximum photos to upload.");
                 }
                 break;
 
             case R.id.upload_view:
-                if(uploadingImageLists.size() < 3) {
+                if (uploadingImageLists.size() < 3) {
                     checkCameraPermission();
                 } else {
-                    CommonMethods.Toast(AddProduct.this,  "Sorry! You have reached maximum photos to upload.");
+                    CommonMethods.Toast(UpdateProduct.this, "Sorry! You have reached maximum photos to upload.");
                 }
                 /*Intent cropintent = new Intent(AddProduct.this, CrapImageSample.class);
                 startActivityForResult(cropintent, ADD_PRODUCT_to_CROP_SAMPLE_ACTIVITY);*/
@@ -334,31 +433,31 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 break;
 
             case R.id.product_subcate:
-                if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
                     hideKeyboard(product_subcate);
                     Bundle bundle = new Bundle();
                     bundle.putInt("SelectedSubId", selSubCateId);
                     bundle.putString("SellerId", sellerId);
                     bundle.putString("CategoryId", cate_id);
-                    Intent intent = new Intent(AddProduct.this, SubCategorySelection.class);
+                    Intent intent = new Intent(UpdateProduct.this, SubCategorySelection.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, ADD_PRODUCT_to_SUBCATE_SELECTION);
                 } else {
                     NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(AddProduct.this, MOVE_SUB_CATEGORY);
+                    networkAvailability.noInternetConnection(UpdateProduct.this, MOVE_SUB_CATEGORY);
                 }
                 break;
 
             case R.id.product_uom:
-                if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
-                    if(uomDatasList.size() > 0) {
+                if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
+                    if (uomDatasList.size() > 0) {
                         bottomSheetDialog.show();
                     } else {
                         showUOMSheet(1);
                     }
                 } else {
                     NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(AddProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
+                    networkAvailability.noInternetConnection(UpdateProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
                 }
                 break;
 
@@ -368,7 +467,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 strPQty = product_qty.getText().toString().trim();
                 strPDiscount = product_discount_price.getText().toString().trim();
                 strPDesc = product_description.getText().toString().trim();
-                strPPayment = product_payment.getText().toString().trim();
+//                strPPayment = product_payment.getText().toString().trim();
                 strPDelivery = product_delivery.getText().toString().trim();
                 strPSubProduct = product_subcate.getText().toString().trim();
                 strPType = product_uom.getText().toString().trim();
@@ -393,18 +492,23 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     return;
                 }
 
-                if (strPType.equalsIgnoreCase("") || strPType.equalsIgnoreCase("Select Status")) {
+                if (strPType.equalsIgnoreCase("") || strPType.equalsIgnoreCase("UOM*")) {
                     showErrorMsg("Please select product UOM.");
                     return;
                 }
 
-                if (strPDiscount.equalsIgnoreCase("")) {
+                /*if (strPDiscount.equalsIgnoreCase("")) {
                     showErrorMsg("Please enter product discount price.");
                     return;
-                }
+                }*/
 
-                if (strPPayment.equalsIgnoreCase("")) {
+               /* if (strPPayment.equalsIgnoreCase("")) {
                     showErrorMsg("Please select product payment type.");
+                    return;
+                }*/
+
+                if(!strCOD.equalsIgnoreCase("1") && !strBank_Transfer.equalsIgnoreCase("1")) {
+                    showErrorMsg("Please select payment option.");
                     return;
                 }
 
@@ -418,9 +522,15 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     return;
                 }
 
-                if (Integer.parseInt(strPDiscount) > Integer.parseInt(strPPrice)) {
-                    showErrorMsg("Selling price was low comparing to Discount price.");
-                    return;
+                if (!strPDiscount.equalsIgnoreCase("")) {
+                    if (Float.parseFloat(strPDiscount) > Float.parseFloat(strPPrice)) {
+                        showErrorMsg("Selling price was low comparing to Discount price.");
+                        return;
+                    }
+                }
+
+                if (strPDiscount.equalsIgnoreCase("")) {
+                    strPDiscount = "" + strPPrice;
                 }
 
                 Map<String, String> params = new HashMap<>();
@@ -436,6 +546,8 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 params.put("quantity", strPQty);
                 params.put("seller_id", sellerId);
                 params.put("uom", strPType);
+                params.put("cod", strCOD);
+                params.put("bank_transfer", strBank_Transfer);
 
                 if (fromActivity.equalsIgnoreCase("HomeFragment")) {
 
@@ -449,11 +561,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                         return;
                     }
 
-                    if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                    if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
                         productsViewModel.addProducts(finalPath, params);
                     } else {
                         NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                        networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                        networkAvailability.noInternetConnection(UpdateProduct.this, Constants.ADD_PRODUCT_INFO);
                     }
 
                     productsViewModel.addProductLV().observe(this, new Observer<Products_Model>() {
@@ -469,11 +581,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     Log.e("appSample", "Params: " + params.toString());
 
                     if (finalPath == null) {
-                        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                        if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
                             productsViewModel.editProducts(params);
                         } else {
                             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                            networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                            networkAvailability.noInternetConnection(UpdateProduct.this, Constants.ADD_PRODUCT_INFO);
                         }
                         productsViewModel.editProductLV().observe(this, new Observer<Products_Model>() {
                             @Override
@@ -484,11 +596,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                             }
                         });
                     } else {
-                        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+                        if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
                             productsViewModel.editProductwithImage(finalPath, params);
                         } else {
                             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                            networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                            networkAvailability.noInternetConnection(UpdateProduct.this, Constants.ADD_PRODUCT_INFO);
                         }
                         productsViewModel.editProductwithImageLV().observe(this, new Observer<Products_Model>() {
                             @Override
@@ -507,11 +619,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void showUOMSheet(int showUOMStatus) {
-        if (NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+        if (NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
             productsViewModel.getUOM();
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
-            networkAvailability.noInternetConnection(AddProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
+            networkAvailability.noInternetConnection(UpdateProduct.this, Constants.NETWORK_ENABLE_SETTINGS);
         }
         productsViewModel.getUOMLV().observe(this, new Observer<UOMModel>() {
             @Override
@@ -523,7 +635,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void showSuccessDialog(Products_Model products_model, String strMessage, int resultCode) {
-        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(AddProduct.this, SweetAlertDialog.SUCCESS_TYPE);
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(UpdateProduct.this, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog.setTitleText("Success");
         sweetAlertDialog.setContentText(strMessage);
         sweetAlertDialog.setCancelable(false);
@@ -545,7 +657,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     public void showErrorMsg(String error) {
-        CommonMethods.Toast(AddProduct.this, error);
+        CommonMethods.Toast(UpdateProduct.this, error);
     }
 
     @Override
@@ -558,12 +670,12 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == NETWORK_ENABLE_SETTINGS) {
+        if (requestCode == NETWORK_ENABLE_SETTINGS) {
             showUOMSheet(1);
-        } else if(requestCode == ADD_PRODUCT_INFO) {
-            if (!NetworkAvailability.isNetworkAvailable(AddProduct.this)) {
+        } else if (requestCode == ADD_PRODUCT_INFO) {
+            if (!NetworkAvailability.isNetworkAvailable(UpdateProduct.this)) {
                 NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                networkAvailability.noInternetConnection(AddProduct.this, Constants.ADD_PRODUCT_INFO);
+                networkAvailability.noInternetConnection(UpdateProduct.this, Constants.ADD_PRODUCT_INFO);
             }
         }
 
@@ -594,11 +706,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 item.setCreated_date("");
                 uploadingImageLists.add(item);
 
-                if(uploadingImageLists != null) {
-                    if(uploadingImageLists.size() > 0) {
+                if (uploadingImageLists != null) {
+                    if (uploadingImageLists.size() > 0) {
                         photos_recycle.setHasFixedSize(true);
                         photos_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProduct.this);
+                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), UpdateProduct.this);
                         photos_recycle.setAdapter(imageUploadingAdapter);
                     }
                 }
@@ -629,11 +741,11 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 item.setCreated_date("");
                 uploadingImageLists.add(item);
 
-                if(uploadingImageLists != null) {
-                    if(uploadingImageLists.size() > 0) {
+                if (uploadingImageLists != null) {
+                    if (uploadingImageLists.size() > 0) {
                         photos_recycle.setHasFixedSize(true);
                         photos_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
-                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), AddProduct.this);
+                        imageUploadingAdapter = new ImageUploadingAdapter(uploadingImageLists, getApplicationContext(), UpdateProduct.this);
                         photos_recycle.setAdapter(imageUploadingAdapter);
                     }
                 }
@@ -681,16 +793,21 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
     }
 
     private void showUOMAdapter(int showUOMStatus) {
-        for(int i=0; i < uomDatasList.size(); i++) {
+        int uomId = 0;
+        for (int i = 0; i < uomDatasList.size(); i++) {
             uomSpinnerList.add((uomDatasList.get(i).getStrUom()));
+            if (selectedUOM.equalsIgnoreCase(uomDatasList.get(i).getStrUom())) {
+                uomId = i;
+            }
         }
 
-        uomSpinnerList.add("Select Status");
+        uomSpinnerList.add("UOM*");
 
         HintAdapter dataAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, uomSpinnerList);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         uom_spinner.setAdapter(dataAdapter);
-        uom_spinner.setSelection(dataAdapter.getCount());
+        uom_spinner.setSelection(uomId);
+//        uom_spinner.setSelection(dataAdapter.getCount());
 
         com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter adapter =
                 new com.zjun.widget.tagflowlayout.TagFlowLayout.Adapter(getApplicationContext()) {
@@ -735,17 +852,17 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                 };
 
         uom_tags.setAdapter(adapter);
-        if(showUOMStatus == 1) {
+        if (showUOMStatus == 1) {
             bottomSheetDialog.show();
         }
     }
 
     public void checkCameraPermission() {
         if (PermissionManager.checkIsGreaterThanM()) {
-            if (!PermissionManager.checkPermissionForReadExternalStorage(AddProduct.this) ||
-                    !PermissionManager.checkPermissionForWriteExternalStorage(AddProduct.this) ||
-                    !PermissionManager.checkPermissionForCamara(AddProduct.this)) {
-                PermissionManager.requestPermissionForCamera(AddProduct.this);
+            if (!PermissionManager.checkPermissionForReadExternalStorage(UpdateProduct.this) ||
+                    !PermissionManager.checkPermissionForWriteExternalStorage(UpdateProduct.this) ||
+                    !PermissionManager.checkPermissionForCamara(UpdateProduct.this)) {
+                PermissionManager.requestPermissionForCamera(UpdateProduct.this);
             } else {
                 openCamera();
             }
@@ -757,7 +874,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
 
     public void openCamera() {
         if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
-            CommonMethods.Toast(AddProduct.this,  getString(R.string.device_dont_have_camera));
+            CommonMethods.Toast(UpdateProduct.this, getString(R.string.device_dont_have_camera));
             return;
         }
         bottomSheetUpload.show();
@@ -773,7 +890,7 @@ public class AddProduct extends AppCompatActivity implements View.OnClickListene
                     openCamera();
 
                 } else {
-                    CommonMethods.Toast(AddProduct.this, "This App required Location permission." +
+                    CommonMethods.Toast(UpdateProduct.this, "This App required Location permission." +
                             "Please enable from app settings.");
                 }
         }

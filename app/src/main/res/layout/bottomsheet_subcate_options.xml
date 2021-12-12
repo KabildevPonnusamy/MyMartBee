@@ -46,6 +46,7 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@color/yellow_btn_color"
         android:text="@string/update_txt"
+        android:textAllCaps="false"
         android:textStyle="bold"
         android:textColor="@color/white" />
 

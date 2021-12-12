@@ -49,6 +49,7 @@ public interface Constants {
     public static int SUBCATE_to_SUBCATE_OPTIONS = 31;
     public static int SUBCATE_update_success = 33;
     public static int IMAGE_DELETION_success = 34;
+    public static int ACCOUNT_FRAG_to_ACCOUNT_DETAILS = 35;
 
 
     public static int LOGOUT = 1000;

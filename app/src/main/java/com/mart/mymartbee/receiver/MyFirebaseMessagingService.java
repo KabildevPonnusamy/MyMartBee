@@ -76,6 +76,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             ordersListObj.setStrPhone(jsonObject.getString("phone") );
             ordersListObj.setStrCountryCode(jsonObject.getString("country_code") );
             ordersListObj.setStrAddress(jsonObject.getString("address") );
+            ordersListObj.setStrPaymentType(jsonObject.getString("payment_type"));
+            ordersListObj.setStrPaymentReceipt(jsonObject.getString("payment_receipt"));
 
             StorageDatas.getInstance().setStrOrderId(jsonObject.getString("order_id"));
             StorageDatas.getInstance().setStrOrderStatus(jsonObject.getString("status"));

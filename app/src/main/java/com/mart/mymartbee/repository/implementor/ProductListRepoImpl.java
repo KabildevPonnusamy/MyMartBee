@@ -59,6 +59,8 @@ public class ProductListRepoImpl implements ProductListRepo {
         RequestBody p_quantity = RequestBody.create(MediaType.parse("text/plain"), params.get("quantity"));
         RequestBody p_seller_id = RequestBody.create(MediaType.parse("text/plain"), params.get("seller_id"));
         RequestBody p_uom = RequestBody.create(MediaType.parse("text/plain"), params.get("uom"));
+        RequestBody p_cod = RequestBody.create(MediaType.parse("text/plain"), params.get("cod"));
+        RequestBody p_bank_transfer = RequestBody.create(MediaType.parse("text/plain"), params.get("bank_transfer"));
 
         MultipartBody.Part[] imageParts = new MultipartBody.Part[uploadingImageLists.size()];
 
@@ -66,7 +68,7 @@ public class ProductListRepoImpl implements ProductListRepo {
 
         for (int index = 0; index < uploadingImageLists.size(); index++) {
 
-            Log.e("appSample", "Index: " + index + " Path: " + uploadingImageLists.get(index).getImage());
+//            Log.e("appSample", "Index: " + index + " Path: " + uploadingImageLists.get(index).getImage());
 
             File file1 = new File(uploadingImageLists.get(index).getImage());
             RequestBody surveyBody = RequestBody.create(MediaType.parse("image/*"), file1);
@@ -77,7 +79,7 @@ public class ProductListRepoImpl implements ProductListRepo {
                     surveyBody));
                 }
 
-        Log.e("appSample", "LENGTH: " + imageParts.length);
+//        Log.e("appSample", "LENGTH: " + imageParts.length);
 
         Retrofit retrofit = ApiClient.getRetrofit();
 
@@ -86,7 +88,8 @@ public class ProductListRepoImpl implements ProductListRepo {
         ApiCallBack apiService = retrofit.create(ApiCallBack.class);
 
         apiService.addProductNew(list, p_title, p_description, p_meta_title, p_meta_description, p_meta_keyword, p_price,
-                p_old_price, p_cat_id, p_sub_cat_id, p_quantity, p_seller_id, p_uom).enqueue(new Callback<Products_Model>() {
+                p_old_price, p_cat_id, p_sub_cat_id, p_quantity, p_seller_id, p_uom, p_cod, p_bank_transfer).enqueue
+                (new Callback<Products_Model>() {
             @Override
             public void onResponse(Call<Products_Model> call, Response<Products_Model> response) {
                 Log.e("appSample", "onResponse");

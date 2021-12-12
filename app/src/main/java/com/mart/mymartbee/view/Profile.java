@@ -3,6 +3,7 @@ package com.mart.mymartbee.view;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -163,7 +165,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         profile_mobile_tv.setFocusable(false);
         profile_mobile_tv.setClickable(false);
         business_category_et.setFocusable(false);
-        business_category_et.setClickable(false);
+        business_category_et.setClickable(true); // false
+        business_category_et.setOnClickListener(this);
 
         start_time.setFocusable(false);
         start_time.setClickable(true);
@@ -276,10 +279,31 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         mTimePicker.show();
     }
 
+    public void hideKeyboard(View view) {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.business_category_et:
+                if (NetworkAvailability.isNetworkAvailable(Profile.this)) {
+                    hideKeyboard(business_category_et);
+                    Log.e("appSample", "ID: " + selectedId);
+
+                    Bundle bundle = new Bundle();
+                    bundle.putString("mobileNumber", strCountryCode + strMobile);
+                    bundle.putInt("SelectedId", selectedId);
+                    Intent intent = new Intent(Profile.this, BusinessCategorySelection.class);
+                    intent.putExtras(bundle);
+                    startActivityForResult(intent, ACCOUNT_FRAG_to_CATEGORY_SELECTION);
+                } else {
+                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
+                    networkAvailability.noInternetConnection(Profile.this, Constants.NETWORK_ENABLE_SETTINGS);
+                }
+                break;
+
             case R.id.close_img:
                 bottomSheetUpload.dismiss();
                 break;
@@ -396,7 +420,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                 }
 
                 Map<String, String> params = new HashMap<>();
-                params.put("country_code", "+60");
+                params.put("country_code", strCountryCode);
                 params.put("mobile_number", strMobile);
                 params.put("imie_no", strAndroidId);
                 params.put("gcm_id", StorageDatas.getInstance().getFirebaseToken());
@@ -423,7 +447,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                         public void onChanged(RegisterModel registerModel) {
                             Log.e("appSample", "SHOP: " + registerModel.getSellerDetails().getStrRegshop());
                             if(registerModel.getStrModule().equalsIgnoreCase("login")) {
-//                                registerViewModel.checkProfileUpdateLiveData().removeObservers(this);
                                 showProfileSuccess(registerModel);
                             }
                         }
