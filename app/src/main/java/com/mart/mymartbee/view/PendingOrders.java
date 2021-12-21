@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -76,6 +78,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
     ImageView paymentdetails_arrow;
     LinearLayout cod_payment_layout, banktransfer_payment_layout, attachment_layout,
             payment_info_layout;
+    TextView filename_attachment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,6 +129,7 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         banktransfer_payment_layout = findViewById(R.id.banktransfer_payment_layout);
         attachment_layout = findViewById(R.id.attachment_layout);
         payment_info_layout = findViewById(R.id.payment_info_layout);
+        filename_attachment = findViewById(R.id.filename_attachment);
         payment_details_layout.setOnClickListener(this);
         attachment_layout.setOnClickListener(this);
 
@@ -180,6 +184,15 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
 
             if (strPaymentType.equalsIgnoreCase("bank_transfer")) {
                 strPaymentReceipt = ordersListObj.getStrPaymentReceipt();
+
+                String fileName = strPaymentReceipt.substring(strPaymentReceipt.lastIndexOf('/') + 1);
+//                filename_attachment.setText(fileName);
+                Log.e("appSample", "FileName: " + fileName);
+
+                SpannableString content = new SpannableString(fileName);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                filename_attachment.setText(content);
+
                 linear_reject.setVisibility(View.GONE);
                 linear_chat.setVisibility(View.VISIBLE);
 
@@ -199,8 +212,8 @@ public class PendingOrders extends AppCompatActivity implements View.OnClickList
         }
 
         String oldPrice = ordersListObj.getStrTotalAmount().replace(".00", "");
-        total_amount.setText("RM. " + oldPrice);
-//        total_amount.setText("RM. " + ordersListObj.getStrTotalAmount());
+        total_amount.setText("RM " + oldPrice);
+//        total_amount.setText("RM " + ordersListObj.getStrTotalAmount());
 
         /*if(ordersListObj.getOrderHistoryList() != null) {
             if(ordersListObj.getOrderHistoryList().size() > 0) {

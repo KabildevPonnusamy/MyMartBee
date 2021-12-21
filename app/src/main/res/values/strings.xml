@@ -89,7 +89,7 @@
     <string name="product_edit_text">Edit</string>
     <string name="product_delete_text">Delete</string>
     <string name="product_details">Product Details</string>
-    <string name="old_price"><strike> RM. 1500 </strike></string>
+    <string name="old_price"><strike> RM 1500 </strike></string>
     <string name="description_txt">Description</string>
     <string name="static_text">Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged</string>
     <string name="from_text">from</string>
@@ -196,4 +196,5 @@
     <string name="bt_description_one">**Please check your bank account to confirm the receiving of payment from customer before accept this order.</string>
     <string name="bt_description_two">**Any discrepancy in payment and/or stock availability, please contact your buyer.</string>
     <string name="attachment_txt">Attachment</string>
+    <string name="update_required">Please update our app to use latest features.</string>
 </resources>

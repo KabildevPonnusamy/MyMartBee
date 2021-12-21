@@ -1,17 +1,23 @@
 package com.mart.mymartbee.view;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,7 +63,8 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
     ProgressDialog progressDialog;
     ArrayList<Order_Status_Model.OrdersStatusList> ordersStatusLists;
     ArrayList<String> ordersStatusStrList;
-    String strOrderStatus = "", strComments = "", strSellerId = "", strOrderId = "", strStatusId = "";
+    String strOrderStatus = "", strComments = "", strSellerId = "", strOrderId = "", strStatusId = "",
+            strPaymentType = "", strPaymentReceipt = "";
     int statusValue = 0;
     TextView update_status;
     MyPreferenceDatas preferenceDatas;
@@ -67,17 +74,25 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
     ImageView orderhis_arrow, productsumm_arrow;
     String strName = "";
 
+    RelativeLayout payment_details_layout;
+    ImageView paymentdetails_arrow;
+    LinearLayout cod_payment_layout, banktransfer_payment_layout, attachment_layout,
+            payment_info_layout;
+    TextView filename_attachment;
+
+    LinearLayout status_layout;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.order_details);
 
         ordersViewModel = ViewModelProviders.of(this).get(OrdersViewModelImpl.class);
-        initView();
+        observeProgress();
         getMyPreferences();
         getBundles();
-        observeProgress();
-        getStatusList();
+        initView();
+//        getStatusList();
         setListeners();
     }
 
@@ -165,6 +180,17 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
 
     private void initView() {
         ordersListObj = StorageDatas.getInstance().getOrdersListObj();
+        status_layout = findViewById(R.id.status_layout);
+
+        payment_details_layout = findViewById(R.id.payment_details_layout);
+        paymentdetails_arrow = findViewById(R.id.paymentdetails_arrow);
+        cod_payment_layout = findViewById(R.id.cod_payment_layout);
+        banktransfer_payment_layout = findViewById(R.id.banktransfer_payment_layout);
+        attachment_layout = findViewById(R.id.attachment_layout);
+        payment_info_layout = findViewById(R.id.payment_info_layout);
+        filename_attachment = findViewById(R.id.filename_attachment);
+        payment_details_layout.setOnClickListener(this);
+        attachment_layout.setOnClickListener(this);
 
         orderhist_layout = findViewById(R.id.orderhist_layout);
         prod_simm_layout = findViewById(R.id.prod_simm_layout);
@@ -209,9 +235,38 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
             ordered_number.setText(strName);
         }
 
+        strPaymentType = ordersListObj.getStrPaymentType();
+        Log.e("appSample", "PaymentType: " + ordersListObj.getStrPaymentType());
+
+        if (strPaymentType != null) {
+
+            if (strPaymentType.equalsIgnoreCase("bank_transfer")) {
+                strPaymentReceipt = ordersListObj.getStrPaymentReceipt();
+
+                String fileName = strPaymentReceipt.substring(strPaymentReceipt.lastIndexOf('/') + 1);
+//                filename_attachment.setText(fileName);
+                Log.e("appSample", "FileName: " + fileName);
+
+                SpannableString content = new SpannableString(fileName);
+                content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+                filename_attachment.setText(content);
+
+                payment_info_layout.setVisibility(View.VISIBLE);
+                cod_payment_layout.setVisibility(View.GONE);
+                banktransfer_payment_layout.setVisibility(View.VISIBLE);
+
+            } else if (strPaymentType.equalsIgnoreCase("cod")) {
+
+                payment_info_layout.setVisibility(View.VISIBLE);
+                cod_payment_layout.setVisibility(View.VISIBLE);
+                banktransfer_payment_layout.setVisibility(View.GONE);
+            }
+
+        }
+
         String oldPrice = ordersListObj.getStrTotalAmount().replace(".00", "");
-        total_amount.setText("RM. " + oldPrice);
-//        total_amount.setText("RM. " + ordersListObj.getStrTotalAmount());
+        total_amount.setText("RM " + oldPrice);
+//        total_amount.setText("RM " + ordersListObj.getStrTotalAmount());
 
         if(ordersListObj.getOrderHistoryList() != null) {
             if(ordersListObj.getOrderHistoryList().size() > 0) {
@@ -229,6 +284,14 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
                 ordersDetailsAdapter = new OrdersDetailsAdapter(ordersListObj.getOrderedProductsList(), getApplicationContext());
                 orders_details_recycler.setAdapter(ordersDetailsAdapter);
             }
+        }
+
+        if(ordersListObj.getStrStatus().equalsIgnoreCase("Completed") ||
+                ordersListObj.getStrStatus().equalsIgnoreCase("Rejected") ) {
+            status_layout.setVisibility(View.GONE);
+        } else {
+            status_layout.setVisibility(View.VISIBLE);
+            getStatusList();
         }
     }
 
@@ -260,6 +323,38 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.payment_details_layout:
+                if (payment_info_layout.getVisibility() == View.VISIBLE) {
+                    payment_info_layout.setVisibility(View.GONE);
+                    paymentdetails_arrow.setImageResource(getImage("icon_new_uparrow"));
+                } else {
+                    payment_info_layout.setVisibility(View.VISIBLE);
+                    paymentdetails_arrow.setImageResource(getImage("icon_new_downarrow"));
+                }
+
+                break;
+
+            case R.id.attachment_layout:
+                if (strPaymentReceipt.endsWith(".pdf")) {
+
+                    Uri path = Uri.parse(strPaymentReceipt);
+                    Intent pdfIntent = new Intent(Intent.ACTION_VIEW);
+                    pdfIntent.setDataAndType(path, "application/pdf");
+                    pdfIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    try {
+                        startActivity(pdfIntent);
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(OrderUpdate.this, "No Application available to viewPDF",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Intent intent = new Intent(OrderUpdate.this, Attachments.class);
+                    intent.putExtra("attachedImage", strPaymentReceipt);
+                    startActivity(intent);
+                }
+
+                break;
+
             case R.id.orderhist_layout:
                 if(orders_history_recycler.getVisibility() == View.VISIBLE) {
                     orders_history_recycler.setVisibility(View.GONE);
@@ -388,7 +483,16 @@ public class OrderUpdate extends AppCompatActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == NETWORK_ENABLE_SETTINGS) {
-            getStatusList();
+            if(ordersListObj.getStrStatus().equalsIgnoreCase("Completed") ||
+                    ordersListObj.getStrStatus().equalsIgnoreCase("Rejected") ) {
+                status_layout.setVisibility(View.GONE);
+            } else {
+                status_layout.setVisibility(View.VISIBLE);
+                getStatusList();
+            }
+
+
+//            getStatusList();
         }
     }
 }

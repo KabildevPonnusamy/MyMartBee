@@ -15,6 +15,7 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 import com.mart.mymartbee.model.BusinessCategory_Model;
+import com.mart.mymartbee.model.CommonResponseModel;
 import com.mart.mymartbee.model.Dashboard_Model;
 import com.mart.mymartbee.model.NewReportProducts_Model;
 import com.mart.mymartbee.model.NewReportSales_Model;
@@ -151,6 +152,10 @@ public interface ApiCallBack {
     @POST("dashboard/sales-report")
     @FormUrlEncoded
     Call<NewReportSales_Model> getSalesReportByYear(@FieldMap Map<String, String> params);
+
+    @POST("version")
+    @FormUrlEncoded
+    Call<CommonResponseModel> checkVersion(@FieldMap Map<String, String> params);
 
     /*@GET("{value}/info.json")
     Call<StatesList> getStateInfos(@Path("value") String value);*/

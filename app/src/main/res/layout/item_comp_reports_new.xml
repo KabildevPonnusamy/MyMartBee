@@ -87,7 +87,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:src="@drawable/sms_banner"
-                        android:scaleType="centerCrop"
+                        android:scaleType="fitXY"
                         android:contentDescription="@string/image_desc" />
 
                 </androidx.cardview.widget.CardView>
@@ -129,7 +129,7 @@
                             android:layout_marginEnd="5dp"
                             android:fontFamily="@font/museosans"
                             android:singleLine="true"
-                            android:text="RM. 150"
+                            android:text="RM 150"
                             android:textColor="@color/main_color_two"
                             android:textSize="13sp"
                             android:textStyle="bold" />

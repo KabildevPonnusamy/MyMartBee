@@ -22,7 +22,8 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
     ImageView settings_back;
     LinearLayout share_whatsapp_layout; // logout_layout
     MyPreferenceDatas preferenceDatas;
-    String myKeyValue = "", strCateName = "", strSelleShop = "", strSellerMobile = "";
+    String myKeyValue = "", strCateName = "", strSelleShop = "", strSellerMobile = "",
+            strCountryCode = "";
     SwitchButton notification_switch;
 
     @Override
@@ -41,6 +42,7 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
         strCateName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
         strSelleShop = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_SHOP), myKeyValue);
         strSellerMobile = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue);
+        strCountryCode = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_COUNTRY_CODE), myKeyValue);
     }
 
     private void initView() {
@@ -86,8 +88,7 @@ public class SettingsAct extends AppCompatActivity implements View.OnClickListen
         whatsappIntent.setPackage("com.whatsapp");
 
         whatsappIntent.putExtra(Intent.EXTRA_TEXT, " \n  Hello! \nNow you can order from " + "*" +  strSelleShop  + "*"+ " using this link: " + StorageDatas.getInstance().getStoreWhatsappLink() +
-                "\nFeel free to call us on " + strSellerMobile + " if you need any help with ordering. \n\n Thank you." );
-
+                "\nFeel free to call us on " + strCountryCode + " " + strSellerMobile + " if you need any help with ordering. \n\n Thank you." );
 
 //        whatsappIntent.putExtra(Intent.EXTRA_TEXT, StorageDatas.getInstance().getStoreWhatsappLink() + " \n\n   Please visit my store to buy " + strCateName +" products on very low cost.");
         try {

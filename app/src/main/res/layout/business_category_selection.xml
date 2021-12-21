@@ -63,7 +63,7 @@
             android:layout_above="@+id/owner_add_product"
             android:scrollbars="none" />
 
-        <LinearLayout
+        <!--<LinearLayout
             android:id="@+id/owner_add_product"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -93,7 +93,7 @@
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+        </LinearLayout>-->
 
     </RelativeLayout>
 

@@ -39,7 +39,7 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
     ImageView cate_back;
     EditText cate_search_edit;
     RecyclerView cate_recycle;
-    Button add_category_btn;
+//    Button add_category_btn;
 
     String strMobileNumber = "";
     int selectedId = -1;
@@ -90,7 +90,7 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
 //        prefcategoryList = new ArrayList<Category_Model.Categorys>();
         businessCategoryListTemp = new ArrayList<BusinessCategory_Model.Categorys>();
         cate_back = findViewById(R.id.cate_back);
-        add_category_btn = findViewById(R.id.add_category_btn);
+//        add_category_btn = findViewById(R.id.add_category_btn);
         cate_search_edit = findViewById(R.id.cate_search_edit);
         cate_recycle = findViewById(R.id.cate_recycle);
 
@@ -101,7 +101,7 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
         add_cate_sheet_btn = (Button) bottomSheetDialog.findViewById(R.id.add_cate_sheet_btn);
 
         cate_back.setOnClickListener(this);
-        add_category_btn.setOnClickListener(this);
+//        add_category_btn.setOnClickListener(this);
         add_cate_sheet_btn.setOnClickListener(this);
         listeners();
     }
@@ -138,9 +138,9 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
                 finish();
                 break;
 
-            case R.id.add_category_btn:
+           /* case R.id.add_category_btn:
                 bottomSheetDialog.show();
-                break;
+                break;*/
 
             case R.id.add_cate_sheet_btn:
                 String strCate = category_name.getText().toString().trim();

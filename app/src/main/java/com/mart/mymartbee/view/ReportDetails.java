@@ -103,7 +103,7 @@ public class ReportDetails extends AppCompatActivity implements View.OnClickList
         report_number.setText(reportsList.getStrOrderId());
         ordered_address.setText(reportsList.getStrAddress());
         String priceAmount = reportsList.getStrTotalAmount().replace(".00", "");
-        total_amount.setText("RM. " + priceAmount);
+        total_amount.setText("RM " + priceAmount);
         String strDate = "";
 
         for (int i=0; i<reportsList.getOrderHistoryList().size(); i++) {

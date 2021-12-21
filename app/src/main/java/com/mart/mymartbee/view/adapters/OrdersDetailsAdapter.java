@@ -42,7 +42,7 @@ public class OrdersDetailsAdapter extends RecyclerView.Adapter<OrdersDetailsAdap
         holder.od_prod_name.setText(orderedProductsArrayList.get(position).getStrProductTitle());
         holder.od_prod_qty.setText(orderedProductsArrayList.get(position).getStrProductQuantity());
         String product_price = orderedProductsArrayList.get(position).getStrProductPrice().replace(".00", "");
-        holder.od_prod_price.setText("RM. " + product_price);
+        holder.od_prod_price.setText("RM " + product_price);
         String strTotal = orderedProductsArrayList.get(position).getStrProductTotal().replace(".00", "");
         holder.od_prod_total.setText(strTotal);
         Glide.with(context).load(orderedProductsArrayList.get(position).getStrProductImage()).into(holder.product_image);

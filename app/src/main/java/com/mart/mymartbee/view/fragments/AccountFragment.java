@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.bumptech.glide.Glide;
 import com.mart.mymartbee.BuildConfig;
@@ -30,14 +31,20 @@ import com.mart.mymartbee.commons.CustomTimePickerDialog;
 import com.mart.mymartbee.commons.GPSTracker;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.NetworkAvailability;
+import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
+import com.mart.mymartbee.model.Products_Model;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.view.AddAccount;
 import com.mart.mymartbee.view.MobileLogin;
+import com.mart.mymartbee.view.ProductDetails;
 import com.mart.mymartbee.view.Profile;
 import com.mart.mymartbee.view.SettingsAct;
 
 import java.text.ParseException;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -184,10 +191,8 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
                 break;*/
 
             case R.id.logout_layout:
-                preferenceDatas.clearPreference(getActivity());
-                Intent intent = new Intent(getActivity(), MobileLogin.class);
-                startActivity(intent);
-                getActivity().finishAffinity();
+                showLogoutDialog();
+
                 break;
 
             case R.id.profile_change:
@@ -211,8 +216,41 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         }
     }
 
+    public void showLogoutDialog() {
+        SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setTitleText("Warning...!");
+        sweetAlertDialog.setContentText("Do you want to Logout?");
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.setConfirmText("Yes");
+        sweetAlertDialog.setCancelText("No");
+        sweetAlertDialog.show();
+
+        sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+                preferenceDatas.clearPreference(getActivity());
+                Intent intent = new Intent(getActivity(), MobileLogin.class);
+                startActivity(intent);
+                getActivity().finishAffinity();
+            }
+        });
+
+        sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+            @Override
+            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                sweetAlertDialog.dismiss();
+            }
+        });
+    }
+
     public void openAdminsWhatsapp() {
-        String contact = "+60 167139800";
+
+        Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+60167139800&text=" + "");
+        Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(sendIntent);
+
+        /*String contact = "+60167139800";
         String url = "https://api.whatsapp.com/send?phone=" + contact;
         try {
             PackageManager pm = getContext().getPackageManager();
@@ -222,7 +260,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
             startActivity(i);
         } catch (PackageManager.NameNotFoundException e) {
             CommonMethods.Toast(getActivity(), "WhatsApp have not been installed.");
-        }
+        }*/
     }
 
     @Override

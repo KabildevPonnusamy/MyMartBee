@@ -2,6 +2,7 @@ package com.mart.mymartbee.view.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +46,14 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
         holder.order_number.setText("#" + pendingOrdersLists.get(position).getStrOrderId() );
         holder.order_date.setText(formatDate(pendingOrdersLists.get(position).getStrOrderDate()));
         holder.order_status.setText(pendingOrdersLists.get(position).getStrStatus());
+
+        if(pendingOrdersLists.get(position).getStrPaymentType().equalsIgnoreCase("cod")) {
+            holder.order_payment_type.setText("Cash on Delivery");
+        } else if(pendingOrdersLists.get(position).getStrPaymentType().equalsIgnoreCase("bank_transfer")) {
+            holder.order_payment_type.setText("Bank Transfer");
+        } else {
+            holder.order_payment_type.setText(pendingOrdersLists.get(position).getStrPaymentType());
+        }
         strName = CommonMethods.getContactName(context,  pendingOrdersLists.get(position).getStrPhone());
         if(strName.equalsIgnoreCase("")) {
             holder.ordered_mobile_number.setText(pendingOrdersLists.get(position).getStrCountryCode() + " " +
@@ -60,15 +69,24 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
         }
 
         String product_price = pendingOrdersLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.order_total_price.setText( "RM. " + product_price);
-        String image = pendingOrdersLists.get(position).getOrderedProductsList().get(0).getStrProductImage();
+        holder.order_total_price.setText( "RM " + product_price);
 
-        if(image != null) {
-            if(!image.equalsIgnoreCase("")) {
-                Glide.with(context).load(image).into(holder.order_image);
-            }
+//        if(pendingOrdersLists.get(0).getOrderedProductsList().size() > 0) {
+//            try {
+
+                String image = pendingOrdersLists.get(position).getOrderedProductsList().get(0).getStrProductImage();
+                if (image != null) {
+                    if (!image.equalsIgnoreCase("")) {
+                        Glide.with(context).load(image).into(holder.order_image);
+                    }
+                }
+
+//            } catch (Exception e) {
+//                Log.e("appSample", "Excep: " + e.getMessage());
+//            }
+//        }
         }
-    }
+
 
     public String formatDate(String inputDate) {
         try {
@@ -89,7 +107,7 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView order_number, order_date, order_quantity, order_total_price,
-                ordered_mobile_number, order_status;
+                ordered_mobile_number, order_status, order_payment_type;
         ImageView order_image;
 
         ViewHolder(View itemView) {
@@ -102,6 +120,7 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
             order_total_price = itemView.findViewById(R.id.order_total_price);
             ordered_mobile_number = itemView.findViewById(R.id.ordered_mobile_number);
             order_status = itemView.findViewById(R.id.order_status);
+            order_payment_type = itemView.findViewById(R.id.order_payment_type);
 
         }
     }

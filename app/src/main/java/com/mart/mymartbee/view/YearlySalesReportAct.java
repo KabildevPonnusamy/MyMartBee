@@ -204,7 +204,7 @@ public class YearlySalesReportAct extends AppCompatActivity implements View.OnCl
 
             for (int i = 0; i < cateViewsList.size(); i++) {
                 if (cateViewsList.get(i).getStrCategory().equalsIgnoreCase(category)) {
-                    strSubCateId = cateViewsList.get(i).getStrCat_id();
+                    strSubCateId = cateViewsList.get(i).getStrCateId();
                 }
             }
 

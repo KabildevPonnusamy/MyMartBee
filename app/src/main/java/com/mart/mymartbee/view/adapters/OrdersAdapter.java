@@ -49,7 +49,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.ViewHolder
         }
 
         String product_price = ordersLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.order_total.setText("RM. " + product_price);
+        holder.order_total.setText("RM " + product_price);
         holder.status_layout.setBackgroundResource(R.drawable.pending_layout);
     }
 

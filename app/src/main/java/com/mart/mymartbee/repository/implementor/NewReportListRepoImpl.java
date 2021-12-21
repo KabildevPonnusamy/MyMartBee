@@ -55,6 +55,7 @@ public class NewReportListRepoImpl implements NewReportListRepo {
                         newReportErrorMLD.setValue("No Response");
                     }
                 } catch(Exception e) {
+                    Log.e("appSample", "Exception: " + e.getMessage());
                     productReportsModelMLD.setValue(null);
                     newReportErrorMLD.setValue(e.getMessage());
                 }
@@ -62,6 +63,7 @@ public class NewReportListRepoImpl implements NewReportListRepo {
 
             @Override
             public void onFailure(Call<NewReportProducts_Model> call, Throwable t) {
+                Log.e("appSample", "onFailure: " + t.getMessage());
                 productReportsModelMLD.setValue(null);
                 progressReportNewObservable.setValue(false);
                 newReportErrorMLD.setValue("Connection Error");

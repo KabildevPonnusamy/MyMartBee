@@ -103,7 +103,7 @@
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
                         android:layout_marginStart="8dp"
-                        android:layout_toStartOf="@+id/order_status"
+                        android:layout_toStartOf="@+id/order_payment_type"
                         android:orientation="vertical">
 
                         <TextView
@@ -129,7 +129,7 @@
                             android:layout_marginEnd="5dp"
                             android:fontFamily="@font/museosans"
                             android:singleLine="true"
-                            android:text="RM. 150"
+                            android:text="RM 150"
                             android:textColor="@color/main_color_two"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -137,17 +137,17 @@
                     </LinearLayout>
 
                     <TextView
-                        android:id="@+id/order_status"
+                        android:id="@+id/order_payment_type"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerInParent="true"
                         android:layout_marginEnd="5dp"
-                        android:background="@color/light_white_two"
+                        android:background="@drawable/whatsapp_layout"
                         android:fontFamily="@font/museosans"
                         android:padding="4dp"
                         android:text="Pending"
-                        android:textColor="@color/main_color_two"
+                        android:textColor="@color/white"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -161,7 +161,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/shadow_color" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -170,13 +170,15 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/img"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:contentDescription="@string/image_desc"
+                    android:layout_alignParentStart="true"
                     android:padding="5dp"
                     android:src="@drawable/icon_user" />
 
-                <TextView
+                <!--<TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -184,20 +186,37 @@
                     android:text="@string/order_from"
                     android:textColor="@color/text_color"
                     android:textSize="12sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal" />-->
 
                 <TextView
                     android:id="@+id/ordered_mobile_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/museosans"
+                    android:layout_toEndOf="@+id/img"
                     android:padding="4dp"
                     android:text="My Airtel Number"
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/order_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:background="@color/light_white_two"
+                    android:fontFamily="@font/museosans"
+                    android:layout_alignParentEnd="true"
+                    android:padding="4dp"
+                    android:text="Pending"
+                    android:gravity="end"
+                    android:layout_gravity="end"
+                    android:textColor="@color/main_color_two"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
 
         </LinearLayout>
 

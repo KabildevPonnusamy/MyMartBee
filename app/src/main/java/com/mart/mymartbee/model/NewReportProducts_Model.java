@@ -59,9 +59,9 @@ public class NewReportProducts_Model {
         @SerializedName("cat_id")
         @Expose
         String strCateId;
-        @SerializedName("cat_id")
+        /*@SerializedName("cat_id")
         @Expose
-        String strCat_id;
+        String strCat_id;*/
         @SerializedName("views")
         @Expose
         String strViews;
@@ -91,13 +91,13 @@ public class NewReportProducts_Model {
             this.strCategory = strCategory;
         }
 
-        public String getStrCat_id() {
+        /*public String getStrCat_id() {
             return strCat_id;
         }
 
         public void setStrCat_id(String strCat_id) {
             this.strCat_id = strCat_id;
-        }
+        }*/
 
         public String getStrViews() {
             return strViews;

@@ -47,7 +47,7 @@ public class ViewAllProductsAdapter extends RecyclerView.Adapter<ViewAllProducts
         holder.itm_product_price.setText(oldPrice);
         holder.itm_product_name.setText(productsArrayList.get(position).getStrProduct_title());
         Glide.with(context).load(productsArrayList.get(position).getStrProduct_image()).into(holder.itm_product_image);
-//        holder.itm_product_price.setText("RM. " + productsArrayList.get(position).getStrProduct_price());
+//        holder.itm_product_price.setText("RM " + productsArrayList.get(position).getStrProduct_price());
     }
 
     @Override

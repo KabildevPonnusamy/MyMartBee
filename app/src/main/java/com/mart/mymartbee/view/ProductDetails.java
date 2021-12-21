@@ -57,7 +57,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
 
     ImageView prod_details_back, prod_details_image, upload_img;
     TextView prod_details_title, prod_details_subcate, prod_details_oldprice, prod_details_price, prod_details_desc,
-            prod_details_stock_with_uom;
+            prod_details_stock_with_uom, prod_details_payment;
     TextView product_edit_btn, product_delete_btn;
     Products_Model.ProductCategories.ProductsList productsObj;
     ArrayList<Products_Model.ProductCategories.ProductsList.OtherImages> imagesArrayList;
@@ -128,6 +128,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         prod_details_oldprice = findViewById(R.id.prod_details_oldprice);
         prod_details_price = findViewById(R.id.prod_details_price);
         prod_details_desc = findViewById(R.id.prod_details_desc);
+        prod_details_payment = findViewById(R.id.prod_details_payment);
         prod_details_stock_with_uom = findViewById(R.id.prod_details_stock_with_uom);
         product_edit_btn = findViewById(R.id.product_edit_btn);
         product_delete_btn = findViewById(R.id.product_delete_btn);
@@ -156,12 +157,25 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
         } else {
             prod_details_oldprice.setVisibility(View.VISIBLE);
             String oldPrice = productsObj.getStrProduct_oldprice().replace(".00", "");
-            prod_details_oldprice.setText("RM. " + oldPrice);
+            prod_details_oldprice.setText("RM " + oldPrice);
         }
 
 
         String newPrice = productsObj.getStrProduct_price().replace(".00", "");
-        prod_details_price.setText("RM. " + newPrice);
+        prod_details_price.setText("RM " + newPrice);
+
+        if(productsObj.getStrCOd().equalsIgnoreCase("1") &&
+                productsObj.getStrBankTransfer().equalsIgnoreCase("1")) {
+            prod_details_payment.setText("Cash on Delivery, Bank Transfer");
+        } else if(productsObj.getStrCOd().equalsIgnoreCase("1") &&
+                productsObj.getStrBankTransfer().equalsIgnoreCase("0")) {
+            prod_details_payment.setText("Cash on Delivery");
+        } else if(productsObj.getStrCOd().equalsIgnoreCase("0") &&
+                productsObj.getStrBankTransfer().equalsIgnoreCase("1")) {
+            prod_details_payment.setText("Bank Transfer");
+        } else {
+            prod_details_payment.setText("");
+        }
 
         prod_details_desc.setText(productsObj.getStrProduct_description());
         prod_details_stock_with_uom.setText(productsObj.getStrProduct_quantity() + " " + productsObj.getStrProduct_uom());
@@ -297,31 +311,58 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.product_delete_btn:
-                Map<String, String> params = new HashMap<>();
-                params.put("seller_id", strSellerId);
-                params.put("cat_id", strCateId);
-                params.put("product_id", strProductId);
 
-                if (NetworkAvailability.isNetworkAvailable(ProductDetails.this)) {
-                    productsViewModel.deleteProducts(params);
-                } else {
-                    NetworkAvailability networkAvailability = new NetworkAvailability(this);
-                    networkAvailability.noInternetConnection(ProductDetails.this, Constants.NETWORK_ENABLE_SETTINGS);
-                }
+                showDeleteDialog();
 
-                productsViewModel.deleteProductLV().observe(this, new Observer<Products_Model>() {
-                    @Override
-                    public void onChanged(Products_Model products_model) {
-                        if (products_model.isStrStatus() == false) {
-                            showErrorDialog(products_model.getStrMessage());
-                        } else {
-                            showSuccessDialog(products_model);
-                        }
-                    }
-                });
                 break;
 
         }
+    }
+
+    public void showDeleteDialog() {
+            SweetAlertDialog sweetAlertDialog = new SweetAlertDialog(ProductDetails.this, SweetAlertDialog.WARNING_TYPE);
+            sweetAlertDialog.setTitleText("Warning...!");
+            sweetAlertDialog.setContentText("Do you want to delete this item?");
+            sweetAlertDialog.setCancelable(false);
+            sweetAlertDialog.setConfirmText("Yes");
+            sweetAlertDialog.setCancelText("No");
+            sweetAlertDialog.show();
+
+            sweetAlertDialog.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                    Map<String, String> params = new HashMap<>();
+                    params.put("seller_id", strSellerId);
+                    params.put("cat_id", strCateId);
+                    params.put("product_id", strProductId);
+
+                    if (NetworkAvailability.isNetworkAvailable(ProductDetails.this)) {
+                        productsViewModel.deleteProducts(params);
+                    } else {
+                        NetworkAvailability networkAvailability = new NetworkAvailability(ProductDetails.this);
+                        networkAvailability.noInternetConnection(ProductDetails.this, Constants.NETWORK_ENABLE_SETTINGS);
+                    }
+
+                    productsViewModel.deleteProductLV().observe(ProductDetails.this, new Observer<Products_Model>() {
+                        @Override
+                        public void onChanged(Products_Model products_model) {
+                            if (products_model.isStrStatus() == false) {
+                                showErrorDialog(products_model.getStrMessage());
+                            } else {
+                                showSuccessDialog(products_model);
+                            }
+                        }
+                    });
+                }
+            });
+            sweetAlertDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    sweetAlertDialog.dismiss();
+                }
+            });
+
     }
 
     @Override

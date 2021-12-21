@@ -240,6 +240,8 @@ public class OrdersFragment extends Fragment implements Constants, View.OnClickL
                     item.setStrStatus(mainOrdersList.get(i).getStrStatus());
                     item.setStrOrderDate(mainOrdersList.get(i).getStrOrderDate());
                     item.setStrTotalAmount(mainOrdersList.get(i).getStrTotalAmount());
+                    item.setStrPaymentType(mainOrdersList.get(i).getStrPaymentType());
+                    item.setStrPaymentReceipt(mainOrdersList.get(i).getStrPaymentReceipt());
                     item.setStrCountryCode(mainOrdersList.get(i).getStrCountryCode());
                     item.setStrPhone(mainOrdersList.get(i).getStrPhone());
                     item.setStrAddress(mainOrdersList.get(i).getStrAddress());
@@ -393,14 +395,14 @@ public class OrdersFragment extends Fragment implements Constants, View.OnClickL
                 }
 
                 //TODO completed and rejected was removed below
-                for(int i=0; i<order_status_model.getOrdersStatusList().size(); i++) {
+                /*for(int i=0; i<order_status_model.getOrdersStatusList().size(); i++) {
                     if(order_status_model.getOrdersStatusList().get(i).getStrOrderStatusName().equalsIgnoreCase("completed")) {
                         order_status_model.getOrdersStatusList().remove(i);
                     }
                     if(order_status_model.getOrdersStatusList().get(i).getStrOrderStatusName().equalsIgnoreCase("rejected")) {
                         order_status_model.getOrdersStatusList().remove(i);
                     }
-                }
+                }*/
 
                 ordersStatusLists.addAll(order_status_model.getOrdersStatusList());
 //                ordersStatusLists = order_status_model.getOrdersStatusList();

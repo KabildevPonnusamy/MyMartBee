@@ -32,8 +32,9 @@ public class Attachments extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initView() {
-        attachment_back = findViewById(R.id.attachment_image);
+        attachment_back = findViewById(R.id.attachment_back);
         attachment_image = findViewById(R.id.attachment_image);
+        attachment_back.setOnClickListener(this);
     }
 
     @Override

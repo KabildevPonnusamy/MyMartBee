@@ -7,20 +7,32 @@ import java.util.ArrayList;
 
 public class RegisterModel {
 
+    /*@SerializedName("status")
+        @Expose
+        String strStatus;*/
     @SerializedName("status")
     @Expose
-    String strStatus;
+    private boolean strStatus;
+
     @SerializedName("module")
     @Expose
     String strModule;
     @SerializedName("message")
     @Expose
     String strMessage;
-    public String getStrStatus() {
+    /*public String getStrStatus() {
         return strStatus;
     }
 
     public void setStrStatus(String strStatus) {
+        this.strStatus = strStatus;
+    }*/
+
+    public boolean isStrStatus() {
+        return strStatus;
+    }
+
+    public void setStrStatus(boolean strStatus) {
         this.strStatus = strStatus;
     }
 
@@ -92,6 +104,51 @@ public class RegisterModel {
         @SerializedName("created_at")
         @Expose
         String strRegCreatedAt;
+        @SerializedName("business")
+        @Expose
+        String strBusiness;
+
+        @SerializedName("acc_holder_name")
+        @Expose
+        String strRegAccountHolderName;
+        @SerializedName("acc_no")
+        @Expose
+        String strAccountNumber;
+        @SerializedName("bank_name")
+        @Expose
+        String strBankName;
+
+        public String getStrRegAccountHolderName() {
+            return strRegAccountHolderName;
+        }
+
+        public void setStrRegAccountHolderName(String strRegAccountHolderName) {
+            this.strRegAccountHolderName = strRegAccountHolderName;
+        }
+
+        public String getStrAccountNumber() {
+            return strAccountNumber;
+        }
+
+        public void setStrAccountNumber(String strAccountNumber) {
+            this.strAccountNumber = strAccountNumber;
+        }
+
+        public String getStrBankName() {
+            return strBankName;
+        }
+
+        public void setStrBankName(String strBankName) {
+            this.strBankName = strBankName;
+        }
+
+        public String getStrBusiness() {
+            return strBusiness;
+        }
+
+        public void setStrBusiness(String strBusiness) {
+            this.strBusiness = strBusiness;
+        }
 
         public String getStrRegCategoryID() {
             return strRegCategoryID;

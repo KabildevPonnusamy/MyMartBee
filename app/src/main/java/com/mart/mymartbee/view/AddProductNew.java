@@ -380,7 +380,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.upload_view_img:
-                if(uploadingImageLists.size() < 3 ) {
+                if(uploadingImageLists.size() < 5 ) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");
@@ -388,7 +388,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.upload_view:
-                if(uploadingImageLists.size() < 3 ) {
+                if(uploadingImageLists.size() < 5 ) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(AddProductNew.this,  "Sorry! You have reached maximum photos to upload.");

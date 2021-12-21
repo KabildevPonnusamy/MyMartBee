@@ -49,7 +49,7 @@ public class NewPendingOrdersAdapter extends RecyclerView.Adapter<NewPendingOrde
         }
 
         String product_price = pendingOrdersLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.order_total_price.setText( "RM. " + product_price);
+        holder.order_total_price.setText( "RM " + product_price);
         String image = pendingOrdersLists.get(position).getPendingProductsList().get(0).getStrProductImage();
 
         if(image != null) {

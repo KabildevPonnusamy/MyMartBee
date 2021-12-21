@@ -47,7 +47,7 @@ public class PendingOrdersAdapter extends RecyclerView.Adapter<PendingOrdersAdap
         }
 
         String product_price = pendingOrdersLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.order_total.setText("RM. " + product_price);
+        holder.order_total.setText("RM " + product_price);
 
         holder.order_status.setText(pendingOrdersLists.get(position).getStrStatus());
         holder.status_layout.setVisibility(View.GONE);

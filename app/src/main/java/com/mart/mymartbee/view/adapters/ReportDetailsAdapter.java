@@ -40,7 +40,7 @@ public class ReportDetailsAdapter extends RecyclerView.Adapter<ReportDetailsAdap
         holder.od_prod_name.setText(reportProductsArrayList.get(position).getStrTitle());
         holder.od_prod_qty.setText(reportProductsArrayList.get(position).getStrQuantity());
         String strPrice = reportProductsArrayList.get(position).getStrPrice().replace(".00", "");
-        holder.od_prod_price.setText("RM. " + strPrice);
+        holder.od_prod_price.setText("RM " + strPrice);
         String strTotal = reportProductsArrayList.get(position).getStrTotal().replace(".00", "");
         holder.od_prod_total.setText(strTotal);
         Glide.with(context).load(reportProductsArrayList.get(position).getStrImage()).into(holder.product_image);

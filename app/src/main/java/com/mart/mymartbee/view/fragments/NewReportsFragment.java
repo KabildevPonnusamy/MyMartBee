@@ -191,6 +191,11 @@ public class NewReportsFragment extends Fragment implements View.OnClickListener
             params1.put("year", strProductYearVal);
             params1.put("month", strProductMonthVal);
 
+            Log.e("appSample", "SellerId: " + strSellerId);
+            Log.e("appSample", "CateId: " + strCateId);
+            Log.e("appSample", "Year: " + strProductYearVal);
+            Log.e("appSample", "Month: " + strProductMonthVal);
+
             if (NetworkAvailability.isNetworkAvailable(getActivity())) {
                 newReportViewModel.getProductReports(params1);
             } else {

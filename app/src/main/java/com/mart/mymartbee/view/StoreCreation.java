@@ -21,11 +21,13 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -53,6 +55,7 @@ import com.mart.mymartbee.commons.PermissionManager;
 import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
+import com.mart.mymartbee.custom.HintAdapter;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.model.RegisterModel;
 import com.mart.mymartbee.model.UploadingImageList;
@@ -70,6 +73,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -88,12 +92,15 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     String profile_str = "";
 
 //    CircleImageView store_image;
+    Spinner business_type_spinner;
     ImageView store_image;
     EditText store_name, business_category_et, address_et, start_time, close_time;
     TextView upload_image;
     Button create_btn;
     ImageView act_back;
     String sel_category = "";
+    String strBusinessType = "";
+    LinearLayout business_cate_layout;
     int selectedId = -1;
     RegisterViewModel registerViewModel;
     MyPreferenceDatas preferenceDatas;
@@ -109,6 +116,9 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     BottomSheetDialog bottomSheetUpload;
     LinearLayout gallery_layout, camera_layout;
     ImageView close_img;
+
+    ArrayList<String> businessTypeList;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -166,7 +176,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
     }
 
     public void initView() {
-        prefCaldate = Calendar.getInstance();
+        business_cate_layout = findViewById(R.id.business_cate_layout);
         act_back = findViewById(R.id.act_back);
         create_btn = findViewById(R.id.create_btn);
         upload_image = findViewById(R.id.upload_image);
@@ -175,6 +185,7 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
         address_et = findViewById(R.id.address_et);
         start_time = findViewById(R.id.start_time);
         close_time = findViewById(R.id.close_time);
+        business_type_spinner = findViewById(R.id.business_type_spinner);
         store_image = findViewById(R.id.store_image);
         start_time.setFocusable(false);
         start_time.setClickable(true);
@@ -192,6 +203,37 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
         act_back.setOnClickListener(this);
         create_btn.setOnClickListener(this);
 
+        prefCaldate = Calendar.getInstance();
+
+        businessTypeList = new ArrayList<String>();
+        businessTypeList.add("Seller");
+        businessTypeList.add("Re-Seller");
+        businessTypeList.add("Business Type*");
+        setSpinnerListerer();
+
+    }
+
+    public void setSpinnerListerer() {
+        HintAdapter dataAdapter = new HintAdapter(this, android.R.layout.simple_spinner_item, businessTypeList);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        business_type_spinner.setAdapter(dataAdapter);
+        business_type_spinner.setSelection(dataAdapter.getCount());
+
+        business_type_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                strBusinessType = business_type_spinner.getSelectedItem().toString();
+                Log.e("appSample", "Selected: " + strBusinessType);
+                if(strBusinessType.equalsIgnoreCase("Re-Seller")) {
+                    business_cate_layout.setVisibility(View.GONE);
+                } else{
+                    business_cate_layout.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
     public void startTimePickerDialog(int hour, int minute) {
@@ -370,6 +412,11 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                     return;
                 }*/
 
+                if (strBusinessType.equalsIgnoreCase("") || strBusinessType.equalsIgnoreCase("Business Type*")) {
+                    showErrorMessage("Please select Business Type.");
+                    return;
+                }
+
                 if(strShop.equalsIgnoreCase("")) {
                     showErrorMessage("Please enter shop name.");
                     return;
@@ -400,6 +447,15 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
 //                    return;
 //                }
 
+                String strCateId = "";
+                String strBusinessId = "";
+                if(strBusinessType.equalsIgnoreCase("Re-Seller")) {
+                    strBusinessId = "2";
+                    strCateId = "134";
+                } else {
+                    strBusinessId = "1";
+                    strCateId = "" + selectedId;
+                }
 
                 Map<String, String> params = new HashMap<>();
                 params.put("country_code", strCountryCode );
@@ -409,7 +465,9 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 params.put("latitude", strLatitude);
                 params.put("longitude", strLongitude);
                 params.put("shop", strShop);
-                params.put("cat_id", ""+selectedId);
+//                params.put("cat_id", ""+selectedId);
+                params.put("cat_id", ""+ strCateId);
+                params.put("business", strBusinessId);
                 params.put("address", strAddress);
                 params.put("open_time", strStartTime);
                 params.put("close_time", strCloseTime);
@@ -421,10 +479,12 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                 Log.e("appSample", "latitude: " + strLatitude);
                 Log.e("appSample", "longitude: " + strLongitude);
                 Log.e("appSample", "shop: " + strShop);
-                Log.e("appSample", "cat_id: " + selectedId);
+                Log.e("appSample", "cat_id: " + strCateId);
+                Log.e("appSample", "business: " + strBusinessId);
                 Log.e("appSample", "address: " + strAddress);
                 Log.e("appSample", "open_time: " + strStartTime);
                 Log.e("appSample", "close_time: " + strCloseTime);
+                Log.e("appSample", "TempPath: " + tempPath);
 
                 if (NetworkAvailability.isNetworkAvailable(StoreCreation.this)) {
                     registerViewModel.checkRegister(tempPath, params);

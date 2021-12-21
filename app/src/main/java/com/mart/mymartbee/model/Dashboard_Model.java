@@ -122,6 +122,28 @@ public class Dashboard_Model {
         @SerializedName("products")
         @Expose
         public ArrayList<PendingProductsList> pendingProductsList;
+        @SerializedName("payment_type")
+        @Expose
+        private String strPaymentType;
+        @SerializedName("payment_receipt")
+        @Expose
+        private String strPaymentReceipt;
+
+        public String getStrPaymentReceipt() {
+            return strPaymentReceipt;
+        }
+
+        public void setStrPaymentReceipt(String strPaymentReceipt) {
+            this.strPaymentReceipt = strPaymentReceipt;
+        }
+
+        public String getStrPaymentType() {
+            return strPaymentType;
+        }
+
+        public void setStrPaymentType(String strPaymentType) {
+            this.strPaymentType = strPaymentType;
+        }
 
         public String getStrOrderId() {
             return strOrderId;

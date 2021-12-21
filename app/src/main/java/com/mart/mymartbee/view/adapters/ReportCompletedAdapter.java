@@ -55,7 +55,7 @@ public class ReportCompletedAdapter extends RecyclerView.Adapter<ReportCompleted
         }
 
         String product_price = reportsLists.get(position).getStrTotalAmount().replace(".00", "");
-        holder.order_total_price.setText( "RM. " + product_price);
+        holder.order_total_price.setText( "RM " + product_price);
 
         if(reportsLists.get(position).getProductsList().size() > 0 ) {
 

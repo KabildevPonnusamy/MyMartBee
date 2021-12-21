@@ -19,28 +19,42 @@ import android.widget.RelativeLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.mart.mymartbee.BuildConfig;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.NetworkAvailability;
 import com.mart.mymartbee.custom.SweetAlert.SweetAlertDialog;
+import com.mart.mymartbee.model.CommonResponseModel;
+import com.mart.mymartbee.model.RegisterModel;
+import com.mart.mymartbee.repository.implementor.VersionListRepoImpl;
 import com.mart.mymartbee.storage.MyPreferenceDatas;
 import com.mart.mymartbee.storage.StorageDatas;
 import com.mart.mymartbee.commons.PermissionManager;
+import com.mart.mymartbee.viewmodel.implementor.RegisterViewModelImpl;
+import com.mart.mymartbee.viewmodel.implementor.VersionViewModelImpl;
+import com.mart.mymartbee.viewmodel.interfaces.VersionViewModel;
 
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Splash extends AppCompatActivity implements Constants{
 
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
+    String strVersion = "";
+    VersionViewModel versionViewModel;
+    SweetAlertDialog sweetAlertDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +62,8 @@ public class Splash extends AppCompatActivity implements Constants{
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.splash_layout);
 
+        strVersion = BuildConfig.VERSION_NAME;
+        versionViewModel = ViewModelProviders.of(this).get(VersionViewModelImpl.class);
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
@@ -106,7 +122,40 @@ public class Splash extends AppCompatActivity implements Constants{
         Log.e("appSample", "Username: " + userName);
 
         if (NetworkAvailability.isNetworkAvailable(Splash.this)) {
-            new Handler().postDelayed(new Runnable() {
+
+            Log.e("appSample", "version: " + strVersion);
+
+            Map<String, String> params = new HashMap<>();
+            params.put("version", strVersion );
+            versionViewModel.getVersions(params);
+            versionViewModel.getVersionLD().observe(this, new Observer<CommonResponseModel>() {
+                @Override
+                public void onChanged(CommonResponseModel commonResponseModel) {
+
+                    if(commonResponseModel.isStrStatus() == true) {
+                        try {
+                            myKeyValue = getResources().getString(R.string.myTripleKey);
+                            preferenceDatas = new MyPreferenceDatas(Splash.this);
+
+                            if(TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue) != null &&
+                                    !TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_MOBILE), myKeyValue).equalsIgnoreCase("")) {
+                                Intent intent= new Intent(Splash.this, HomeActivity.class); // Map_Activity
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Intent intent= new Intent(Splash.this, MobileLogin.class); // MobileLogin
+                                startActivity(intent);
+                                finish();
+                            }
+                        } catch (Exception e) {
+                        }
+                    } else {
+                        showUpdateDialog();
+                    }
+                }
+            });
+
+            /*new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -126,7 +175,8 @@ public class Splash extends AppCompatActivity implements Constants{
                     } catch (Exception e) {
                     }
                 }
-            }, Constants.SPLASH_TIME_OUT);
+            }, Constants.SPLASH_TIME_OUT);*/
+
         } else {
             NetworkAvailability networkAvailability = new NetworkAvailability(this);
             networkAvailability.noInternetConnection(Splash.this, Constants.NETWORK_ENABLE_SETTINGS);
@@ -145,6 +195,27 @@ public class Splash extends AppCompatActivity implements Constants{
                     finish();
                 }
         }
+    }
+
+    public void showUpdateDialog() {
+        sweetAlertDialog = new SweetAlertDialog(Splash.this, SweetAlertDialog.WARNING_TYPE);
+        sweetAlertDialog.setTitleText("Update Required...!");
+        sweetAlertDialog.setContentText(getString(R.string.update_required));
+        sweetAlertDialog.setCancelable(false);
+        sweetAlertDialog.show();
+        sweetAlertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
+                sweetAlertDialog.dismiss();
+
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName))); //
+                }
+            }
+        });
     }
 
     @Override
