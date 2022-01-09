@@ -125,10 +125,18 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
                         cate_recycle.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                         businessCategoryAdapter = new BusinessCategoryAdapter(businessCategoryList, getApplicationContext(), selectedId);
                         cate_recycle.setAdapter(businessCategoryAdapter);
+                    } else {
+                        showErrorMessage("No Records Found!");
                     }
+                } else {
+                    showErrorMessage("No Records Found!");
                 }
             }
         });
+    }
+
+    public void showErrorMessage(String errMessage) {
+        CommonMethods.Toast(BusinessCategorySelection.this,  errMessage);
     }
 
     @Override
@@ -171,6 +179,8 @@ public class BusinessCategorySelection extends AppCompatActivity implements View
                             businessCategoryAdapter.notifyDataSetChanged();
                             category_name.setText("");
                             bottomSheetDialog.dismiss();
+                        } else {
+                            showErrorMessage("Error.");
                         }
                     }
                 });

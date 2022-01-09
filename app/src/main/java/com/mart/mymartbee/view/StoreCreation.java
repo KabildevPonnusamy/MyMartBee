@@ -417,15 +417,19 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                     return;
                 }
 
+                if(strBusinessType.equalsIgnoreCase("Seller")) {
+                    if(strCategory.equalsIgnoreCase("")) {
+                        showErrorMessage("Please select business category.");
+                        return;
+                    }
+                }
+
                 if(strShop.equalsIgnoreCase("")) {
                     showErrorMessage("Please enter shop name.");
                     return;
                 }
 
-                if(strCategory.equalsIgnoreCase("")) {
-                    showErrorMessage("Please select business category.");
-                    return;
-                }
+
 
                 if(strAddress.equalsIgnoreCase("")) {
                     showErrorMessage("Please select address.");
@@ -497,9 +501,13 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onChanged(RegisterModel registerModel) {
 
-                        if(registerModel.getStrModule().equalsIgnoreCase("login")) {
-                            showShopCreateDialog(registerModel);
-                            Log.e("appSample", "Resp: " + registerModel.getSellerDetails().getStrRegImage());
+                        if(registerModel.isStrStatus() == false) {
+                            showErrorMessage(registerModel.getStrMessage());
+                        } else {
+                            if(registerModel.getStrModule().equalsIgnoreCase("login")) {
+                                showShopCreateDialog(registerModel);
+                                Log.e("appSample", "Resp: " + registerModel.getSellerDetails().getStrRegImage());
+                            }
                         }
                     }
                 });
@@ -776,6 +784,11 @@ public class StoreCreation extends AppCompatActivity implements View.OnClickList
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_PRODUCTS_COUNT, TripleDes.getDESEncryptValue("0", myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_START_TIME, TripleDes.getDESEncryptValue(strStartTime, myKeyValue) );
                             preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME, TripleDes.getDESEncryptValue(strCloseTime, myKeyValue) );
+
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_HOLDER_NAME, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegAccountHolderName(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_NUMBER, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrAccountNumber(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BANK_NAME, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrBankName(), myKeyValue) );
+                            preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BUSINESS_TYPE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrBusiness(), myKeyValue) );
 
                             Intent homeIntent = new Intent(StoreCreation.this, HomeActivity.class);
                             startActivityForResult(homeIntent, STORE_CREATION_to_HOME);

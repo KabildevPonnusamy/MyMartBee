@@ -73,7 +73,6 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
     GPSTracker gpsTracker;
     String S_lat = "", S_lon = "";
     String strLoc = "";
-    String apiKey = "AIzaSyB4CPqqhVMPCH9VEOBtMu_gRRhaVh0SWrU";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +100,7 @@ public class AddressSelection extends AppCompatActivity implements View.OnClickL
         select_btn.setOnClickListener(this);
         address_back.setOnClickListener(this);
 
-        Places.initialize(AddressSelection.this, apiKey);
+        Places.initialize(AddressSelection.this, getResources().getString(R.string.placesKey));
         PlacesClient placesClient = Places.createClient(AddressSelection.this);
 
         autocompleteFragment = (AutocompleteSupportFragment)

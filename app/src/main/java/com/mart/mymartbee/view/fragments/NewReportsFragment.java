@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.HintAdapter;
 import com.mart.mymartbee.custom.NetworkAvailability;
@@ -171,8 +172,13 @@ public class NewReportsFragment extends Fragment implements View.OnClickListener
                                 addToPieChart(newReportSales_model.getStrTotalRevenue());
                                 setCateSalesAdapter();
                                 setSalesCategoryProductProgressAdapter();
+                            } else {
+                                sales_report_scroll.setVisibility(View.GONE);
+                                no_sales_report_layout.setVisibility(View.VISIBLE);
                             }
                         }
+                    } else {
+                        showErrorMessage("No Records found.");
                     }
                 }
             });
@@ -234,6 +240,8 @@ public class NewReportsFragment extends Fragment implements View.OnClickListener
                         }
 
 
+                    } else {
+                        showErrorMessage("No Records found.");
                     }
                 }
             });
@@ -670,5 +678,8 @@ public class NewReportsFragment extends Fragment implements View.OnClickListener
 
     }
 
+    public void showErrorMessage(String errMessage) {
+        CommonMethods.Toast(getActivity(),  errMessage);
+    }
 
 }

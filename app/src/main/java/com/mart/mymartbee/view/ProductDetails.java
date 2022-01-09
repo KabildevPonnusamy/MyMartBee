@@ -193,7 +193,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
             delete_image_layout.setVisibility(View.VISIBLE);
         }
 
-        if (imagesArrayList.size() == 3) {
+        if (imagesArrayList.size() == 5) {
             upload_img.setVisibility(View.GONE);
         } else {
             upload_img.setVisibility(View.VISIBLE);
@@ -303,7 +303,7 @@ public class ProductDetails extends AppCompatActivity implements View.OnClickLis
                 break;
 
             case R.id.upload_img:
-                if (imagesArrayList.size() < 3) {
+                if (imagesArrayList.size() < 5) {
                     checkCameraPermission();
                 } else {
                     CommonMethods.Toast(ProductDetails.this, "Sorry! You have reached maximum photos to upload.");

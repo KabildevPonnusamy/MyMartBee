@@ -48,7 +48,8 @@ public interface ApiCallBack {
     Call<RegisterModel> sellerRegistration(@Part MultipartBody.Part image, @Part("country_code") RequestBody country_code, @Part("mobile_number") RequestBody mobile_number,
                                            @Part("imie_no") RequestBody imie_no, @Part("gcm_id") RequestBody gcm_id, @Part("latitude") RequestBody latitude,
                                            @Part("longitude") RequestBody longitude, @Part("shop") RequestBody shop, @Part("cat_id") RequestBody category,
-                                           @Part("address") RequestBody address, @Part("open_time") RequestBody open_time, @Part("close_time") RequestBody close_time);
+                                           @Part("address") RequestBody address, @Part("open_time") RequestBody open_time, @Part("close_time") RequestBody close_time,
+                                           @Part("business") RequestBody business);
 
     @POST("seller/register")
     @FormUrlEncoded

@@ -100,6 +100,51 @@ public class OTPVerifyModel {
         @Expose
         String strCloseTime;
 
+        @SerializedName("business")
+        @Expose
+        String strBusiness;
+        @SerializedName("acc_holder_name")
+        @Expose
+        String strRegAccountHolderName;
+        @SerializedName("acc_no")
+        @Expose
+        String strAccountNumber;
+        @SerializedName("bank_name")
+        @Expose
+        String strBankName;
+
+        public String getStrRegAccountHolderName() {
+            return strRegAccountHolderName;
+        }
+
+        public void setStrRegAccountHolderName(String strRegAccountHolderName) {
+            this.strRegAccountHolderName = strRegAccountHolderName;
+        }
+
+        public String getStrAccountNumber() {
+            return strAccountNumber;
+        }
+
+        public void setStrAccountNumber(String strAccountNumber) {
+            this.strAccountNumber = strAccountNumber;
+        }
+
+        public String getStrBankName() {
+            return strBankName;
+        }
+
+        public void setStrBankName(String strBankName) {
+            this.strBankName = strBankName;
+        }
+
+        public String getStrBusiness() {
+            return strBusiness;
+        }
+
+        public void setStrBusiness(String strBusiness) {
+            this.strBusiness = strBusiness;
+        }
+
         public String getStrOpenTime() {
             return strOpenTime;
         }

@@ -163,14 +163,23 @@ public class AddAccount extends AppCompatActivity implements View.OnClickListene
                     @Override
                     public void onChanged(RegisterModel registerModel) {
                         Log.e("appSample", "SHOP: " + registerModel.getSellerDetails().getStrRegshop());
-                        if(registerModel.getStrModule().equalsIgnoreCase("login")) {
-                            showProfileSuccess(registerModel);
+
+                        if(registerModel.isStrStatus() == false) {
+                            showErrorMessage(registerModel.getStrMessage());
+                        } else {
+                            if(registerModel.getStrModule().equalsIgnoreCase("login")) {
+                                showProfileSuccess(registerModel);
+                            }
                         }
                     }
                 });
 
                 break;
         }
+    }
+
+    public void showErrorMessage(String errMessage) {
+        CommonMethods.Toast(AddAccount.this,  errMessage);
     }
 
     private void showProfileSuccess(RegisterModel registerModel) {

@@ -104,10 +104,10 @@ public class RegisterModel {
         @SerializedName("created_at")
         @Expose
         String strRegCreatedAt;
+
         @SerializedName("business")
         @Expose
         String strBusiness;
-
         @SerializedName("acc_holder_name")
         @Expose
         String strRegAccountHolderName;

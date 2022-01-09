@@ -748,6 +748,7 @@ public class AddProductNew extends AppCompatActivity implements View.OnClickList
         productsViewModel.getUOMLV().observe(this, new Observer<UOMModel>() {
             @Override
             public void onChanged(UOMModel uomModel) {
+
                 uomDatasList = uomModel.getUomLists();
                 showUOMAdapter(showUOMStatus);
             }

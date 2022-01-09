@@ -266,6 +266,12 @@ public class MobileLogin extends AppCompatActivity implements View.OnClickListen
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_START_TIME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrOpenTime(), myKeyValue) );
                         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrCloseTime(), myKeyValue) );
 
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_HOLDER_NAME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrRegAccountHolderName(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_NUMBER, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrAccountNumber(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BANK_NAME, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrBankName(), myKeyValue) );
+                        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BUSINESS_TYPE, TripleDes.getDESEncryptValue(otpVerifyModel.getSellerDetails().getStrBusiness(), myKeyValue) );
+
+                        Log.e("appSample","Businesstype: " + otpVerifyModel.getSellerDetails().getStrBusiness());
                         Intent homeIntent = new Intent(MobileLogin.this, HomeActivity.class);
                         startActivityForResult(homeIntent, MOBILE_LOGIN_to_HOME);
                         finish();

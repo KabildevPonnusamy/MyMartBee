@@ -72,10 +72,11 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
 
     String strCountryCode, strMobile, strAndroidId, strFCM, strShop,
             strCategory, strAddress, strImage, strCategoryName;
-    String strLatitude = "", strLongitude= "";
+    String strLatitude = "", strLongitude= "", strBusinessType = "";
     GPSTracker gpsTracker;
     String profile_str = "";
 
+    LinearLayout business_category_layout;
     ImageView store_image;
     ImageView profile_back;
     EditText profile_store, profile_mobile_tv, business_category_et, address_et, start_time, close_time;
@@ -137,6 +138,8 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         strCategoryName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
         strStartTime = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_START_TIME), myKeyValue);
         strCloseTime = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME), myKeyValue);
+        strBusinessType = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_BUSINESS_TYPE), myKeyValue);
+        Log.e("appSample", "BusinessTypeProfile: " + strBusinessType);
         if(strStartTime == null) {
             strStartTime = "";
         }
@@ -152,6 +155,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         startCalDate = Calendar.getInstance();
         prefCaldate = Calendar.getInstance();
         profile_change = findViewById(R.id.profile_change);
+        business_category_layout = findViewById(R.id.business_category_layout);
         store_image = findViewById(R.id.store_image);
         profile_back = findViewById(R.id.profile_back);
         profile_store = findViewById(R.id.profile_store);
@@ -191,6 +195,12 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         profile_mobile_tv.setText(strCountryCode + " " + strMobile);
         business_category_et.setText(strCategoryName);
         profile_store.setText(strShop);
+        if(strBusinessType.equalsIgnoreCase("2")) { // He is an Re-seller. So he won't update his business category.
+            business_category_layout.setVisibility(View.GONE);
+        } else {
+            business_category_layout.setVisibility(View.VISIBLE);
+        }
+
         if(strImage != null) {
             if(!strImage.equalsIgnoreCase("") ) {
                 Glide.with(getApplicationContext()).load(strImage).into(store_image);
@@ -431,6 +441,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
                 params.put("address", strAddress);
                 params.put("open_time", strStartTime);
                 params.put("close_time", strCloseTime);
+                params.put("business", strBusinessType);
 
                 if(finalPath == null) {
                     Log.e("appSample", "Params: " + params.toString());
@@ -487,6 +498,12 @@ public class Profile extends AppCompatActivity implements View.OnClickListener, 
         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_START_TIME, TripleDes.getDESEncryptValue(strStartTime, myKeyValue) );
         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME, TripleDes.getDESEncryptValue(strCloseTime, myKeyValue) );
         preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_PRODUCTS_COUNT, TripleDes.getDESEncryptValue("0", myKeyValue) );
+
+        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_HOLDER_NAME, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrRegAccountHolderName(), myKeyValue) );
+        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_ACC_NUMBER, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrAccountNumber(), myKeyValue) );
+        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BANK_NAME, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrBankName(), myKeyValue) );
+        preferenceDatas.putPrefString(MyPreferenceDatas.SELLER_BUSINESS_TYPE, TripleDes.getDESEncryptValue(registerModel.getSellerDetails().getStrBusiness(), myKeyValue) );
+
 
         sweetAlertDialog = new SweetAlertDialog(Profile.this, SweetAlertDialog.SUCCESS_TYPE);
         sweetAlertDialog.setTitleText("Success...!");

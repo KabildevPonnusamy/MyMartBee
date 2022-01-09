@@ -26,6 +26,8 @@ public class MyPreferenceDatas {
     public static final String SELLER_ACC_NUMBER = "sellerAccNumber";
     public static final String SELLER_BANK_NAME = "sellerBankName";
 
+    public static final String SELLER_BUSINESS_TYPE = "sellerBusinessType";
+
     public MyPreferenceDatas(Context context) {
         myPrefs = context.getSharedPreferences(myPrefName, Context.MODE_PRIVATE);
     }

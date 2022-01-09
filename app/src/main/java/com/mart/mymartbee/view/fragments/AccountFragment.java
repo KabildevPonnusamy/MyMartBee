@@ -54,7 +54,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
     GPSTracker gpsTracker;
     String strCountryCode, strMobile, strAndroidId, strFCM, strShop,
             strCategory, strAddress, strImage, strCategoryName;
-    String strLatitude = "", strLongitude= "", strOpenHour, strCloseHour;
+    String strLatitude = "", strLongitude= "", strOpenHour, strCloseHour, strBusinessType = "";
 
     MyPreferenceDatas preferenceDatas;
     String myKeyValue = "";
@@ -91,6 +91,7 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         strCategoryName = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CATEGORY_NAME), myKeyValue);
         strOpenHour = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_START_TIME), myKeyValue);
         strCloseHour = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_CLOSE_TIME), myKeyValue);
+        strBusinessType = TripleDes.getDESDecryptValue(preferenceDatas.getPrefString(MyPreferenceDatas.SELLER_BUSINESS_TYPE), myKeyValue);
     }
 
     public void initView(View view){
@@ -119,6 +120,14 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         store_name.setText(strShop);
         store_category.setText(strCategoryName);
         store_available_hours.setText("Open Hours: " + strOpenHour + " - " + strCloseHour);
+
+        Log.e("appSample", "Businesstype: " + strBusinessType);
+        if(strBusinessType.equalsIgnoreCase("2")) {
+            store_category.setVisibility(View.GONE);
+        } else {
+            store_category.setVisibility(View.VISIBLE);
+        }
+
         if(strImage != null) {
             if(!strImage.equalsIgnoreCase("") ) {
                 Glide.with(getActivity()).load(strImage).into(store_image);
@@ -249,18 +258,6 @@ public class AccountFragment extends Fragment implements View.OnClickListener, C
         Uri uri = Uri.parse("https://api.whatsapp.com/send?phone=+60167139800&text=" + "");
         Intent sendIntent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(sendIntent);
-
-        /*String contact = "+60167139800";
-        String url = "https://api.whatsapp.com/send?phone=" + contact;
-        try {
-            PackageManager pm = getContext().getPackageManager();
-            pm.getPackageInfo("com.whatsapp", PackageManager.GET_ACTIVITIES);
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(url));
-            startActivity(i);
-        } catch (PackageManager.NameNotFoundException e) {
-            CommonMethods.Toast(getActivity(), "WhatsApp have not been installed.");
-        }*/
     }
 
     @Override

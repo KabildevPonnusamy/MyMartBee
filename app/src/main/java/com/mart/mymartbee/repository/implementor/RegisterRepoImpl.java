@@ -139,6 +139,7 @@ public class RegisterRepoImpl implements RegisterRepo {
         RequestBody r_Address = RequestBody.create(MediaType.parse("text/plain"), params.get("address"));
         RequestBody r_close_time = RequestBody.create(MediaType.parse("text/plain"), params.get("close_time"));
         RequestBody r_open_time = RequestBody.create(MediaType.parse("text/plain"), params.get("open_time"));
+        RequestBody r_business = RequestBody.create(MediaType.parse("text/plain"), params.get("business"));
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("image/*"), file);
@@ -152,7 +153,7 @@ public class RegisterRepoImpl implements RegisterRepo {
         ApiCallBack apiService = retrofit.create(ApiCallBack.class);
 
         apiService.sellerRegistration(body, r_CountryCode, r_MobileNumber, r_ImieNo, r_GcmId, r_Latitude, r_Longitude,
-                r_Shop, r_Category, r_Address, r_open_time, r_close_time
+                r_Shop, r_Category, r_Address, r_open_time, r_close_time, r_business
         ).enqueue(new Callback<RegisterModel>() {
             @Override
             public void onResponse(Call<RegisterModel> call, Response<RegisterModel> response) {

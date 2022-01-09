@@ -71,8 +71,8 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
         String product_price = pendingOrdersLists.get(position).getStrTotalAmount().replace(".00", "");
         holder.order_total_price.setText( "RM " + product_price);
 
-//        if(pendingOrdersLists.get(0).getOrderedProductsList().size() > 0) {
-//            try {
+        if(pendingOrdersLists.get(0).getOrderedProductsList().size() > 0) {
+            try {
 
                 String image = pendingOrdersLists.get(position).getOrderedProductsList().get(0).getStrProductImage();
                 if (image != null) {
@@ -81,10 +81,10 @@ public class NewOrdersAdapter extends RecyclerView.Adapter<NewOrdersAdapter.View
                     }
                 }
 
-//            } catch (Exception e) {
-//                Log.e("appSample", "Excep: " + e.getMessage());
-//            }
-//        }
+            } catch (Exception e) {
+                Log.e("appSample", "Excep: " + e.getMessage());
+            }
+        }
         }
 
 

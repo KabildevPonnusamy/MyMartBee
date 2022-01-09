@@ -28,6 +28,7 @@ import com.github.mikephil.charting.utils.Utils;
 import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.mart.mymartbee.R;
 import com.mart.mymartbee.algorithm.TripleDes;
+import com.mart.mymartbee.commons.CommonMethods;
 import com.mart.mymartbee.commons.Util;
 import com.mart.mymartbee.constants.Constants;
 import com.mart.mymartbee.custom.HintAdapter;
@@ -386,9 +387,15 @@ public class YearlySalesReportAct extends AppCompatActivity implements View.OnCl
                                 chartDatas(categoryRevenuesList);
                             }
                         }
+                    } else {
+                        showErrorMessage("No Records found.");
                     }
                 }
             });
         }
+    }
+
+    public void showErrorMessage(String errMessage) {
+        CommonMethods.Toast(YearlySalesReportAct.this,  errMessage);
     }
 }

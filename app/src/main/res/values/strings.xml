@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">MartBee</string>
     <string name="myTripleKey">asdf-4yo9-21mkjh</string>
+    <string name="placesKey">AIzaSyB4CPqqhVMPCH9VEOBtMu_gRRhaVh0SWrU</string>
 <!--    <string name="maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyB4CPqqhVMPCH9VEOBtMu_gRRhaVh0SWrU</string>-->
     <string name="dialog_default_title">Here\'s a message!</string>
     <string name="dialog_ok">OK</string>
